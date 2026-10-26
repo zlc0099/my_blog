@@ -1,0 +1,23 @@
+<script setup>
+import { computed } from 'vue';
+import { useRoute } from 'vue-router';
+import ArchiveBrowser from '@/components/post/ArchiveBrowser.vue';
+import NotFoundView from '@/views/NotFoundView.vue';
+import { categoryMap } from '@/data/taxonomy';
+
+const route = useRoute();
+const category = computed(() => categoryMap[String(route.params.slug)]);
+</script>
+
+<template>
+  <ArchiveBrowser
+    v-if="category"
+    eyebrow="ARCHIVE / CATEGORY"
+    :title="category.en"
+    :zh="category.zh"
+    :description="`${category.desc}。浏览该分类下的全部记录。`"
+    :serial="`CATEGORY / ${category.slug.toUpperCase()}`"
+    :locked-category="category.slug"
+  />
+  <NotFoundView v-else />
+</template>

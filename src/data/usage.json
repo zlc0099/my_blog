@@ -1,0 +1,156 @@
+{
+  "demo": true,
+  "updated": "2026-10-26",
+  "note": "示例数据，仅用于展示账本结构。替换为真实记录后，将 demo 改为 false。",
+  "records": [
+    {
+      "date": "2026-08-04",
+      "agent": "claude-code",
+      "task": "整理 Spring Boot 分层规范",
+      "type": "refactor",
+      "tokensIn": 186000,
+      "tokensOut": 42000,
+      "post": "spring-boot-layered-refactor"
+    },
+    {
+      "date": "2026-08-07",
+      "agent": "qoder",
+      "task": "搭建学习档案页骨架",
+      "type": "feature",
+      "tokensIn": 224000,
+      "tokensOut": 68000
+    },
+    {
+      "date": "2026-08-12",
+      "agent": "trae",
+      "task": "调整文章列表的视觉层级",
+      "type": "feature",
+      "tokensIn": 96000,
+      "tokensOut": 31000
+    },
+    {
+      "date": "2026-08-18",
+      "agent": "claude-code",
+      "task": "排查跨域请求缓存问题",
+      "type": "debug",
+      "tokensIn": 158000,
+      "tokensOut": 28000
+    },
+    {
+      "date": "2026-08-25",
+      "agent": "qoder",
+      "task": "补充接口 DTO 映射",
+      "type": "feature",
+      "tokensIn": 132000,
+      "tokensOut": 36000
+    },
+    {
+      "date": "2026-09-02",
+      "agent": "claude-code",
+      "task": "MySQL 慢查询执行计划分析",
+      "type": "debug",
+      "tokensIn": 246000,
+      "tokensOut": 54000,
+      "post": "mysql-slow-query-index"
+    },
+    {
+      "date": "2026-09-05",
+      "agent": "trae",
+      "task": "重构分类筛选交互",
+      "type": "feature",
+      "tokensIn": 118000,
+      "tokensOut": 39000
+    },
+    {
+      "date": "2026-09-09",
+      "agent": "qoder",
+      "task": "前后端联调：消息通知链路",
+      "type": "debug",
+      "tokensIn": 312000,
+      "tokensOut": 76000
+    },
+    {
+      "date": "2026-09-15",
+      "agent": "claude-code",
+      "task": "复核技能工作流文档",
+      "type": "review",
+      "tokensIn": 164000,
+      "tokensOut": 48000,
+      "post": "agent-skill-workflow"
+    },
+    {
+      "date": "2026-09-21",
+      "agent": "trae",
+      "task": "学习时间线组件草稿",
+      "type": "feature",
+      "tokensIn": 88000,
+      "tokensOut": 27000
+    },
+    {
+      "date": "2026-09-27",
+      "agent": "qoder",
+      "task": "优化缓存与接口返回结构",
+      "type": "refactor",
+      "tokensIn": 208000,
+      "tokensOut": 52000
+    },
+    {
+      "date": "2026-10-03",
+      "agent": "claude-code",
+      "task": "Agent 工具对比资料整理",
+      "type": "doc",
+      "tokensIn": 192000,
+      "tokensOut": 61000,
+      "post": "agent-tools-claude-trae-qoder"
+    },
+    {
+      "date": "2026-10-08",
+      "agent": "qoder",
+      "task": "文章详情页目录与滚动高亮",
+      "type": "feature",
+      "tokensIn": 176000,
+      "tokensOut": 44000
+    },
+    {
+      "date": "2026-10-12",
+      "agent": "trae",
+      "task": "移动端导航与断点适配",
+      "type": "feature",
+      "tokensIn": 106000,
+      "tokensOut": 33000
+    },
+    {
+      "date": "2026-10-16",
+      "agent": "claude-code",
+      "task": "Vite 构建体积审查",
+      "type": "review",
+      "tokensIn": 214000,
+      "tokensOut": 51000,
+      "post": "vue-vite-github-pages"
+    },
+    {
+      "date": "2026-10-18",
+      "agent": "qoder",
+      "task": "GitHub Pages 部署与深链接兜底",
+      "type": "feature",
+      "tokensIn": 148000,
+      "tokensOut": 39000
+    },
+    {
+      "date": "2026-10-22",
+      "agent": "trae",
+      "task": "浅色主题 Token 覆盖",
+      "type": "feature",
+      "tokensIn": 122000,
+      "tokensOut": 35000
+    },
+    {
+      "date": "2026-10-25",
+      "agent": "claude-code",
+      "task": "整站可访问性复核",
+      "type": "review",
+      "tokensIn": 268000,
+      "tokensOut": 58000
+    }
+  ]
+}
