@@ -42,7 +42,7 @@ const agentStats = computed(() =>
         </div>
         <div class="agent-card__numbers mono">
           <span>{{ String(agent.sessions).padStart(2, '0') }} SESSIONS</span>
-          <span>{{ formatTokens(agent.tokens) }} TOKENS</span>
+          <span>{{ formatTokens(agent.tokens) }} PROCESSED</span>
           <span class="agent-card__share">{{ agent.shareLabel }}</span>
         </div>
       </div>
@@ -104,7 +104,7 @@ const agentStats = computed(() =>
   justify-content: space-between;
   gap: 12px;
   color: var(--text-muted);
-  font-size: 8.5px;
+  font-size: 10px;
   letter-spacing: 0.1em;
 }
 
@@ -132,7 +132,7 @@ const agentStats = computed(() =>
   margin-top: 9px;
   color: var(--text-secondary);
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: 10px;
   letter-spacing: 0.05em;
 }
 
@@ -167,13 +167,13 @@ const agentStats = computed(() =>
   gap: 8px;
   margin-top: 10px;
   color: var(--text-muted);
-  font-size: 7.5px;
+  font-size: 10px;
   letter-spacing: 0.02em;
 }
 
 .agent-card__share {
   color: var(--agent-color);
-  font-size: 9px;
+  font-size: 10px;
 }
 
 @media (max-width: 900px) {

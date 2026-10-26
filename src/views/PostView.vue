@@ -3,9 +3,11 @@ import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 import NotFoundView from '@/views/NotFoundView.vue';
 import MarkdownBody from '@/components/post/MarkdownBody.vue';
+import RelatedPrompts from '@/components/post/RelatedPrompts.vue';
 import TocSidebar from '@/components/post/TocSidebar.vue';
 import ReadingProgress from '@/components/post/ReadingProgress.vue';
 import TagChip from '@/components/ui/TagChip.vue';
+import { site } from '@/data/site';
 import {
   getAdjacentPosts,
   getPostBySlug,
@@ -51,7 +53,10 @@ usePageMeta(() =>
           <div class="post-header__main">
             <div class="post-meta mono">
               <RouterLink :to="`/categories/${post.category}`" class="post-meta__category">
-                {{ post.categoryInfo.en }} / {{ post.categoryInfo.zh }}
+                {{ post.categoryInfo.en }}
+                <template v-if="post.categoryInfo.zh.toLowerCase() !== post.categoryInfo.en.toLowerCase()">
+                  / {{ post.categoryInfo.zh }}
+                </template>
               </RouterLink>
               <span class="post-meta__sep">/</span>
               <time :datetime="post.date">{{ formatDate(post.date) }}</time>
@@ -104,7 +109,20 @@ usePageMeta(() =>
           </nav>
         </details>
 
+        <a
+          v-if="post.repoPath"
+          :href="`${site.repo}/tree/main/${post.repoPath}`"
+          class="post-repo"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <span class="eyebrow">GITHUB / SOURCE</span>
+          <strong>完整源码在 GitHub：{{ post.repoPath }} ↗</strong>
+        </a>
+
         <MarkdownBody :html="rendered.html" />
+
+        <RelatedPrompts v-if="post.prompts.length" :ids="post.prompts" />
 
         <RouterLink
           v-if="relatedProject"
@@ -203,7 +221,7 @@ usePageMeta(() =>
   position: relative;
   display: inline-block;
   color: var(--text-muted);
-  font-size: 9px;
+  font-size: 10px;
   letter-spacing: 0.1em;
   transition: color var(--dur-fast) var(--ease-out);
 }
@@ -227,7 +245,7 @@ usePageMeta(() =>
   align-items: center;
   gap: 8px;
   color: var(--text-muted);
-  font-size: 9px;
+  font-size: 10px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -287,7 +305,7 @@ usePageMeta(() =>
 
 .post-header__side-label {
   color: var(--text-muted);
-  font-size: 8px;
+  font-size: 10px;
   letter-spacing: 0.14em;
 }
 
@@ -327,7 +345,7 @@ usePageMeta(() =>
 
 .toc-mobile__count {
   color: var(--text-muted);
-  font-size: 8.5px;
+  font-size: 10px;
 }
 
 .toc-mobile nav {
@@ -352,7 +370,7 @@ usePageMeta(() =>
 .toc-mobile__link span {
   margin-right: 8px;
   color: var(--text-muted);
-  font-size: 9px;
+  font-size: 10px;
 }
 
 .toc-mobile__link--h3 {
@@ -363,6 +381,31 @@ usePageMeta(() =>
 .toc-mobile__link--h4 {
   padding-left: 32px;
   font-size: 11.5px;
+}
+
+.post-repo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 28px;
+  padding: 16px 18px;
+  border: 1px solid var(--border-subtle);
+  border-left: 2px solid var(--accent);
+  background: var(--bg-secondary);
+  transition: border-color var(--dur-base) var(--ease-out);
+}
+
+.post-repo:hover {
+  border-color: var(--border-strong);
+  border-left-color: var(--accent);
+}
+
+.post-repo strong {
+  color: var(--text-primary);
+  font-size: 13.5px;
+  font-weight: 500;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
 }
 
 .post-project {
@@ -390,7 +433,7 @@ usePageMeta(() =>
 
 .post-project .mono {
   color: var(--text-muted);
-  font-size: 9px;
+  font-size: 10px;
   letter-spacing: 0.06em;
 }
 
@@ -410,7 +453,7 @@ usePageMeta(() =>
 
 .post-footer__end {
   color: var(--text-muted);
-  font-size: 8.5px;
+  font-size: 10px;
   letter-spacing: 0.1em;
   white-space: nowrap;
 }
@@ -449,7 +492,7 @@ usePageMeta(() =>
 
 .post-pagination__label {
   color: var(--text-muted);
-  font-size: 8px;
+  font-size: 10px;
   letter-spacing: 0.12em;
 }
 
@@ -467,14 +510,14 @@ usePageMeta(() =>
 .post-pagination__date {
   margin-top: auto;
   color: var(--text-muted);
-  font-size: 8.5px;
+  font-size: 10px;
 }
 
 .post-pagination__placeholder {
   align-items: center;
   justify-content: center;
   color: var(--text-muted);
-  font-size: 8.5px;
+  font-size: 10px;
   letter-spacing: 0.1em;
   border-style: dashed;
 }
@@ -494,7 +537,7 @@ usePageMeta(() =>
 
 .post-related__all {
   color: var(--text-muted);
-  font-size: 8.5px;
+  font-size: 10px;
   letter-spacing: 0.08em;
 }
 
@@ -517,7 +560,7 @@ usePageMeta(() =>
 
 .post-related__code {
   color: var(--text-muted);
-  font-size: 8.5px;
+  font-size: 10px;
 }
 
 .post-related__title {
@@ -532,7 +575,7 @@ usePageMeta(() =>
 
 .post-related__category {
   color: var(--text-muted);
-  font-size: 8.5px;
+  font-size: 10px;
 }
 
 .post-related__arrow {

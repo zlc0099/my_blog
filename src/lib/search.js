@@ -1,8 +1,15 @@
 import { posts, projects } from './content';
-import { skills } from '@/data/skills';
 import { prompts } from '@/data/prompts';
 import { stripMarkdown, truncateText } from './text';
 import { formatDate } from './format';
+
+
+const promptPostMap = new Map();
+posts.forEach((post) => {
+  post.prompts.forEach((code) => {
+    if (!promptPostMap.has(code)) promptPostMap.set(code, post);
+  });
+});
 
 const searchIndex = [
   ...posts.map((post) => ({
@@ -27,31 +34,25 @@ const searchIndex = [
     body: stripMarkdown(project.body),
     to: `/projects/${project.slug}`,
   })),
-  ...skills.map((skill) => ({
-    type: 'skill',
-    group: 'SKILLS / 技能',
-    code: skill.code,
-    title: `${skill.name} · ${skill.title}`,
-    summary: skill.summary,
-    meta: `${skill.category} · ${skill.status}`,
-    tags: skill.capabilities,
-    body: `${skill.summary} ${skill.capabilities.join(' ')}`,
-    to: '/lab/skills',
-  })),
-  ...prompts.map((prompt) => ({
-    type: 'prompt',
-    group: 'PROMPTS / 提示词',
-    code: prompt.code,
-    title: prompt.title,
-    summary: prompt.goal,
-    meta: prompt.target.toUpperCase(),
-    tags: [prompt.target],
-    body: `${prompt.goal} ${prompt.body}`,
-    to: `/lab/prompts#${prompt.code}`,
-  })),
+  ...prompts
+    .filter((prompt) => promptPostMap.has(prompt.code))
+    .map((prompt) => {
+      const post = promptPostMap.get(prompt.code);
+      return {
+        type: 'prompt',
+        group: 'PROMPTS / 提示词',
+        code: prompt.code,
+        title: prompt.title,
+        summary: prompt.goal,
+        meta: prompt.target.toUpperCase(),
+        tags: [prompt.target],
+        body: prompt.body,
+        to: `/posts/${post.slug}#${prompt.code}`,
+      };
+    }),
 ];
 
-const groupOrder = ['post', 'project', 'skill', 'prompt'];
+const groupOrder = ['post', 'project', 'prompt'];
 
 function scoreItem(item, query) {
   const title = item.title.toLowerCase();

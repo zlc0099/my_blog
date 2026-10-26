@@ -14,7 +14,7 @@ const category = computed(() => categoryMap[String(route.params.slug)]);
     v-if="category"
     eyebrow="ARCHIVE / CATEGORY"
     :title="category.en"
-    :zh="category.zh"
+    :zh="category.zh.toLowerCase() === category.en.toLowerCase() ? '' : category.zh"
     :description="`${category.desc}。浏览该分类下的全部记录。`"
     :serial="`CATEGORY / ${category.slug.toUpperCase()}`"
     :locked-category="category.slug"

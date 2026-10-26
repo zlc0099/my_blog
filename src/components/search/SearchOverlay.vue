@@ -117,7 +117,7 @@ onBeforeUnmount(() => {
           autocomplete="off"
           spellcheck="false"
           placeholder="搜索标题、标签、正文…"
-          aria-label="搜索文章、项目、技能和提示词"
+          aria-label="搜索文章和项目"
           @keydown.down.prevent="move(1)"
           @keydown.up.prevent="move(-1)"
           @keydown.enter.prevent="openActive"
@@ -130,7 +130,7 @@ onBeforeUnmount(() => {
       <div class="search-results">
         <div v-if="!query.trim()" class="search-placeholder">
           <div class="search-placeholder__code">QUERY / 000</div>
-          <p>输入关键词开始检索，范围包括文章、项目、技能与提示词。</p>
+          <p>输入关键词开始检索，范围包括文章、项目和提示词。</p>
           <div class="search-placeholder__quick">
             <span class="eyebrow">TRY / 试试</span>
             <button
@@ -259,7 +259,7 @@ onBeforeUnmount(() => {
 .search-panel__close {
   color: var(--text-muted);
   font-family: var(--font-mono);
-  font-size: 9.5px;
+  font-size: 10.5px;
   letter-spacing: 0.12em;
   transition: color var(--dur-fast) var(--ease-out);
 }
@@ -303,7 +303,7 @@ onBeforeUnmount(() => {
   flex: none;
   color: var(--accent-ink);
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: 10px;
   letter-spacing: 0.12em;
 }
 
@@ -377,7 +377,7 @@ onBeforeUnmount(() => {
 .search-result__code {
   color: var(--text-muted);
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: 10px;
   letter-spacing: 0.08em;
 }
 
@@ -408,7 +408,7 @@ onBeforeUnmount(() => {
 .search-result__meta {
   color: var(--text-muted);
   font-family: var(--font-mono);
-  font-size: 8.5px;
+  font-size: 10px;
   letter-spacing: 0.06em;
   white-space: nowrap;
 }
@@ -433,7 +433,7 @@ onBeforeUnmount(() => {
   border-top: 1px solid var(--border-subtle);
   color: var(--text-muted);
   font-family: var(--font-mono);
-  font-size: 8.5px;
+  font-size: 10px;
   letter-spacing: 0.1em;
 }
 
@@ -479,7 +479,7 @@ onBeforeUnmount(() => {
   }
 
   .search-result__code {
-    font-size: 8px;
+    font-size: 10px;
   }
 
   .search-footer__brand {

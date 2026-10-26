@@ -3,8 +3,9 @@ title: Vue 3 + Vite 静态博客：GitHub Pages 上线的工程清单
 slug: vue-vite-github-pages
 date: 2026-10-26
 updated: 2026-10-26
-category: frontend
+category: notes
 tags: [vue, vite, github-pages, frontend]
+prompts: [PRO-01, PRO-03]
 summary: 用 Vue 3 + Vite 搭一个无后端的技术档案站：Markdown 内容管线、base 路径、深链接兜底、主题持久化和构建体积控制。
 featured: false
 sample: true

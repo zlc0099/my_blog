@@ -52,7 +52,7 @@ defineProps({
   padding-top: 7px;
   color: var(--accent-ink);
   font-family: var(--font-mono);
-  font-size: 9.5px;
+  font-size: 10.5px;
   letter-spacing: 0.1em;
 }
 
@@ -90,7 +90,7 @@ defineProps({
 .section-heading__link {
   color: var(--text-secondary);
   font-family: var(--font-mono);
-  font-size: 9.5px;
+  font-size: 10.5px;
   letter-spacing: 0.1em;
   white-space: nowrap;
   transition: color var(--dur-fast) var(--ease-out);

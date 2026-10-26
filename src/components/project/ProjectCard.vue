@@ -111,7 +111,7 @@ defineProps({
   position: absolute;
   z-index: 1;
   color: var(--text-secondary);
-  font-size: 8.5px;
+  font-size: 10px;
   letter-spacing: 0.1em;
 }
 
@@ -180,7 +180,7 @@ defineProps({
   padding: 0;
   color: var(--text-muted);
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: 10px;
   letter-spacing: 0.04em;
 }
 
@@ -202,7 +202,7 @@ defineProps({
 .project-card__link {
   color: var(--text-primary);
   font-family: var(--font-mono);
-  font-size: 9.5px;
+  font-size: 10.5px;
   letter-spacing: 0.08em;
 }
 
@@ -227,7 +227,7 @@ defineProps({
 .project-card__external a {
   color: var(--text-muted);
   font-family: var(--font-mono);
-  font-size: 8.5px;
+  font-size: 10px;
   letter-spacing: 0.06em;
   transition: color var(--dur-fast) var(--ease-out);
 }

@@ -102,7 +102,7 @@ watch(
 
 .toc-sidebar__count {
   color: var(--text-muted);
-  font-size: 8.5px;
+  font-size: 10px;
 }
 
 .toc-sidebar__nav {
@@ -173,7 +173,7 @@ watch(
   padding-top: 10px;
   border-top: 1px solid var(--border-subtle);
   color: var(--text-muted);
-  font-size: 8px;
+  font-size: 10px;
   letter-spacing: 0.12em;
 }
 </style>

@@ -3,8 +3,9 @@ title: 把重复工作流封装成 Agent Skill
 slug: agent-skill-workflow
 date: 2026-10-18
 updated: 2026-10-19
-category: engineering
+category: notes
 tags: [agent, skill, workflow, prompt]
+prompts: [PRO-05]
 summary: 从「每次复制一段提示词」到「一个可触发、可执行、可验证的 Skill」：结构、触发条件、阶段划分和自检清单。
 featured: false
 sample: true

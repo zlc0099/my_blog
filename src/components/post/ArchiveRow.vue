@@ -21,7 +21,10 @@ defineProps({
     <div class="archive-row__main">
       <div class="archive-row__meta">
         <RouterLink :to="`/categories/${post.category}`" class="archive-row__category">
-          {{ post.categoryInfo.en }} / {{ post.categoryInfo.zh }}
+          {{ post.categoryInfo.en }}
+          <template v-if="post.categoryInfo.zh.toLowerCase() !== post.categoryInfo.en.toLowerCase()">
+            / {{ post.categoryInfo.zh }}
+          </template>
         </RouterLink>
         <span class="archive-row__sep">·</span>
         <span :title="'按正文字数估算'">{{ post.readingTime }} MIN READ</span>
@@ -99,7 +102,7 @@ defineProps({
 
 .archive-row__code {
   color: var(--text-muted);
-  font-size: 9px;
+  font-size: 10px;
   letter-spacing: 0.1em;
 }
 
@@ -114,7 +117,7 @@ defineProps({
   gap: 8px;
   color: var(--text-muted);
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: 10px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
@@ -185,7 +188,7 @@ defineProps({
 .archive-row__read {
   color: var(--text-muted);
   font-family: var(--font-mono);
-  font-size: 8px;
+  font-size: 10px;
   letter-spacing: 0.12em;
   writing-mode: vertical-rl;
 }

@@ -1,13 +1,11 @@
 <script setup>
 import { computed, ref } from 'vue';
-import { usageSummary, usageTypeLabels } from '@/lib/usage';
-import { getPostBySlug } from '@/lib/content';
+import { recordTotal, usageSummary, usageTypeLabels } from '@/lib/usage';
 import { agentMap } from '@/data/agents';
-import { formatDate, formatNumber, formatTokens } from '@/lib/format';
+import { formatDate, formatDuration, formatNumber, formatTokens } from '@/lib/format';
 import EmptyState from '@/components/ui/EmptyState.vue';
 
 const colors = ['var(--chart-1)', 'var(--chart-2)', 'var(--chart-3)'];
-const showAll = ref(false);
 
 const colorMap = computed(() =>
   Object.fromEntries(
@@ -15,9 +13,55 @@ const colorMap = computed(() =>
   ),
 );
 
-const visibleRecords = computed(() =>
-  showAll.value ? usageSummary.records : usageSummary.records.slice(0, 8),
+const records = computed(() =>
+  usageSummary.records.map((record) => ({
+    ...record,
+    total: recordTotal(record),
+  })),
 );
+
+const agentFilter = ref('all');
+const projectFilter = ref('all');
+const modelFilter = ref('all');
+
+const agentOptions = computed(() => [
+  ...new Map(
+    records.value.map((record) => [
+      record.agent,
+      agentMap[record.agent]?.name || record.agent,
+    ]),
+  ).entries(),
+].map(([id, name]) => ({ id, name })));
+
+const projectOptions = computed(() => [
+  ...new Set(records.value.map((record) => record.project).filter(Boolean)),
+].sort());
+
+const modelOptions = computed(() => [
+  ...new Set(records.value.map((record) => record.model).filter(Boolean)),
+].sort());
+
+const filteredRecords = computed(() =>
+  records.value.filter((record) => {
+    if (agentFilter.value !== 'all' && record.agent !== agentFilter.value) return false;
+    if (projectFilter.value !== 'all' && record.project !== projectFilter.value) return false;
+    if (modelFilter.value !== 'all' && record.model !== modelFilter.value) return false;
+    return true;
+  }),
+);
+
+const hasFilters = computed(
+  () =>
+    agentFilter.value !== 'all' ||
+    projectFilter.value !== 'all' ||
+    modelFilter.value !== 'all',
+);
+
+function clearFilters() {
+  agentFilter.value = 'all';
+  projectFilter.value = 'all';
+  modelFilter.value = 'all';
+}
 </script>
 
 <template>
@@ -25,72 +69,119 @@ const visibleRecords = computed(() =>
     <div class="session-log__head">
       <div>
         <span class="eyebrow">SESSION LOG / 作业明细</span>
-        <h3>任务与消耗记录</h3>
+        <h3>Claude Code 会话记录</h3>
       </div>
-      <span class="mono session-log__count">{{ String(usageSummary.sessions).padStart(2, '0') }} ROWS</span>
+      <span class="mono session-log__count">
+        {{ filteredRecords.length }} / {{ usageSummary.sessions }} ROWS
+      </span>
     </div>
+
+    <p class="session-log__hint mono">
+      SESSION RECORDS / 本地 Claude Code 日志聚合 · 原始对话不发布
+    </p>
 
     <EmptyState
       v-if="!usageSummary.sessions"
       code="LOG / EMPTY"
       title="还没有作业记录"
-      description="添加记录后，这里会按时间展示任务、Agent 与 Token 消耗。"
+      description="运行 Claude Code 导入器后，这里会显示真实会话记录。"
     />
 
     <template v-else>
-      <div class="session-log__table-wrap">
+      <div class="session-log__filters">
+        <label class="session-log__filter">
+          <span>AGENT</span>
+          <select v-model="agentFilter">
+            <option value="all">ALL</option>
+            <option v-for="option in agentOptions" :key="option.id" :value="option.id">
+              {{ option.name }}
+            </option>
+          </select>
+        </label>
+
+        <label class="session-log__filter">
+          <span>PROJECT</span>
+          <select v-model="projectFilter">
+            <option value="all">ALL</option>
+            <option v-for="option in projectOptions" :key="option" :value="option">
+              {{ option }}
+            </option>
+          </select>
+        </label>
+
+        <label class="session-log__filter">
+          <span>MODEL</span>
+          <select v-model="modelFilter">
+            <option value="all">ALL</option>
+            <option v-for="option in modelOptions" :key="option" :value="option">
+              {{ option }}
+            </option>
+          </select>
+        </label>
+
+        <button
+          v-if="hasFilters"
+          type="button"
+          class="session-log__reset mono"
+          @click="clearFilters"
+        >
+          RESET ×
+        </button>
+      </div>
+
+      <p v-if="!filteredRecords.length" class="session-log__no-match mono">
+        NO MATCHING RECORDS / 没有符合筛选条件的会话
+      </p>
+
+      <div v-else class="session-log__table-wrap">
         <table>
           <thead>
             <tr>
               <th>DATE</th>
+              <th>DURATION</th>
               <th>AGENT</th>
-              <th>TASK</th>
+              <th>PROJECT</th>
+              <th>TASK / SESSION</th>
               <th>TYPE</th>
               <th>TOKENS</th>
-              <th>NOTE</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="record in visibleRecords" :key="`${record.date}-${record.task}`">
+            <tr
+              v-for="record in filteredRecords"
+              :key="`${record.date}-${record.session || record.task}`"
+            >
               <td class="mono session-log__date">{{ formatDate(record.date) }}</td>
+              <td class="mono session-log__duration">{{ formatDuration(record.durationMinutes) }}</td>
               <td>
                 <span class="session-log__agent">
                   <i :style="{ background: colorMap[record.agent] || colors[2] }"></i>
                   {{ agentMap[record.agent]?.name || record.agent }}
                 </span>
               </td>
-              <td class="session-log__task">{{ record.task }}</td>
+              <td class="mono session-log__project">{{ record.project || '—' }}</td>
+              <td class="session-log__task">
+                <span>{{ record.task }}</span>
+                <small class="mono">
+                  #{{ record.session || '—' }} · {{ record.model || 'unknown' }}
+                </small>
+              </td>
               <td>
                 <span class="tag">{{ usageTypeLabels[record.type] || record.type }}</span>
               </td>
-              <td class="mono session-log__tokens">
-                <strong>{{ formatTokens((record.tokensIn || 0) + (record.tokensOut || 0)) }}</strong>
-                <span>{{ formatNumber((record.tokensIn || 0) + (record.tokensOut || 0)) }}</span>
-              </td>
-              <td>
-                <RouterLink
-                  v-if="record.post && getPostBySlug(record.post)"
-                  :to="`/posts/${record.post}`"
-                  class="session-log__note"
-                >
-                  RELATED →
-                </RouterLink>
-                <span v-else class="session-log__none mono">—</span>
+              <td
+                class="mono session-log__tokens"
+                :title="`INPUT ${formatNumber(record.tokensIn)} / OUTPUT ${formatNumber(record.tokensOut)} / CACHE READ ${formatNumber(record.cacheRead)} / CACHE WRITE ${formatNumber(record.cacheWrite)}`"
+              >
+                <strong>{{ formatTokens(record.total) }}</strong>
+                <span>{{ formatNumber(record.total) }}</span>
               </td>
             </tr>
           </tbody>
         </table>
       </div>
-
-      <button
-        v-if="usageSummary.records.length > 8"
-        type="button"
-        class="btn btn--compact session-log__more"
-        @click="showAll = !showAll"
-      >
-        {{ showAll ? 'COLLAPSE LOG' : `SHOW ALL ${usageSummary.records.length} RECORDS` }}
-      </button>
     </template>
+
   </div>
 </template>
 
@@ -117,52 +208,128 @@ const visibleRecords = computed(() =>
 
 .session-log__count {
   color: var(--text-muted);
-  font-size: 8.5px;
+  font-size: 10px;
   letter-spacing: 0.1em;
+}
+
+.session-log__hint {
+  padding: 11px 22px;
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-muted);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  line-height: 1.7;
+}
+
+.session-log__filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 10px 14px;
+  padding: 14px 22px;
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--bg-primary);
+}
+
+.session-log__filter {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.session-log__filter span {
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+}
+
+.session-log__filter select {
+  height: 30px;
+  min-width: 112px;
+  padding: 0 8px;
+  border: 1px solid var(--border-primary);
+  outline: none;
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  cursor: pointer;
+}
+
+.session-log__filter select:focus {
+  border-color: var(--accent);
+}
+
+.session-log__reset {
+  height: 30px;
+  padding: 0 8px;
+  border: 1px solid var(--border-primary);
+  color: var(--text-secondary);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+}
+
+.session-log__reset:hover {
+  border-color: var(--accent);
+  color: var(--accent-ink);
+}
+
+.session-log__no-match {
+  padding: 24px 22px;
+  color: var(--text-muted);
+  font-size: 10.5px;
+  letter-spacing: 0.05em;
 }
 
 .session-log__table-wrap {
   overflow-x: auto;
 }
 
-.session-log__table-wrap table {
+table {
   width: 100%;
-  min-width: 760px;
+  min-width: 860px;
   border-collapse: collapse;
   background: var(--bg-primary);
 }
 
-.session-log__table-wrap th,
-.session-log__table-wrap td {
+th,
+td {
   padding: 11px 14px;
   border-bottom: 1px solid var(--border-subtle);
   text-align: left;
   vertical-align: middle;
 }
 
-.session-log__table-wrap th {
+th {
   color: var(--text-muted);
   font-family: var(--font-mono);
-  font-size: 8px;
+  font-size: 10px;
   font-weight: 400;
   letter-spacing: 0.1em;
 }
 
-.session-log__table-wrap tbody tr {
+tbody tr {
   transition: background-color var(--dur-fast) var(--ease-out);
 }
 
-.session-log__table-wrap tbody tr:hover {
+tbody tr:hover {
   background: var(--bg-secondary);
 }
 
-.session-log__table-wrap tbody tr:last-child td {
+tbody tr:last-child td {
   border-bottom: 0;
 }
 
 .session-log__date {
   color: var(--text-muted);
-  font-size: 9px;
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.session-log__duration {
+  color: var(--text-muted);
+  font-size: 10px;
   white-space: nowrap;
 }
 
@@ -181,10 +348,24 @@ const visibleRecords = computed(() =>
   flex: none;
 }
 
+.session-log__project {
+  color: var(--text-muted);
+  font-size: 10px;
+  white-space: nowrap;
+}
+
 .session-log__task {
   color: var(--text-secondary);
   font-size: 12.5px;
   line-height: 1.5;
+}
+
+.session-log__task small {
+  display: block;
+  margin-top: 3px;
+  color: var(--text-muted);
+  font-size: 10px;
+  letter-spacing: 0.03em;
 }
 
 .session-log__tokens {
@@ -198,30 +379,10 @@ const visibleRecords = computed(() =>
 }
 
 .session-log__tokens span {
-  margin-left: 7px;
-  color: var(--text-muted);
-  font-size: 8.5px;
-}
-
-.session-log__note {
-  color: var(--text-secondary);
-  font-family: var(--font-mono);
-  font-size: 8.5px;
-  letter-spacing: 0.04em;
-  white-space: nowrap;
-}
-
-.session-log__note:hover {
-  color: var(--accent-ink);
-}
-
-.session-log__none {
+  display: block;
+  margin-top: 2px;
   color: var(--text-muted);
   font-size: 10px;
-}
-
-.session-log__more {
-  margin: 16px 22px 22px;
 }
 
 @media (max-width: 560px) {
@@ -232,8 +393,8 @@ const visibleRecords = computed(() =>
     padding: 18px;
   }
 
-  .session-log__more {
-    margin: 14px 18px 18px;
+  .session-log__hint {
+    padding: 10px 18px;
   }
 }
 </style>

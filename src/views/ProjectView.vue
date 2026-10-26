@@ -192,7 +192,7 @@ usePageMeta(() =>
   position: relative;
   display: inline-block;
   color: var(--text-muted);
-  font-size: 9px;
+  font-size: 10px;
   letter-spacing: 0.1em;
   transition: color var(--dur-fast) var(--ease-out);
 }
@@ -216,7 +216,7 @@ usePageMeta(() =>
   align-items: center;
   gap: 8px;
   color: var(--text-muted);
-  font-size: 9px;
+  font-size: 10px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -256,7 +256,7 @@ usePageMeta(() =>
   border: 1px solid var(--border-primary);
   color: var(--text-secondary);
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: 10px;
   letter-spacing: 0.04em;
 }
 
@@ -270,7 +270,7 @@ usePageMeta(() =>
 
 .project-actions__none {
   color: var(--text-muted);
-  font-size: 8.5px;
+  font-size: 10px;
   letter-spacing: 0.08em;
 }
 
@@ -281,7 +281,7 @@ usePageMeta(() =>
   gap: 10px;
   padding-bottom: 6px;
   color: var(--text-muted);
-  font-size: 8px;
+  font-size: 10px;
   letter-spacing: 0.14em;
 }
 
@@ -326,7 +326,7 @@ usePageMeta(() =>
   right: 16px;
   bottom: 14px;
   color: var(--text-muted);
-  font-size: 8.5px;
+  font-size: 10px;
   letter-spacing: 0.1em;
 }
 
@@ -344,7 +344,7 @@ usePageMeta(() =>
 
 .project-related__count {
   color: var(--text-muted);
-  font-size: 8.5px;
+  font-size: 10px;
   letter-spacing: 0.1em;
 }
 
@@ -363,7 +363,7 @@ usePageMeta(() =>
 
 .project-related__code {
   color: var(--text-muted);
-  font-size: 8.5px;
+  font-size: 10px;
 }
 
 .project-related__title {
@@ -378,7 +378,7 @@ usePageMeta(() =>
 
 .project-related__category {
   color: var(--text-muted);
-  font-size: 8.5px;
+  font-size: 10px;
 }
 
 .project-related__arrow {
@@ -404,7 +404,7 @@ usePageMeta(() =>
 
 .project-footer__date {
   color: var(--text-muted);
-  font-size: 8.5px;
+  font-size: 10px;
   letter-spacing: 0.08em;
 }
 
@@ -441,7 +441,7 @@ usePageMeta(() =>
 .project-facts dt {
   color: var(--text-muted);
   font-family: var(--font-mono);
-  font-size: 8px;
+  font-size: 10px;
   letter-spacing: 0.1em;
 }
 
@@ -471,7 +471,7 @@ usePageMeta(() =>
   border: 1px solid var(--border-primary);
   color: var(--text-secondary);
   font-family: var(--font-mono);
-  font-size: 8.5px;
+  font-size: 10px;
 }
 
 .project-facts__links {
@@ -486,7 +486,7 @@ usePageMeta(() =>
 .project-facts__links a {
   color: var(--text-secondary);
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: 10px;
   letter-spacing: 0.06em;
   transition: color var(--dur-fast) var(--ease-out);
 }

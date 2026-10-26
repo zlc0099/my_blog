@@ -3,8 +3,9 @@ title: MySQL 慢查询：从执行计划到索引调整
 slug: mysql-slow-query-index
 date: 2026-10-12
 updated: 2026-10-14
-category: database
+category: notes
 tags: [mysql, index, performance, explain]
+prompts: [PRO-04]
 summary: 一个列表接口从 1.8 秒降到 80 毫秒的过程：先读执行计划，再判断索引顺序，最后用覆盖索引减少回表。
 featured: false
 sample: true

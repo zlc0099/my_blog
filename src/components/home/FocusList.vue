@@ -94,14 +94,14 @@ import { formatDate, padIndex } from '@/lib/format';
   margin-top: auto;
   padding-top: 24px;
   color: var(--text-muted);
-  font-size: 8.5px;
+  font-size: 10px;
   letter-spacing: 0.08em;
 }
 
 .focus-item__link {
   color: var(--text-secondary);
   font-family: var(--font-mono);
-  font-size: 8.5px;
+  font-size: 10px;
   letter-spacing: 0.06em;
   white-space: nowrap;
   transition: color var(--dur-fast) var(--ease-out);
@@ -114,7 +114,7 @@ import { formatDate, padIndex } from '@/lib/format';
 .focus-list__note {
   margin-top: 14px;
   color: var(--text-muted);
-  font-size: 8px;
+  font-size: 10px;
   letter-spacing: 0.08em;
 }
 

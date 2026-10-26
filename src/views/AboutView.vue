@@ -2,7 +2,6 @@
 import { computed } from 'vue';
 import SectionHeading from '@/components/ui/SectionHeading.vue';
 import FocusList from '@/components/home/FocusList.vue';
-import TimelineList from '@/components/timeline/TimelineList.vue';
 import { site } from '@/data/site';
 import { agents } from '@/data/agents';
 import { focusItems } from '@/data/focus';
@@ -154,20 +153,7 @@ const barcode = [2, 5, 3, 8, 2, 6, 4, 9, 3, 5, 2, 7, 4, 6, 3, 8, 2, 5, 7, 3, 6, 
 
     <section class="section section--bordered">
       <div class="container">
-        <SectionHeading
-          index="05"
-          title="TIMELINE"
-          zh="学习时间线"
-          action-to="/timeline"
-          action-label="FULL TIMELINE"
-        />
-        <TimelineList :limit="6" compact />
-      </div>
-    </section>
-
-    <section class="section section--bordered">
-      <div class="container">
-        <SectionHeading index="06" title="CONTACT" zh="联系方式" />
+        <SectionHeading index="05" title="CONTACT" zh="联系方式" />
         <div class="about-contact">
           <div>
             <span class="eyebrow">OPEN CHANNEL / 公开入口</span>
@@ -280,7 +266,7 @@ const barcode = [2, 5, 3, 8, 2, 6, 4, 9, 3, 5, 2, 7, 4, 6, 3, 8, 2, 5, 7, 3, 6, 
   padding-bottom: 14px;
   border-bottom: 1px solid var(--border-subtle);
   color: var(--text-muted);
-  font-size: 8px;
+  font-size: 10px;
   letter-spacing: 0.1em;
 }
 
@@ -314,7 +300,7 @@ const barcode = [2, 5, 3, 8, 2, 6, 4, 9, 3, 5, 2, 7, 4, 6, 3, 8, 2, 5, 7, 3, 6, 
 .profile-card__data dt {
   color: var(--text-muted);
   font-family: var(--font-mono);
-  font-size: 8px;
+  font-size: 10px;
   letter-spacing: 0.1em;
 }
 
@@ -374,7 +360,7 @@ const barcode = [2, 5, 3, 8, 2, 6, 4, 9, 3, 5, 2, 7, 4, 6, 3, 8, 2, 5, 7, 3, 6, 
 
 .about-tool__code {
   color: var(--accent-ink);
-  font-size: 9px;
+  font-size: 10px;
   letter-spacing: 0.08em;
 }
 
@@ -394,14 +380,14 @@ const barcode = [2, 5, 3, 8, 2, 6, 4, 9, 3, 5, 2, 7, 4, 6, 3, 8, 2, 5, 7, 3, 6, 
   padding: 3px 6px;
   border: 1px solid var(--border-primary);
   color: var(--text-muted);
-  font-size: 8px;
+  font-size: 10px;
   letter-spacing: 0.08em;
 }
 
 .about-note {
   margin-top: 16px;
   color: var(--text-muted);
-  font-size: 8px;
+  font-size: 10px;
   letter-spacing: 0.08em;
 }
 
@@ -437,7 +423,7 @@ const barcode = [2, 5, 3, 8, 2, 6, 4, 9, 3, 5, 2, 7, 4, 6, 3, 8, 2, 5, 7, 3, 6, 
 
 .principle__index {
   color: var(--accent-ink);
-  font-size: 9px;
+  font-size: 10px;
   letter-spacing: 0.08em;
 }
 
@@ -475,7 +461,7 @@ const barcode = [2, 5, 3, 8, 2, 6, 4, 9, 3, 5, 2, 7, 4, 6, 3, 8, 2, 5, 7, 3, 6, 
 
 .about-project__meta {
   color: var(--text-muted);
-  font-size: 8.5px;
+  font-size: 10px;
   letter-spacing: 0.08em;
 }
 
@@ -507,7 +493,7 @@ const barcode = [2, 5, 3, 8, 2, 6, 4, 9, 3, 5, 2, 7, 4, 6, 3, 8, 2, 5, 7, 3, 6, 
 
 .about-project__stack {
   color: var(--text-muted);
-  font-size: 8.5px;
+  font-size: 10px;
   letter-spacing: 0.04em;
   text-align: right;
 }
@@ -554,7 +540,7 @@ const barcode = [2, 5, 3, 8, 2, 6, 4, 9, 3, 5, 2, 7, 4, 6, 3, 8, 2, 5, 7, 3, 6, 
   gap: 12px 28px;
   margin-top: 20px;
   color: var(--text-muted);
-  font-size: 8px;
+  font-size: 10px;
   letter-spacing: 0.06em;
 }
 

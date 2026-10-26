@@ -83,7 +83,7 @@ const heroMeta = computed(() => [
 
 .projects-summary p {
   color: var(--text-muted);
-  font-size: 8.5px;
+  font-size: 10px;
   letter-spacing: 0.1em;
 }
 

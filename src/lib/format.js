@@ -43,6 +43,16 @@ export function formatPercent(part, total) {
   return String(Math.round((part / total) * 100));
 }
 
+export function formatDuration(minutes) {
+  if (minutes === null || minutes === undefined || Number.isNaN(minutes)) return '—';
+  if (minutes < 1) return '<1m';
+  const rounded = Math.round(minutes);
+  if (rounded < 60) return `${rounded}m`;
+  const hours = Math.floor(rounded / 60);
+  const rest = rounded % 60;
+  return `${hours}h ${String(rest).padStart(2, '0')}m`;
+}
+
 export function readingTime(source) {
   const text = String(source || '')
     .replace(/```[\s\S]*?```/g, ' ')

@@ -3,7 +3,7 @@ title: Claude Code / Trae / Qoder：三种 Agent 工作方式的实际分工
 slug: agent-tools-claude-trae-qoder
 date: 2026-10-24
 updated: 2026-10-25
-category: ai-tools
+category: ai-division
 tags: [agent, claude-code, qoder, trae, workflow]
 summary: 不是做功能横评，而是记录三个 Agent 在真实开发流程里的分工：谁适合长上下文重构，谁适合全栈联动，谁适合快速试界面。
 featured: true

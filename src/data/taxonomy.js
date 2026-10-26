@@ -1,51 +1,43 @@
 export const categories = [
   {
-    slug: 'backend',
-    en: 'BACKEND',
-    zh: '后端开发',
-    desc: 'Java · Spring Boot · 接口与架构',
+    slug: 'notes',
+    en: 'LEARNING LOG',
+    zh: '学习记录',
+    desc: '平时学到的、踩过的坑和复盘。',
   },
   {
-    slug: 'frontend',
-    en: 'FRONTEND',
-    zh: '前端开发',
-    desc: 'Vue 3 · 交互 · 设计系统',
+    slug: 'skill',
+    en: 'SKILL',
+    zh: 'Skill',
+    desc: '本地技能与 Agent 工作流。',
   },
   {
-    slug: 'database',
-    en: 'DATABASE',
-    zh: '数据库',
-    desc: 'MySQL · Redis · 查询优化',
+    slug: 'frontend-prompts',
+    en: 'FRONTEND PROMPTS',
+    zh: '前端提示词',
+    desc: '页面、交互和设计系统相关提示词。',
   },
   {
-    slug: 'engineering',
-    en: 'ENGINEERING',
-    zh: '工程实践',
-    desc: '调试 · 复盘 · 工程质量',
+    slug: 'backend-prompts',
+    en: 'BACKEND PROMPTS',
+    zh: '后端提示词',
+    desc: '接口、业务和数据相关提示词。',
   },
   {
-    slug: 'ai-tools',
-    en: 'AI & TOOLS',
-    zh: 'AI 与工具',
-    desc: 'Claude Code · Trae · Qoder',
+    slug: 'ai-division',
+    en: 'AI DIVISION',
+    zh: 'AI 分工',
+    desc: 'Claude Code / Qoder / Trae 的使用分工。',
   },
 ];
 
 export const categoryMap = Object.fromEntries(categories.map((item) => [item.slug, item]));
 
 export const agentTypes = {
+  session: '会话',
   feature: '功能实现',
   refactor: '重构',
   debug: '排查',
   review: '复核',
   doc: '整理',
 };
-
-export const promptTargets = [
-  { id: 'all', label: 'ALL' },
-  { id: 'fullstack', label: 'FULLSTACK' },
-  { id: 'backend', label: 'BACKEND' },
-  { id: 'frontend', label: 'FRONTEND' },
-  { id: 'debug', label: 'DEBUG' },
-  { id: 'agent', label: 'AGENT' },
-];

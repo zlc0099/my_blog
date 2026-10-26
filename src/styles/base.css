@@ -12,12 +12,14 @@ html {
   scroll-behavior: smooth;
   scroll-padding-top: calc(var(--header-height) + 28px);
   -webkit-text-size-adjust: 100%;
+  background: var(--bg-base);
+  transition: background-color var(--dur-base) var(--ease-out);
 }
 
 body {
   min-height: 100vh;
   overflow-x: clip;
-  background: var(--bg-primary);
+  background: transparent;
   color: var(--text-primary);
   font-family: var(--font-body);
   font-size: 16px;
@@ -108,6 +110,21 @@ button {
   min-height: 60vh;
 }
 
+.site-main,
+.site-footer {
+  transition: opacity 0.55s var(--ease-out);
+}
+
+html.is-booting {
+  overflow: hidden;
+}
+
+html.is-booting .site-header,
+html.is-booting .site-main,
+html.is-booting .site-footer {
+  opacity: 0;
+}
+
 .mono {
   font-family: var(--font-mono);
 }
@@ -117,7 +134,7 @@ button {
   align-items: center;
   gap: 10px;
   font-family: var(--font-mono);
-  font-size: 10.5px;
+  font-size: 11px;
   font-weight: 500;
   letter-spacing: 0.16em;
   line-height: 1.4;
@@ -215,7 +232,7 @@ button {
 .btn--compact {
   height: 36px;
   padding: 0 13px;
-  font-size: 10.5px;
+  font-size: 11px;
 }
 
 .btn:disabled,
@@ -242,7 +259,7 @@ button {
   border: 1px solid var(--border-primary);
   color: var(--text-secondary);
   font-family: var(--font-mono);
-  font-size: 10.5px;
+  font-size: 11px;
   letter-spacing: 0.05em;
   line-height: 1;
   white-space: nowrap;
@@ -266,7 +283,7 @@ a.tag:hover {
   background: var(--accent-muted);
   color: var(--accent-ink);
   font-family: var(--font-mono);
-  font-size: 9.5px;
+  font-size: 10.5px;
   letter-spacing: 0.12em;
   line-height: 1;
   text-transform: uppercase;

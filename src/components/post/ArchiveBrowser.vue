@@ -12,23 +12,23 @@ import { usePageMeta } from '@/composables/usePageMeta';
 const props = defineProps({
   eyebrow: {
     type: String,
-    default: 'ARCHIVE / KNOWLEDGE',
+    default: 'ARCHIVE / CONTENT',
   },
   title: {
     type: String,
-    default: 'KNOWLEDGE ARCHIVE',
+    default: 'CONTENT ARCHIVE',
   },
   zh: {
     type: String,
-    default: '学习档案',
+    default: '内容档案',
   },
   description: {
     type: String,
-    default: '所有学习笔记、问题复盘与工具记录。按分类、标签或关键词检索。',
+    default: '学习记录、Skill、前端/后端提示词和 AI 分工。按模块、标签或关键词检索。',
   },
   serial: {
     type: String,
-    default: 'ARCHIVE / INDEX',
+    default: 'ARCHIVE / CONTENT',
   },
   lockedCategory: {
     type: String,
@@ -142,6 +142,10 @@ function updateQuery(patch) {
 }
 
 function setCategory(slug) {
+  if (slug === 'skill') {
+    router.push('/categories/skill');
+    return;
+  }
   updateQuery({ category: slug || undefined });
 }
 
@@ -371,7 +375,7 @@ onBeforeUnmount(() => {
   align-items: center;
   gap: 16px;
   color: var(--text-muted);
-  font-size: 8.5px;
+  font-size: 10px;
   letter-spacing: 0.08em;
   white-space: nowrap;
 }
@@ -379,7 +383,7 @@ onBeforeUnmount(() => {
 .archive-clear {
   color: var(--text-secondary);
   font-family: var(--font-mono);
-  font-size: 8.5px;
+  font-size: 10px;
   letter-spacing: 0.08em;
   transition: color var(--dur-fast) var(--ease-out);
 }
@@ -398,7 +402,7 @@ onBeforeUnmount(() => {
 
 .filter-group__label {
   padding-top: 7px;
-  font-size: 8.5px;
+  font-size: 10px;
 }
 
 .filter-options {
@@ -416,7 +420,7 @@ onBeforeUnmount(() => {
   border: 1px solid var(--border-subtle);
   color: var(--text-secondary);
   font-family: var(--font-mono);
-  font-size: 9.5px;
+  font-size: 10.5px;
   letter-spacing: 0.04em;
   transition: color var(--dur-fast) var(--ease-out),
     border-color var(--dur-fast) var(--ease-out),
@@ -425,7 +429,7 @@ onBeforeUnmount(() => {
 
 .filter-chip span {
   color: var(--text-muted);
-  font-size: 8px;
+  font-size: 10px;
 }
 
 .filter-chip:hover {
@@ -446,7 +450,7 @@ onBeforeUnmount(() => {
 .filter-chip--tag {
   height: 26px;
   padding: 0 8px;
-  font-size: 9px;
+  font-size: 10px;
   border-color: transparent;
 }
 
@@ -471,13 +475,13 @@ onBeforeUnmount(() => {
 
 .archive-load__count {
   color: var(--text-muted);
-  font-size: 9px;
+  font-size: 10px;
 }
 
 .archive-end {
   margin-top: 28px;
   color: var(--text-muted);
-  font-size: 8.5px;
+  font-size: 10px;
   letter-spacing: 0.1em;
   text-align: center;
 }
@@ -511,11 +515,11 @@ onBeforeUnmount(() => {
   .filter-chip {
     height: 28px;
     padding: 0 8px;
-    font-size: 9px;
+    font-size: 10px;
   }
 
   .archive-summary {
-    font-size: 8px;
+    font-size: 10px;
   }
 }
 </style>

@@ -8,30 +8,37 @@ import {
 } from '@/lib/format';
 import EmptyState from '@/components/ui/EmptyState.vue';
 
-const colors = ['var(--chart-1)', 'var(--chart-2)', 'var(--chart-3)'];
+const chartTypes = computed(() => usageSummary.tokenTypes);
 
-const chartAgents = computed(() =>
-  usageSummary.byAgent.map((agent, index) => ({
-    ...agent,
-    color: colors[index] || colors[2],
-  })),
+const inactiveNames = computed(() =>
+  usageSummary.inactiveAgents.map((agent) => agent.name).join(' · '),
 );
 
 const stats = computed(() => [
   {
-    label: 'TOTAL TOKENS',
+    label: 'TOTAL PROCESSED',
     value: formatTokens(usageSummary.total),
     sub: `${formatNumber(usageSummary.total)} recorded`,
   },
   {
-    label: 'INPUT',
+    label: 'NEW INPUT',
     value: formatTokens(usageSummary.tokensIn),
-    sub: 'prompt side',
+    sub: 'uncached prompt',
   },
   {
     label: 'OUTPUT',
     value: formatTokens(usageSummary.tokensOut),
     sub: 'completion side',
+  },
+  {
+    label: 'CACHE READ',
+    value: formatTokens(usageSummary.cacheRead),
+    sub: `${usageSummary.cacheShare.toFixed(1)}% of total`,
+  },
+  {
+    label: 'CACHE WRITE',
+    value: formatTokens(usageSummary.cacheWrite),
+    sub: 'cache creation',
   },
   {
     label: 'SESSIONS',
@@ -69,11 +76,17 @@ function barHeight(month) {
         <div>
           <span class="eyebrow">MONTHLY CONSUMPTION</span>
           <h3>月度资源消耗</h3>
+          <p class="ledger__hint mono">
+            TOTAL INCLUDES INPUT / OUTPUT / CACHE · CACHE READ {{ usageSummary.cacheShare.toFixed(1) }}%
+          </p>
         </div>
-        <div class="ledger__legend">
-          <span v-for="agent in chartAgents" :key="agent.id">
-            <i :style="{ background: agent.color }"></i>{{ agent.name }}
-          </span>
+        <div class="ledger__chart-tools">
+          <span class="badge">{{ usageSummary.sourceLabel }}</span>
+          <div class="ledger__legend">
+            <span v-for="type in chartTypes" :key="type.key">
+              <i :style="{ background: type.color }"></i>{{ type.label }}
+            </span>
+          </div>
         </div>
       </div>
 
@@ -94,9 +107,9 @@ function barHeight(month) {
               >
                 <div class="ledger__stack" :style="{ height: barHeight(month) }">
                   <span
-                    v-for="agent in chartAgents"
-                    :key="agent.id"
-                    :style="{ flexGrow: month.byAgent[agent.id] || 0, background: agent.color }"
+                    v-for="type in chartTypes"
+                    :key="type.key"
+                    :style="{ flexGrow: month.byType[type.key] || 0, background: type.color }"
                   ></span>
                 </div>
               </div>
@@ -117,15 +130,15 @@ function barHeight(month) {
             <thead>
               <tr>
                 <th>MONTH</th>
-                <th v-for="agent in chartAgents" :key="agent.id">{{ agent.name }}</th>
+                <th v-for="type in chartTypes" :key="type.key">{{ type.label }}</th>
                 <th>TOTAL</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="month in usageSummary.chartMonths" :key="month.month">
                 <td class="mono">{{ formatMonth(month.month) }}</td>
-                <td v-for="agent in chartAgents" :key="agent.id" class="mono">
-                  {{ formatTokens(month.byAgent[agent.id] || 0) }}
+                <td v-for="type in chartTypes" :key="type.key" class="mono">
+                  {{ formatTokens(month.byType[type.key] || 0) }}
                 </td>
                 <td class="mono">{{ formatTokens(month.total) }}</td>
               </tr>
@@ -134,8 +147,11 @@ function barHeight(month) {
         </div>
       </details>
 
-      <p v-if="usageSummary.isDemo" class="ledger__note mono">
-        DEMO DATA / {{ usageSummary.note }}
+      <p v-if="usageSummary.note" class="ledger__note mono">
+        {{ usageSummary.sourceLabel }} / {{ usageSummary.note }}
+      </p>
+      <p v-if="inactiveNames" class="ledger__hint mono">
+        NO LOGS YET / {{ inactiveNames }} · 手动记录后显示
       </p>
     </div>
   </div>
@@ -148,7 +164,7 @@ function barHeight(month) {
 
 .ledger__stats {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 1px;
   background: var(--border-subtle);
 }
@@ -166,7 +182,7 @@ function barHeight(month) {
 .ledger__stat-label {
   color: var(--text-muted);
   font-family: var(--font-mono);
-  font-size: 8px;
+  font-size: 10px;
   letter-spacing: 0.12em;
 }
 
@@ -181,7 +197,7 @@ function barHeight(month) {
 .ledger__stat small {
   color: var(--text-muted);
   font-family: var(--font-mono);
-  font-size: 8px;
+  font-size: 10px;
   letter-spacing: 0.04em;
 }
 
@@ -203,6 +219,21 @@ function barHeight(month) {
   font-weight: 600;
 }
 
+.ledger__hint {
+  margin-top: 6px;
+  color: var(--text-muted);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  line-height: 1.6;
+}
+
+.ledger__chart-tools {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+}
+
 .ledger__legend {
   display: flex;
   flex-wrap: wrap;
@@ -215,7 +246,7 @@ function barHeight(month) {
   gap: 6px;
   color: var(--text-muted);
   font-family: var(--font-mono);
-  font-size: 8.5px;
+  font-size: 10px;
 }
 
 .ledger__legend i {
@@ -236,7 +267,7 @@ function barHeight(month) {
   flex-direction: column;
   justify-content: space-between;
   color: var(--text-muted);
-  font-size: 8px;
+  font-size: 10px;
   text-align: right;
 }
 
@@ -270,7 +301,7 @@ function barHeight(month) {
 
 .ledger__value {
   color: var(--text-secondary);
-  font-size: 8.5px;
+  font-size: 10px;
 }
 
 .ledger__bar {
@@ -279,7 +310,7 @@ function barHeight(month) {
   max-width: 42px;
   height: 168px;
   align-items: flex-end;
-  background: var(--bg-elevated);
+  background: transparent;
 }
 
 .ledger__stack {
@@ -298,7 +329,7 @@ function barHeight(month) {
   gap: clamp(12px, 4vw, 48px);
   margin-top: 10px;
   color: var(--text-muted);
-  font-size: 8.5px;
+  font-size: 10px;
 }
 
 .ledger__months span {
@@ -317,7 +348,7 @@ function barHeight(month) {
   justify-content: space-between;
   padding: 13px 0;
   color: var(--text-secondary);
-  font-size: 8.5px;
+  font-size: 10px;
   letter-spacing: 0.08em;
   cursor: pointer;
   list-style: none;
@@ -350,7 +381,7 @@ function barHeight(month) {
   background: var(--bg-secondary);
   color: var(--text-muted);
   font-family: var(--font-mono);
-  font-size: 8.5px;
+  font-size: 10px;
   font-weight: 400;
   letter-spacing: 0.06em;
 }
@@ -366,20 +397,30 @@ function barHeight(month) {
 .ledger__note {
   margin-top: 18px;
   color: var(--text-muted);
-  font-size: 8px;
+  font-size: 10px;
   line-height: 1.7;
   letter-spacing: 0.04em;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1100px) {
   .ledger__stats {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .ledger__chart-head {
     align-items: flex-start;
     flex-direction: column;
     gap: 14px;
+  }
+
+  .ledger__chart-tools {
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 560px) {
+  .ledger__stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
@@ -400,7 +441,7 @@ function barHeight(month) {
   }
 
   .ledger__value {
-    font-size: 7.5px;
+    font-size: 10px;
   }
 
   .ledger__bar {

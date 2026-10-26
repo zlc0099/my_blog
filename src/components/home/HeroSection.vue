@@ -1,13 +1,8 @@
 <script setup>
-import { focusItems } from '@/data/focus';
 import { site } from '@/data/site';
-import { archiveStats, getLatestEntryLabel } from '@/lib/content';
-import { formatDate } from '@/lib/format';
 
-const latestFocus = focusItems[0] || null;
-const latestEntry = getLatestEntryLabel();
-const lastUpdated = formatDate(archiveStats.latestUpdate);
 const year = new Date().getFullYear();
+const projectIndex = String(year).slice(-2);
 const tickMarks = Array.from({ length: 36 }, (_, index) => index + 1);
 </script>
 
@@ -30,29 +25,29 @@ const tickMarks = Array.from({ length: 36 }, (_, index) => index + 1);
           </span>
         </h1>
 
-        <p class="hero__lead">{{ site.intro }}</p>
-        <p class="hero__cn">持续学习 / 持续构建 / 持续记录</p>
+        <p class="hero__lead">{{ site.selfIntro }}</p>
+        <p class="hero__cn">平时写点东西 / 踩点坑 / 顺手记下来</p>
 
         <div class="hero__actions">
           <RouterLink to="/posts" class="btn btn--primary">
-            浏览学习笔记 <span class="btn__arrow">→</span>
+            浏览学习档案 <span class="btn__arrow">→</span>
           </RouterLink>
-          <RouterLink to="/projects" class="btn">
-            查看项目记录 <span class="btn__arrow">→</span>
+          <RouterLink to="/lab" class="btn">
+            打开 AI LAB <span class="btn__arrow">→</span>
           </RouterLink>
         </div>
 
         <dl class="hero__status">
           <div>
-            <dt>CURRENTLY LEARNING</dt>
-            <dd>{{ latestFocus ? latestFocus.topic : '正在整理' }}</dd>
+            <dt>MAINLY</dt>
+            <dd>JAVA · SPRING BOOT · VUE</dd>
           </div>
           <div>
-            <dt>LAST UPDATED</dt>
-            <dd>{{ lastUpdated || '—' }}</dd>
+            <dt>TOOLS</dt>
+            <dd>CLAUDE CODE · QODER · TRAE</dd>
           </div>
           <div class="hero__scroll">
-            <dt>SCROLL TO EXPLORE</dt>
+            <dt>SCROLL TO READ</dt>
             <dd class="hero__scroll-line"><span></span></dd>
           </div>
         </dl>
@@ -76,8 +71,8 @@ const tickMarks = Array.from({ length: 36 }, (_, index) => index + 1);
           </svg>
 
           <div class="archive-plate__top">
-            <span class="mono">DOSSIER / {{ String(archiveStats.postCount).padStart(3, '0') }}</span>
-            <span class="archive-plate__status mono"><i></i> CATALOGUED</span>
+            <span class="mono">PROFILE / 001</span>
+            <span class="archive-plate__status mono"><i></i> PERSONAL SITE</span>
           </div>
 
           <div class="archive-plate__visual">
@@ -138,18 +133,16 @@ const tickMarks = Array.from({ length: 36 }, (_, index) => index + 1);
           </div>
 
           <span class="archive-plate__orange" aria-hidden="true"></span>
-          <span class="archive-plate__index" aria-hidden="true">
-            {{ String(archiveStats.postCount).padStart(2, '0') }}
-          </span>
+          <span class="archive-plate__index" aria-hidden="true">{{ projectIndex }}</span>
 
           <div class="archive-plate__info">
             <div class="archive-plate__info-row">
-              <span class="mono">CURRENT FOCUS</span>
-              <strong>{{ latestFocus ? latestFocus.topic : '整理中' }}</strong>
+              <span class="mono">CALLSIGN</span>
+              <strong>zlc0099</strong>
             </div>
             <div class="archive-plate__info-row">
-              <span class="mono">LATEST ENTRY</span>
-              <strong>{{ latestEntry }}</strong>
+              <span class="mono">STACK</span>
+              <strong>JAVA / VUE</strong>
             </div>
           </div>
 
@@ -188,7 +181,7 @@ const tickMarks = Array.from({ length: 36 }, (_, index) => index + 1);
   left: 16px;
   color: var(--text-muted);
   font-family: var(--font-mono);
-  font-size: 8px;
+  font-size: 10px;
   letter-spacing: 0.22em;
   writing-mode: vertical-rl;
 }
@@ -247,7 +240,7 @@ const tickMarks = Array.from({ length: 36 }, (_, index) => index + 1);
   margin-top: 10px;
   color: var(--text-muted);
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: 10px;
   letter-spacing: 0.16em;
 }
 
@@ -260,7 +253,7 @@ const tickMarks = Array.from({ length: 36 }, (_, index) => index + 1);
 
 .hero__status {
   display: grid;
-  grid-template-columns: 1.1fr 0.9fr 1fr;
+  grid-template-columns: 0.85fr 1.35fr 0.8fr;
   gap: 24px;
   margin-top: clamp(38px, 6vh, 68px);
   padding-top: 18px;
@@ -270,7 +263,7 @@ const tickMarks = Array.from({ length: 36 }, (_, index) => index + 1);
 .hero__status dt {
   color: var(--text-muted);
   font-family: var(--font-mono);
-  font-size: 8.5px;
+  font-size: 10px;
   letter-spacing: 0.12em;
 }
 
@@ -365,7 +358,7 @@ const tickMarks = Array.from({ length: 36 }, (_, index) => index + 1);
   justify-content: space-between;
   gap: 12px;
   color: var(--text-muted);
-  font-size: 8.5px;
+  font-size: 10px;
   letter-spacing: 0.14em;
 }
 
@@ -374,7 +367,7 @@ const tickMarks = Array.from({ length: 36 }, (_, index) => index + 1);
   align-items: center;
   gap: 6px;
   color: var(--text-secondary);
-  font-size: 8px;
+  font-size: 10px;
 }
 
 .archive-plate__status i {
@@ -400,7 +393,7 @@ const tickMarks = Array.from({ length: 36 }, (_, index) => index + 1);
 .archive-plate__axis {
   fill: var(--text-muted);
   font-family: var(--font-mono);
-  font-size: 8px;
+  font-size: 10px;
   letter-spacing: 0.1em;
 }
 
@@ -418,7 +411,7 @@ const tickMarks = Array.from({ length: 36 }, (_, index) => index + 1);
 .archive-plate__tag {
   position: absolute;
   color: var(--text-muted);
-  font-size: 8px;
+  font-size: 10px;
   letter-spacing: 0.12em;
 }
 
@@ -473,7 +466,7 @@ const tickMarks = Array.from({ length: 36 }, (_, index) => index + 1);
 .archive-plate__info-row span {
   flex: none;
   color: var(--text-muted);
-  font-size: 8px;
+  font-size: 10px;
   letter-spacing: 0.12em;
 }
 
@@ -511,7 +504,7 @@ const tickMarks = Array.from({ length: 36 }, (_, index) => index + 1);
   top: 86px;
   right: 12px;
   color: var(--text-muted);
-  font-size: 8px;
+  font-size: 10px;
   letter-spacing: 0.16em;
   writing-mode: vertical-rl;
 }
@@ -556,13 +549,9 @@ const tickMarks = Array.from({ length: 36 }, (_, index) => index + 1);
   }
 
   .hero__status {
-    grid-template-columns: 1fr 1fr;
-    gap: 18px;
+    grid-template-columns: 1fr;
+    gap: 16px;
     margin-top: 36px;
-  }
-
-  .hero__scroll {
-    grid-column: 1 / -1;
   }
 
   .archive-plate {

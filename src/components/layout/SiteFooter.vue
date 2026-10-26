@@ -26,21 +26,23 @@ const year = new Date().getFullYear();
         <nav class="site-footer__col" aria-label="站点导航">
           <div class="eyebrow">INDEX</div>
           <RouterLink to="/">首页</RouterLink>
-          <RouterLink to="/posts">学习档案</RouterLink>
+          <RouterLink to="/posts">内容档案</RouterLink>
           <RouterLink to="/projects">项目记录</RouterLink>
-          <RouterLink to="/timeline">学习时间线</RouterLink>
           <RouterLink to="/about">关于我</RouterLink>
         </nav>
 
-        <nav class="site-footer__col" aria-label="AI LAB 导航">
-          <div class="eyebrow">AI LAB</div>
-          <RouterLink to="/lab">作业与账本</RouterLink>
-          <RouterLink to="/lab/skills">技能库</RouterLink>
-          <RouterLink to="/lab/prompts">提示词与工作流</RouterLink>
+        <nav class="site-footer__col" aria-label="档案分类导航">
+          <div class="eyebrow">ARCHIVE</div>
+          <RouterLink to="/categories/notes">学习记录</RouterLink>
+          <RouterLink to="/categories/skill">Skill</RouterLink>
+          <RouterLink to="/categories/frontend-prompts">前端提示词</RouterLink>
+          <RouterLink to="/categories/backend-prompts">后端提示词</RouterLink>
+          <RouterLink to="/categories/ai-division">AI 分工</RouterLink>
         </nav>
 
         <div class="site-footer__col">
           <div class="eyebrow">SYSTEM</div>
+          <RouterLink to="/lab">AI LAB</RouterLink>
           <span>Vue 3 / Vite</span>
           <span>GitHub Pages</span>
           <span>无后端 · 本地数据</span>
@@ -150,14 +152,14 @@ const year = new Date().getFullYear();
   border-top: 1px solid var(--border-subtle);
   color: var(--text-muted);
   font-family: var(--font-mono);
-  font-size: 9.5px;
+  font-size: 10.5px;
   letter-spacing: 0.1em;
 }
 
 .site-footer__bottom button {
   color: var(--text-secondary);
   font-family: var(--font-mono);
-  font-size: 9.5px;
+  font-size: 10.5px;
   letter-spacing: 0.1em;
   transition: color var(--dur-fast) var(--ease-out);
 }

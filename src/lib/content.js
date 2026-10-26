@@ -1,7 +1,6 @@
-import { JSON_SCHEMA, load as loadYaml } from 'js-yaml';
 import { categoryMap, categories } from '@/data/taxonomy';
-import { milestones } from '@/data/milestones';
-import { formatDate, readingTime, toTagSlug } from './format';
+import { readingTime, toTagSlug } from './format';
+import { fileSlug, parseFrontmatter } from './frontmatter';
 
 const postFiles = import.meta.glob('../content/posts/*.md', {
   query: '?raw',
@@ -15,20 +14,6 @@ const projectFiles = import.meta.glob('../content/projects/*.md', {
   eager: true,
 });
 
-function parseFile(raw) {
-  const normalized = String(raw || '').replace(/^\uFEFF/, '');
-  const match = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/.exec(normalized);
-  if (!match) return { data: {}, body: normalized };
-  return {
-    data: loadYaml(match[1], { schema: JSON_SCHEMA }) || {},
-    body: match[2],
-  };
-}
-
-function fileSlug(path) {
-  return path.split('/').pop().replace(/\.md$/, '');
-}
-
 function asString(value, fallback = '') {
   return value === undefined || value === null ? fallback : String(value);
 }
@@ -38,7 +23,7 @@ function asArray(value) {
 }
 
 const postList = Object.entries(postFiles).map(([path, raw]) => {
-  const { data, body } = parseFile(raw);
+  const { data, body } = parseFrontmatter(raw);
   const date = asString(data.date);
   return {
     ...data,
@@ -47,17 +32,20 @@ const postList = Object.entries(postFiles).map(([path, raw]) => {
     date,
     updated: asString(data.updated, date),
     summary: asString(data.summary),
-    category: asString(data.category, 'engineering'),
+    category: asString(data.category, 'notes'),
     categoryInfo: categoryMap[asString(data.category)] || {
-      slug: asString(data.category, 'engineering'),
+      slug: asString(data.category, 'notes'),
       en: 'OTHER',
       zh: '其他',
       desc: '',
     },
     tags: asArray(data.tags),
+    prompts: asArray(data.prompts),
     featured: Boolean(data.featured),
     sample: Boolean(data.sample),
     project: asString(data.project),
+    skillType: asString(data.skillType),
+    repoPath: asString(data.repoPath),
     body,
     readingTime: readingTime(body),
     year: date.slice(0, 4),
@@ -71,7 +59,7 @@ postList.forEach((post, index) => {
 postList.sort((a, b) => b.date.localeCompare(a.date) || a.slug.localeCompare(b.slug));
 
 const projectList = Object.entries(projectFiles).map(([path, raw]) => {
-  const { data, body } = parseFile(raw);
+  const { data, body } = parseFrontmatter(raw);
   const date = asString(data.date);
   return {
     ...data,
@@ -172,58 +160,4 @@ export function getPostsForProject(project) {
     .filter(Boolean);
   const attached = posts.filter((post) => post.project === project.slug);
   return [...new Map([...explicit, ...attached].map((post) => [post.slug, post])).values()];
-}
-
-export function getRecentUpdates(limit = 6) {
-  return posts
-    .map((post) => ({
-      date: post.updated || post.date,
-      title: post.title,
-      summary: post.summary,
-      to: `/posts/${post.slug}`,
-    }))
-    .sort((a, b) => b.date.localeCompare(a.date))
-    .slice(0, limit);
-}
-
-export function getTimelineEntries() {
-  const postEntries = posts.map((post) => ({
-    type: 'post',
-    code: post.archiveCode,
-    date: post.date,
-    title: post.title,
-    summary: post.summary,
-    meta: post.categoryInfo.zh,
-    to: `/posts/${post.slug}`,
-  }));
-
-  const projectEntries = projects.map((project) => ({
-    type: 'project',
-    code: project.archiveCode,
-    date: project.date,
-    title: project.title,
-    summary: project.summary,
-    meta: project.status,
-    to: `/projects/${project.slug}`,
-  }));
-
-  const milestoneEntries = milestones.map((milestone) => ({
-    type: 'milestone',
-    code: milestone.code,
-    date: milestone.date,
-    title: milestone.title,
-    summary: milestone.desc,
-    meta: 'MILESTONE',
-    to: '',
-  }));
-
-  return [...postEntries, ...projectEntries, ...milestoneEntries].sort((a, b) =>
-    b.date.localeCompare(a.date),
-  );
-}
-
-export function getLatestEntryLabel() {
-  const latest = posts[0];
-  if (!latest) return 'NO ENTRIES';
-  return `${latest.archiveCode} / ${formatDate(latest.date)}`;
 }

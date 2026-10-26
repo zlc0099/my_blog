@@ -11,7 +11,11 @@ export const site = {
     status: 'CONTINUOUS LEARNING',
   },
   github: 'https://github.com/zlc0099',
+  repo: 'https://github.com/zlc0099/my_blog',
   avatar: 'avatar.jpg',
+  selfIntro:
+    '我是 zlc0099，平时主要写 Java / Spring Boot，也会用 Vue 做页面。这里记下我学到的、踩过的坑，还有做过的项目。',
+  projectIntro: 'zlc0099 的个人技术档案：记录学习、项目、Agent 使用与 Token 消耗。',
   philosophy: [
     {
       title: '项目驱动',

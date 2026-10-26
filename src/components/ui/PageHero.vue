@@ -128,7 +128,7 @@ defineProps({
 .page-hero__meta-label {
   color: var(--text-muted);
   font-family: var(--font-mono);
-  font-size: 8.5px;
+  font-size: 10px;
   letter-spacing: 0.12em;
 }
 
@@ -145,7 +145,7 @@ defineProps({
   right: var(--gutter);
   color: var(--text-muted);
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: 10px;
   letter-spacing: 0.16em;
   writing-mode: vertical-rl;
 }

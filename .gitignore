@@ -9,3 +9,6 @@ audit-result/
 screenshots/
 
 .verify/
+
+src/content/sessions/
+.verify-*/

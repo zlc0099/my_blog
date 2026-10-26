@@ -3,8 +3,9 @@ title: Spring Boot 分层重构：把业务从 Controller 里拿出来
 slug: spring-boot-layered-refactor
 date: 2026-10-20
 updated: 2026-10-22
-category: backend
+category: notes
 tags: [spring-boot, architecture, refactor]
+prompts: [PRO-02]
 summary: 一次从「Controller 直连 Mapper」到 Controller / Service / Mapper 分层的重构记录，包含 DTO 边界、事务归属和回归清单。
 featured: true
 sample: true

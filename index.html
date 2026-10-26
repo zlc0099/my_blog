@@ -24,6 +24,17 @@
         } catch (error) {
           document.documentElement.dataset.theme = 'dark';
         }
+        try {
+          var alreadyBooted = sessionStorage.getItem('pa-booted') === '1';
+          if (
+            !alreadyBooted &&
+            !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+          ) {
+            document.documentElement.classList.add('is-booting');
+          }
+        } catch (error) {
+          // Keep the page usable if sessionStorage or matchMedia is unavailable.
+        }
       })();
     </script>
   </head>

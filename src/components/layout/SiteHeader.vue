@@ -14,7 +14,6 @@ const navItems = [
   { index: '01', label: '档案', en: 'ARCHIVE', to: '/posts', match: ['/posts', '/categories', '/tags'] },
   { index: '02', label: '项目', en: 'PROJECTS', to: '/projects', match: ['/projects'] },
   { index: '03', label: 'AI LAB', en: 'LAB', to: '/lab', match: ['/lab'] },
-  { index: '04', label: '时间线', en: 'TIMELINE', to: '/timeline', match: ['/timeline'] },
 ];
 
 const year = new Date().getFullYear();
@@ -239,7 +238,7 @@ onBeforeUnmount(() => {
             <span class="mobile-menu__en">{{ item.en }}</span>
           </RouterLink>
           <RouterLink to="/about" :class="{ 'is-active': route.path === '/about' }" @click="closeMenu(false)">
-            <span class="mobile-menu__index">05</span>
+            <span class="mobile-menu__index">04</span>
             <span class="mobile-menu__label">关于</span>
             <span class="mobile-menu__en">ABOUT</span>
           </RouterLink>
@@ -272,7 +271,8 @@ onBeforeUnmount(() => {
   background: var(--header-bg);
   backdrop-filter: blur(10px);
   transition: border-color var(--dur-base) var(--ease-out),
-    background-color var(--dur-base) var(--ease-out);
+    background-color var(--dur-base) var(--ease-out),
+    opacity 0.55s var(--ease-out);
 }
 
 .site-header.is-scrolled {
@@ -327,7 +327,7 @@ onBeforeUnmount(() => {
 .brand__sub {
   color: var(--text-muted);
   font-family: var(--font-mono);
-  font-size: 8.5px;
+  font-size: 10px;
   letter-spacing: 0.16em;
   line-height: 1;
   white-space: nowrap;
@@ -378,7 +378,7 @@ onBeforeUnmount(() => {
 .site-nav__index {
   color: var(--text-muted);
   font-family: var(--font-mono);
-  font-size: 8.5px;
+  font-size: 10px;
   letter-spacing: 0.06em;
 }
 
@@ -431,7 +431,7 @@ onBeforeUnmount(() => {
   border: 1px solid var(--border-primary);
   color: var(--text-muted);
   font-family: var(--font-mono);
-  font-size: 8.5px;
+  font-size: 10px;
   letter-spacing: 0.05em;
 }
 
@@ -569,7 +569,7 @@ onBeforeUnmount(() => {
 .mobile-menu__en {
   color: var(--text-muted);
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: 10px;
   letter-spacing: 0.14em;
 }
 
@@ -611,7 +611,7 @@ onBeforeUnmount(() => {
   margin-top: auto;
   padding-top: 40px;
   color: var(--text-muted);
-  font-size: 9px;
+  font-size: 10px;
   letter-spacing: 0.12em;
 }
 
