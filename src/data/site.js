@@ -11,6 +11,7 @@ export const site = {
     status: 'CONTINUOUS LEARNING',
   },
   github: 'https://github.com/zlc0099',
+  avatar: 'avatar.jpg',
   philosophy: [
     {
       title: '项目驱动',

@@ -18,6 +18,9 @@ const navItems = [
 ];
 
 const year = new Date().getFullYear();
+const avatarFailed = ref(false);
+const avatarSrc = `${import.meta.env.BASE_URL}${site.avatar}`;
+const avatarInitial = site.owner.callsign.slice(0, 1).toUpperCase();
 const isScrolled = ref(false);
 const menuOpen = ref(false);
 const menuButton = ref(null);
@@ -163,6 +166,28 @@ onBeforeUnmount(() => {
         >
           <span class="header-action__label">关于</span>
         </RouterLink>
+
+        <a
+          :href="site.github"
+          class="header-avatar"
+          target="_blank"
+          rel="noopener noreferrer"
+          :aria-label="`访问 ${site.owner.callsign} 的 GitHub 主页`"
+          :title="`GitHub / @${site.owner.callsign}`"
+        >
+          <img
+            v-if="!avatarFailed"
+            :src="avatarSrc"
+            alt=""
+            width="30"
+            height="30"
+            loading="eager"
+            decoding="async"
+            referrerpolicy="no-referrer"
+            @error="avatarFailed = true"
+          />
+          <span v-else class="header-avatar__fallback" aria-hidden="true">{{ avatarInitial }}</span>
+        </a>
 
         <button
           ref="menuButton"
@@ -414,6 +439,37 @@ onBeforeUnmount(() => {
   color: var(--accent-ink);
 }
 
+.header-avatar {
+  display: inline-flex;
+  width: 30px;
+  height: 30px;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-primary);
+  background: var(--bg-elevated);
+  overflow: hidden;
+  transition: border-color var(--dur-fast) var(--ease-out);
+}
+
+.header-avatar:hover {
+  border-color: var(--accent);
+}
+
+.header-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.header-avatar__fallback {
+  color: var(--accent-ink);
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1;
+}
+
 .menu-toggle {
   display: none;
   width: 36px;
@@ -610,6 +666,16 @@ onBeforeUnmount(() => {
   .brand__mark {
     width: 26px;
     height: 26px;
+  }
+
+  .header-action--search,
+  .header-action--icon {
+    display: none;
+  }
+
+  .header-avatar {
+    width: 28px;
+    height: 28px;
   }
 }
 </style>
