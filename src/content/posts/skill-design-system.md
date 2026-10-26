@@ -10,8 +10,6 @@ prompts: []
 summary: "设计 Token 的三层结构、组件规格和响应式规范，适合把视觉决策沉淀成可维护的系统。"
 ---
 
-> 来源：本地用户技能 `~/.claude/skills/design-system`。已安装；Claude Code 日志中没有记录到直接 `Skill` 调用，可能通过其他 Agent 或手动引用使用。
-
 ## 它是什么
 
 从 primitive → semantic → component 建立 Token，整理间距、字体、组件规格和主题规则。
@@ -22,4 +20,4 @@ summary: "设计 Token 的三层结构、组件规格和响应式规范，适合
 
 ## 说明
 
-这里记录用途和边界，完整的 `SKILL.md` 仍在本地技能目录中，没有整份复制到站点。
+这里记录用途和边界。

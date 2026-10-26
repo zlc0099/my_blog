@@ -67,13 +67,13 @@ const heroMeta = computed(() => [
           <SectionHeading index="02" title="COMMON SKILL" zh="常用 Skill（非自制）" />
 
           <p class="skill-group__note">
-            来自插件、市场或本地安装的常用 Skill。不是每份都跟着仓库上传；文章里标注了来源和实际调用情况。
+            平时在用的非自制 Skill，按用途整理。
           </p>
 
           <div v-if="commonSkills.length" class="archive-list">
             <ArchiveRow v-for="post in commonSkills" :key="post.slug" :post="post" />
           </div>
-          <EmptyState v-else code="SKILL / COMMON-EMPTY" title="还没有常用 Skill 记录" description="安装记录还在整理中。" />
+          <EmptyState v-else code="SKILL / COMMON-EMPTY" title="还没有常用 Skill 记录" description="常用 Skill 还在整理中。" />
         </div>
       </div>
     </section>

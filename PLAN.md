@@ -83,7 +83,7 @@ project: slug       # 可选，关联项目
 - `scripts/import-claude-usage.mjs`：读取本机 `~/.claude/projects/**/*.jsonl`，按 session 去重聚合；仅写 token、模型、时间、项目标签与会话 ID，不写对话原文；保留已有手写笔记。
 - `src/data/usage.json`：`source: claude-code-logs` + 20 条真实会话记录（日期、模型、项目、input/output、cache read/write、会话 ID、笔记 slug）。
 - `src/content/sessions/*.md`：可选本地 Markdown 笔记文件；导入时可生成，站点不读取、不展示、不搜索。
-- Skill 文章：`/categories/skill` 分为 **自制 Skill（3 条）** 与 **常用 Skill（非自制，11 条）**。3 个自制技能为完整 SKILL.md 主体，文章顶部链接 GitHub 的 `myskill/<name>/`；`superpowers` 为实际调用记录总览，其余本机安装技能与 Anthropic 合集为用途摘要。
+- Skill 文章：`/categories/skill` 分为 **自制 Skill（3 条）** 与 **常用 Skill（非自制，11 条）**。3 个自制技能为完整 SKILL.md 主体，文章顶部链接 GitHub 的 `myskill/<name>/`；`superpowers` 为常用子技能总览，其余为用途摘要；文章不展示来源、安装位置或调用日志。
 - 本地技能源码放在仓库 `myskill/`，构建不打包；`src/content/sessions/` 为本地笔记目录，默认不提交。
 - AI LAB 图表按 `CACHE READ / NEW INPUT / OUTPUT` 堆叠；会话表支持 Agent / 项目 / 模型筛选和时长。
 - 提示词：`src/data/prompts.js` 保存模板；文章 frontmatter 用 `prompts` 引用，正文下方渲染 `RelatedPrompts`；全局搜索可索引提示词并跳到 `#PRO-xx`。

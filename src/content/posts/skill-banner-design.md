@@ -10,8 +10,6 @@ prompts: []
 summary: "多平台 Banner 与视觉物料的 art direction：社交图、网站 hero、广告和打印尺寸。"
 ---
 
-> 来源：本地用户技能 `~/.claude/skills/banner-design`。已安装；Claude Code 日志中没有记录到直接 `Skill` 调用，可能通过其他 Agent 或手动引用使用。
-
 ## 它是什么
 
 为社交媒体、广告、网站 hero 和打印物料规划多种视觉方向，并生成对应尺寸的素材。
@@ -22,4 +20,4 @@ summary: "多平台 Banner 与视觉物料的 art direction：社交图、网站
 
 ## 说明
 
-这里记录用途和边界，完整的 `SKILL.md` 仍在本地技能目录中，没有整份复制到站点。
+这里记录用途和边界。

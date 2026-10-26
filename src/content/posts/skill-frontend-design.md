@@ -5,12 +5,10 @@ date: "2026-10-01"
 updated: "2026-10-26"
 category: "skill"
 skillType: "common"
-tags: ["skill", "frontend", "design", "plugin"]
+tags: ["skill", "frontend", "design"]
 prompts: []
-summary: "用于建立页面视觉方向的插件技能：先确定主题和受众，再在字体、配色和布局上做明确取舍。"
+summary: "用于建立页面视觉方向的设计 Skill：先确定主题和受众，再在字体、配色和布局上做明确取舍。"
 ---
-
-> 来源：Claude Code 插件 `frontend-design@claude-plugins-official`，已安装；日志中有 1 次直接调用。
 
 ## 用途
 
@@ -24,4 +22,4 @@ summary: "用于建立页面视觉方向的插件技能：先确定主题和受�
 
 ## 说明
 
-这是插件里的设计指导技能，和 `ui-ux-pro-max`、`frontend-ui-design` 有部分重叠。完整 SKILL.md 在本地插件目录中，没有整份搬进站点。
+这是一个偏视觉方向判断的设计技能，和 `ui-ux-pro-max`、`frontend-ui-design` 有部分重叠。这里记录用途和设计判断。

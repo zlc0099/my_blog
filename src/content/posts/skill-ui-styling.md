@@ -10,8 +10,6 @@ prompts: []
 summary: "基于 shadcn/ui、Radix 和 Tailwind 的界面实现规范，重点是可访问组件、主题和响应式布局。"
 ---
 
-> 来源：本地用户技能 `~/.claude/skills/ui-styling`。已安装；Claude Code 日志中没有记录到直接 `Skill` 调用，可能通过其他 Agent 或手动引用使用。
-
 ## 它是什么
 
 用 shadcn/ui、Radix UI 和 Tailwind 搭可访问的界面：按钮、表单、弹窗、表格、主题和暗色模式。
@@ -22,4 +20,4 @@ summary: "基于 shadcn/ui、Radix 和 Tailwind 的界面实现规范，重点�
 
 ## 说明
 
-这里记录用途和边界，完整的 `SKILL.md` 仍在本地技能目录中，没有整份复制到站点。
+这里记录用途和边界。

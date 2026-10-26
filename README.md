@@ -53,7 +53,7 @@ src/
 ├─ lib/               # 内容加载、Markdown 渲染、搜索索引、Token 聚合、格式化
 ├─ composables/       # 主题、页面元信息、搜索浮层状态
 ├─ components/        # 布局、首页、文章、项目、AI LAB 与通用 UI
-myskill/               # 本地 Skill 源码（自制技能 + Anthropic 合集）
+myskill/               # 本地 Skill 源码（自制技能与常用技能）
 ├─ views/             # 路由页面
 ├─ styles/            # Design Token、基础样式、Markdown 排版
 ├─ router.js
@@ -194,8 +194,8 @@ Qoder / Trae 没有同等可用的本地日志，目前需要手动追加记录�
 
 - Skill：`src/content/posts/skill-*.md` 现有 14 条，`/categories/skill` 分成两组：
   - **自制 Skill（3 条）**：`frontend-ui-design`、`fullstack-dev-workflow`、`web-test-pro`，已导入真实 `SKILL.md` 主体；文章顶部有 GitHub 源码入口，完整目录在仓库的 `myskill/<name>/` 下。
-  - **常用 Skill（非自制，11 条）**：`superpowers`（一条总览，记录实际调用过的 7 个子技能与次数）、`frontend-design`、`ui-ux-pro-max`（ui-max）、`ui-styling`、`design-system`、`banner-design`、`brand`、`design`、`slides`、Qoder `webapp-testing`、Anthropic Skills 本地合集。
-  - 部分已安装技能在 Claude Code 的 Skill 调用日志中没有直接记录，文章内已标注。
+  - **常用 Skill（非自制，11 条）**：`superpowers`（一条总览，整理 7 个常用子技能）、`frontend-design`、`ui-ux-pro-max`（ui-max）、`ui-styling`、`design-system`、`banner-design`、`brand`、`design`、`slides`、`webapp-testing`、常用 Skills 合集。
+  - Skill 文章只说明能做什么、怎么用，不展示来源、安装位置或调用日志。
 - `myskill/` 存放本地技能源码；站点构建不会打包它，GitHub 目录链接指向仓库里的原始文件。`src/content/sessions/` 是个人的本地会话笔记目录，默认不提交。
 - 提示词：`src/data/prompts.js` 保存模板，文章 frontmatter 用 `prompts: [PRO-02]` 引用，展示在文章正文下方，并可通过全局搜索跳转到 `#PRO-xx`；没有独立的提示词页面。
 - 前端 / 后端提示词分类各自对应一篇模板文章（`frontend-prompt-*`、`backend-prompt-*`），目前是个人模板，不是本地 SKILL.md 原文。

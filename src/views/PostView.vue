@@ -116,7 +116,7 @@ usePageMeta(() =>
           target="_blank"
           rel="noopener noreferrer"
         >
-          <span class="eyebrow">GITHUB / SOURCE</span>
+          <span class="eyebrow">GITHUB / 源码</span>
           <strong>完整源码在 GitHub：{{ post.repoPath }} ↗</strong>
         </a>
 

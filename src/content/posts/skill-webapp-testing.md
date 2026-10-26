@@ -5,12 +5,10 @@ date: "2026-10-16"
 updated: "2026-10-26"
 category: "skill"
 skillType: "common"
-tags: ["skill", "testing", "playwright", "qoder"]
+tags: ["skill", "testing", "playwright", "webapp"]
 prompts: []
-summary: "Qoder 侧的本地 Web 测试技能：用 Playwright 跑真实交互、截图、控制台和网络检查。"
+summary: "本地 Web 测试 Skill：用 Playwright 跑真实交互、截图、控制台和网络检查。"
 ---
-
-> 来源：Qoder 本地技能 `~/.qoder-cn/skills/webapp-testing`；`skills-main` 里也有一份同名集合版本。
 
 ## 用途
 
@@ -26,6 +24,5 @@ summary: "Qoder 侧的本地 Web 测试技能：用 Playwright 跑真实交互�
 
 ## 使用方式
 
-在 Qoder 里显式调用，针对本地开发地址写 Playwright 脚本。测试结果以真实浏览器行为和截图为准，不只看代码。
+针对本地开发地址写 Playwright 脚本。测试结果以真实浏览器行为和截图为准，不只看代码。
 
-> 这个技能的调用记录在 Qoder 侧，Claude Code 日志不包含它。站点只记录用途和结构。

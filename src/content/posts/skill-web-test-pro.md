@@ -11,8 +11,6 @@ summary: 在 Playwright 基础上补一层页面体检：JS 异常、失败请�
 prompts: []
 ---
 
-> 以下内容来自本地技能项目 `web-test-pro/SKILL.md`（已移除 frontmatter 与技能标题）。技能还包含 `references/` 目录和脚本，站点只导入了 SKILL.md 主体。
-
 ## 调用方式（通用适配）
 
 - **手动调用**：本技能不依赖自动触发，普通"测试一下"类请求不加载本技能。仅当用户显式引用本技能（`/web-test-pro`、"按 web-test-pro 测试"）时，读取本 SKILL.md 并执行。

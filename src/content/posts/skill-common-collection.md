@@ -1,17 +1,14 @@
 ---
-title: "Skill：Anthropic Skills 本地合集"
-slug: "skill-anthropic-collection"
+title: "Skill：常用 Skills 合集"
+slug: "skill-common-collection"
 date: "2026-10-16"
 updated: "2026-10-26"
 category: "skill"
 skillType: "common"
-repoPath: "myskill/skills-main"
-tags: ["skill", "collection", "anthropic"]
+tags: ["skill", "collection"]
 prompts: []
-summary: "本地 clone 的 Anthropic Skills 合集索引：包含设计、文档、构建、MCP、测试等 19 个技能。"
+summary: "常用技能集合索引：设计、文档、构建、MCP、测试等 19 个技能。"
 ---
-
-> 来源：`D:\a2605\myskill\skills-main`，是本地 clone 的 Anthropic Skills 合集。收录不等于每个都已安装或实际调用，完整内容仍在本地目录。
 
 ## 合集里有什么
 

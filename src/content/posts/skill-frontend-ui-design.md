@@ -11,8 +11,6 @@ summary: 把颜色、字体、间距、组件和可访问性规则固化成一�
 prompts: []
 ---
 
-> 以下内容来自本地技能项目 `frontend-ui-design/SKILL.md`（已移除 frontmatter 与技能标题）。技能还包含 `references/` 目录和脚本，站点只导入了 SKILL.md 主体。
-
 ## 调用方式（通用适配）
 
 - **手动调用**：本技能不依赖自动触发。当用户显式引用本技能（如 `/frontend-ui-design`、"用 frontend-ui-design 规范"、"按 UI 设计规范来"）时，Agent 读取本 SKILL.md 并按其执行。

@@ -11,8 +11,6 @@ summary: 强制先澄清、再列原子任务、按 TDD 执行，并用真实命
 prompts: []
 ---
 
-> 以下内容来自本地技能项目 `fullstack-dev-workflow/SKILL.md`（已移除 frontmatter 与技能标题）。技能还包含 `references/` 目录和脚本，站点只导入了 SKILL.md 主体。
-
 ## 核心理念
 
 每一次开发任务都必须走流程，禁止"凭直觉直接写代码"。三条铁律：
