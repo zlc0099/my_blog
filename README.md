@@ -3,7 +3,7 @@
 > 把个人学习记录做成一套持续更新的技术档案。  
 > 深色工业科幻视觉 · 中文长文阅读 · 真实 Agent 资源账本 · 个人学习记录。
 
-纯前端静态站点，无后端、无登录、无数据库。文章和项目是仓库里的 Markdown，Agent / Token 数据由本地 Claude Code 日志聚合到 JSON；构建后部署到 GitHub Pages。
+纯前端静态站点，无后端、无登录、无数据库。文章和项目是仓库里的 Markdown，Agent 模型统计与 Token 数据由本机 Claude Code / Qoder / Trae 数据聚合到 JSON；构建后部署到 GitHub Pages。
 
 - 仓库：<https://github.com/zlc0099/my_blog>
 - 线上地址：<https://zlc0099.github.io/my_blog/>（启用 GitHub Pages 后）
@@ -14,7 +14,7 @@
 - **知识档案**：全文搜索、分类筛选、标签筛选、URL 状态同步、加载更多、空状态。
 - **文章详情**：Markdown 渲染、代码高亮与真实复制、自动目录、滚动章节高亮、阅读进度、上下篇、按标签计算的相关笔记、文章下方挂载相关提示词、示例文章标记。
 - **项目记录**：确定性 SVG 蓝图封面、项目档案侧栏、技术栈、真实仓库 / 演示链接、关联笔记。
-- **AI LAB**：Claude Code / Qoder / Trae 分工档案、真实 Claude Code Token 账本、按 `CACHE READ / NEW INPUT / OUTPUT` 分型的月度图，以及支持 Agent / 项目 / 模型筛选和时长的会话记录。
+- **AI LAB**：Claude Code / Qoder / Trae 分工档案、真实 Claude Code Token 账本、按 `CACHE READ / NEW INPUT / OUTPUT` 分型的月度图、按消息模型拆分的 Claude 模型面板，以及 Qoder / Trae 的本地模型与会话统计；三者合计 37 个本地会话、12 条模型记录。
 - **会话记录**：AI LAB 以表格展示本地 Claude Code 日志聚合出的日期、时长、Agent、项目、类型与 Token；不展示 note、原始对话或详情页。
 - **进场动画**：同一个标签页首次整页进入时显示一次进度条加载动画，完成后中央亮线展开、左右面板从中间分开、首页内容淡入；点击或按 Enter / Space 可跳过，刷新同 tab 和内部路由不会重复出现。
 - **背景与动效**：固定粒子层缓慢漂浮，面板改为半透明；鼠标有小拖尾、点击有涟漪微特效（参考 Arknights 官网氛围，原创实现，不使用官方素材）。`prefers-reduced-motion` 或触屏设备会自动关闭光标特效和进场动画。
@@ -49,8 +49,8 @@ src/
 │  ├─ posts/          # 文章 Markdown
 │  ├─ projects/       # 项目 Markdown
 │  └─ sessions/       # 可选本地 Markdown 笔记文件（站点不展示）
-├─ data/              # 站点、分类、专注目标、Agent、Token、提示词
-├─ lib/               # 内容加载、Markdown 渲染、搜索索引、Token 聚合、格式化
+├─ data/              # 站点、分类、Agent、Token、模型统计、提示词
+├─ lib/               # 内容加载、Markdown 渲染、搜索索引、Token / Agent 模型聚合、格式化
 ├─ composables/       # 主题、页面元信息、搜索浮层状态
 ├─ components/        # 布局、首页、文章、项目、AI LAB 与通用 UI
 myskill/               # 本地 Skill 源码（自制技能与常用技能）
@@ -151,14 +151,14 @@ node scripts/import-claude-usage.mjs \
 - `tokensIn` = 未缓存的 input tokens。
 - `tokensOut` = output tokens。
 - `cacheRead` / `cacheWrite` 单列；总量包含全部四项。
-- 会话时间使用本机时区日期；模型取该会话出现次数最多的非 synthetic 模型。
+- 会话时间使用本机时区日期；会话的 `model` 取该会话出现次数最多的非 synthetic 模型，同时按每条 assistant 消息的 `model` 聚合出 `models` 顶层数组，保留同一会话内的多模型使用情况。
 - **不写入任何用户 prompt、assistant 回复或原始对话内容。**
 - 会保留已有的本地 Markdown 笔记文件，不覆盖（站点不展示这些文件）。
 - `usage.json` 中 `demo` 会改为 `false`，页面显示 `LOCAL LOGS`。
 
 当前导入结果：20 个有效会话，约 981.62M processed tokens，其中约 98.4% 为 cache read。这个数字是**包含缓存读取的总处理量**，不是单次 API 的新内容量；页面把 NEW INPUT / OUTPUT / CACHE READ / CACHE WRITE 分开显示。
 
-Qoder / Trae 没有同等可用的本地日志，目前需要手动追加记录：
+Qoder / Trae 的本机数据没有 Token 明细；模型与会话统计由下面的导入器自动同步。如需把 Token 计入账本，仍可手动追加记录：
 
 ```json
 {
@@ -182,7 +182,85 @@ Qoder / Trae 没有同等可用的本地日志，目前需要手动追加记录�
   "source": "claude-code-logs",
   "updated": "2026-10-26",
   "note": "由本地 Claude Code 会话日志聚合，不包含对话原文……",
+  "models": [
+    {
+      "model": "deepseek-flash",
+      "agent": "claude-code",
+      "sessions": 18,
+      "messages": 9329,
+      "tokensIn": 10525895,
+      "tokensOut": 4781472,
+      "cacheRead": 951752960,
+      "cacheWrite": 0,
+      "total": 967060327
+    }
+  ],
   "records": []
+}
+```
+
+`models` 按 token 总量降序排列；`sessions` 是出现该模型的会话数，同一会话可能被多个模型分别计数，不能相加。当前 5 个模型的合计与 Token 账本一致（981.62M）。
+
+## Qoder / Trae 模型统计导入
+
+Qoder 与 Trae 的本机应用没有保存可用的 Token 明细，但保留了模型和会话活动。仓库包含一个只读本地数据的统计脚本：
+
+```bash
+npm run import:agents -- --dry-run   # 只统计，不写文件
+npm run import:agents                # 写入 src/data/agent-models.json
+```
+
+脚本需要 Node.js 22.5+（使用内置 `node:sqlite`）。默认读取：
+
+- Qoder：`%APPDATA%/com.qodercn.app.*/main.sqlite` 的 `chat_sessions` / `chat_session_messages`。
+- Trae：`%APPDATA%/Trae CN/logs/**/renderer.log` 的 `startStream` 事件，以及 `User/globalStorage/state.vscdb` 中的完成缓存。
+
+也支持显式路径：
+
+```bash
+node scripts/import-agent-models.mjs \
+  --qoder-db "/path/to/main.sqlite" \
+  --trae-dir "/path/to/Trae CN" \
+  --out src/data/agent-models.json \
+  --dry-run
+```
+
+统计规则与隐私边界：
+
+- Qoder：按会话读取模型名和 assistant 回复数；模型名是 Qoder 本地内部标识（如 `dfmodel` / `qfmodel` / `auto`）。
+- Trae：从日志的 `startStream` 事件按 `sessionId + userMessageId` 去重，统计模型调用；完成缓存只补充没有被日志覆盖的会话。
+- 不写入 Token 估算值；Qoder 与 Trae 不进入 Token 账本、模型 Token 占比和月度图。
+- **只输出模型名、会话数、活动数与日期范围；不输出对话、标题、工作区路径、会话 ID。**
+- 某个来源暂时读不到时，保留 `agent-models.json` 中已有的对应条目。
+
+当前统计：
+
+- Qoder：9 个会话 / 294 条 assistant 回复 / 3 个模型记录（`dfmodel` 7、`qfmodel` 1、`auto` 1），2026-10-12 → 2026-10-26。
+- Trae：8 个会话 / 15 次可观测调用 / 4 个模型记录（`Doubao-Seed-Code` 4、`glm-5.3-flash` 2、`deepseek-v4.1-flash` 2、`qwen3.8-flash` 1），2026-08-19 → 2026-10-26。
+- AI LAB 合计展示 37 个本地会话与 12 条模型记录；其中 20 个会话、5 个模型来自 Claude Code Token 日志。
+
+`agent-models.json` 的顶层字段：
+
+```json
+{
+  "demo": false,
+  "source": "local-agent-trace",
+  "updated": "2026-10-26",
+  "note": "只包含模型名、会话数、活动数与日期范围……",
+  "agents": [
+    {
+      "agent": "qoder",
+      "sourceLabel": "LOCAL DB",
+      "tokensAvailable": false,
+      "activityLabel": "REPLIES",
+      "sessions": 9,
+      "activity": 294,
+      "period": { "first": "2026-10-12", "last": "2026-10-26" },
+      "models": [
+        { "model": "dfmodel", "sessions": 7, "activity": 278, "first": "2026-10-15", "last": "2026-10-26" }
+      ]
+    }
+  ]
 }
 ```
 
@@ -198,7 +276,10 @@ Qoder / Trae 没有同等可用的本地日志，目前需要手动追加记录�
   - Skill 文章只说明能做什么、怎么用，不展示来源、安装位置或调用日志。
 - `myskill/` 存放本地技能源码；站点构建不会打包它，GitHub 目录链接指向仓库里的原始文件。`src/content/sessions/` 是个人的本地会话笔记目录，默认不提交。
 - 提示词：`src/data/prompts.js` 保存模板，文章 frontmatter 用 `prompts: [PRO-02]` 引用，展示在文章正文下方，并可通过全局搜索跳转到 `#PRO-xx`；没有独立的提示词页面。
-- 前端 / 后端提示词分类各自对应一篇模板文章（`frontend-prompt-*`、`backend-prompt-*`），目前是个人模板，不是本地 SKILL.md 原文。
+- 前端提示词分类现有 8 篇排版风格文章：政务蓝中后台、深色侧栏生产级中后台、公共服务门户、黑金 / 科技蓝数据大屏、视觉小说 ADV、双主题档案、战术终端、漫画气泡小工具。每篇只讲按钮、字阶、色彩、间距、表面和状态，不锁页面栏目，也不出现项目名；政务蓝、深色侧栏、黑金大屏和视觉小说四篇把完整设计规范直接放在正文 `prompt` 代码块，其余 4 篇文末挂 `PRO-08`、`PRO-11`–`PRO-13` 的提示词卡片。
+- 这 8 篇用 frontmatter 的 `coverStyle` 渲染 CSS 封面示意；`/posts`、分类和标签页使用封面卡片网格（桌面 3 列、平板 2 列、手机 1 列），没有封面的文章使用按分类和档案编号生成的默认封面。
+- 档案列表按 9 条/页分页，只渲染当前页；分页控件在列表底部，页码写入 URL 的 `?page=`，筛选、搜索或切换分类/标签会回到第 1 页。Skill 页也按 9 条/页分页，并保留自制/常用分组。
+- 后端提示词分类保留一篇模板文章（`backend-prompt-*`）。
 
 ## 主题
 
@@ -242,7 +323,7 @@ Qoder / Trae 没有同等可用的本地日志，目前需要手动追加记录�
 - 100+ 项浏览器检查：搜索、筛选、目录、代码复制、深浅主题、移动端菜单、360 / 768 / 1440 视口无横向溢出。
 - 特效检查：粒子绘制与缓慢动画、光标拖尾、点击涟漪、画布不拦截交互、reduced-motion 下静止、移动端禁用拖尾。
 - 进场动画检查：进度条递增、面板展开、加载层移除后才可交互、点击跳过、同 tab 刷新不重复、reduced-motion 直接跳过。
-- 真实数据页面检查：20 条会话记录、按 token 类型的 2 个月图表、6 项 Token 统计、Agent / 项目 / 模型筛选、会话时长、移动端布局；首页不渲染其他模块数据，也不显示 note。
+- 真实数据页面检查：20 条 Claude Code 会话记录、按 token 类型的 2 个月图表、6 项 Token 统计、5 个模型的拆分面板（合计 981.62M）、Qoder / Trae 的 17 个会话与 7 条模型记录、37 个 Agent 会话 / 12 条模型记录的汇总、Agent / 项目 / 模型筛选（模型筛选覆盖会话内多模型）、会话时长、移动端布局；首页不渲染其他模块数据，也不显示 note。
 - 优化项检查：提示词搜索跳转锚点、真实 SKILL.md 主体、14 条 Skill 档案与搜索、自制/常用分组、自制技能 GitHub 目录链接、辅助文字最小 10px。
 - 0 控制台错误、0 失败请求。
 
@@ -250,7 +331,7 @@ Qoder / Trae 没有同等可用的本地日志，目前需要手动追加记录�
 
 - 纯静态 SPA，页面 SEO 元信息由客户端更新；搜索引擎对正文的收录有限。
 - 无登录、评论、后台与真实接口；所有内容通过仓库文件维护。
-- Claude Code 的对话原文与原始日志不进入站点；Qoder / Trae 没有自动导入。
+- Claude Code 的对话原文与原始日志不进入站点；Qoder 的会话标题、工作区路径与 Trae 的对话内容也不会导出。Qoder / Trae 只同步模型、会话和活动数，不包含 Token 明细。
 - 会话 note 不在站点展示；本地 Markdown 笔记文件仍可由导入器生成，不需要可关闭。
 - 5 篇文章仍带 `SAMPLE` 标记；实际项目记录使用真实项目。
 - 图片需要自行放入 `public/` 或以可访问 URL 引用；加载失败时有虚线占位样式。

@@ -3,14 +3,16 @@ import { computed } from 'vue';
 import { usageSummary } from '@/lib/usage';
 import { formatTokens } from '@/lib/format';
 
-const colors = ['var(--chart-1)', 'var(--chart-2)', 'var(--chart-3)'];
-
 const agentStats = computed(() =>
-  usageSummary.byAgent.map((agent, index) => ({
+  usageSummary.agentCoverage.map((agent, index) => ({
     ...agent,
-    color: colors[index] || colors[2],
     rank: String(index + 1).padStart(2, '0'),
-    shareLabel: `${Math.round(agent.share)}%`,
+    shareLabel: agent.tokensAvailable
+      ? `${Math.round(agent.share)}%`
+      : `${String(agent.modelCount).padStart(2, '0')} MODELS`,
+    tokenLabel: agent.tokensAvailable
+      ? `${formatTokens(agent.tokens)} PROCESSED`
+      : 'TOKEN N/A',
   })),
 );
 </script>
@@ -37,12 +39,22 @@ const agentStats = computed(() =>
       </div>
 
       <div class="agent-card__usage">
-        <div class="agent-card__bar">
-          <span :style="{ width: `${agent.share}%` }"></span>
+        <div class="agent-card__bar" :class="{ 'is-trace': !agent.tokensAvailable }">
+          <span
+            :style="{ width: agent.tokensAvailable ? `${agent.share}%` : '100%' }"
+          ></span>
         </div>
         <div class="agent-card__numbers mono">
           <span>{{ String(agent.sessions).padStart(2, '0') }} SESSIONS</span>
-          <span>{{ formatTokens(agent.tokens) }} PROCESSED</span>
+          <span
+            :title="
+              agent.tokensAvailable
+                ? ''
+                : '本机应用未保存 Token 明细，仅同步模型与会话统计'
+            "
+          >
+            {{ agent.tokenLabel }}
+          </span>
           <span class="agent-card__share">{{ agent.shareLabel }}</span>
         </div>
       </div>
@@ -158,6 +170,22 @@ const agentStats = computed(() =>
   height: 100%;
   background: var(--agent-color);
   transition: width 0.8s var(--ease-out);
+}
+
+.agent-card__bar.is-trace {
+  height: 4px;
+  border-top: 1px dashed var(--border-primary);
+  background: transparent;
+}
+
+.agent-card__bar.is-trace span {
+  height: 3px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--agent-color) 0 6px,
+    transparent 6px 12px
+  );
+  opacity: 0.6;
 }
 
 .agent-card__numbers {

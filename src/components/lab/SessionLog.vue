@@ -14,10 +14,20 @@ const colorMap = computed(() =>
 );
 
 const records = computed(() =>
-  usageSummary.records.map((record) => ({
-    ...record,
-    total: recordTotal(record),
-  })),
+  usageSummary.records.map((record) => {
+    const modelList = record.models?.length
+      ? record.models
+      : [record.model].filter(Boolean);
+    return {
+      ...record,
+      total: recordTotal(record),
+      modelList,
+      modelLabel:
+        modelList.length > 1
+          ? `${modelList[0]} +${modelList.length - 1}`
+          : modelList[0] || 'unknown',
+    };
+  }),
 );
 
 const agentFilter = ref('all');
@@ -38,14 +48,14 @@ const projectOptions = computed(() => [
 ].sort());
 
 const modelOptions = computed(() => [
-  ...new Set(records.value.map((record) => record.model).filter(Boolean)),
+  ...new Set(records.value.flatMap((record) => record.modelList).filter(Boolean)),
 ].sort());
 
 const filteredRecords = computed(() =>
   records.value.filter((record) => {
     if (agentFilter.value !== 'all' && record.agent !== agentFilter.value) return false;
     if (projectFilter.value !== 'all' && record.project !== projectFilter.value) return false;
-    if (modelFilter.value !== 'all' && record.model !== modelFilter.value) return false;
+    if (modelFilter.value !== 'all' && !record.modelList.includes(modelFilter.value)) return false;
     return true;
   }),
 );
@@ -162,8 +172,8 @@ function clearFilters() {
               <td class="mono session-log__project">{{ record.project || '—' }}</td>
               <td class="session-log__task">
                 <span>{{ record.task }}</span>
-                <small class="mono">
-                  #{{ record.session || '—' }} · {{ record.model || 'unknown' }}
+                <small class="mono" :title="record.modelList.join(' · ')">
+                  #{{ record.session || '—' }} · {{ record.modelLabel }}
                 </small>
               </td>
               <td>

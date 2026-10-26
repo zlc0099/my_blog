@@ -1,9 +1,10 @@
 <script setup>
-import { computed } from 'vue';
+import { computed, nextTick, ref, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import PageHero from '@/components/ui/PageHero.vue';
 import SectionHeading from '@/components/ui/SectionHeading.vue';
-import ArchiveRow from '@/components/post/ArchiveRow.vue';
-import EmptyState from '@/components/ui/EmptyState.vue';
+import ArchiveCard from '@/components/post/ArchiveCard.vue';
+import ArchivePagination from '@/components/post/ArchivePagination.vue';
 import { posts } from '@/lib/content';
 import { site } from '@/data/site';
 import { usePageMeta } from '@/composables/usePageMeta';
@@ -13,15 +14,69 @@ usePageMeta({
   description: '自制 Skill 与常用非自制 Skill 的档案索引；自制技能完整源码放在 GitHub 的 myskill 目录。',
 });
 
+const PAGE_SIZE = 9;
+const route = useRoute();
+const router = useRouter();
+const sectionRef = ref(null);
+
 const skillPosts = computed(() => posts.filter((post) => post.category === 'skill'));
 const selfSkills = computed(() => skillPosts.value.filter((post) => post.skillType === 'self'));
 const commonSkills = computed(() => skillPosts.value.filter((post) => post.skillType !== 'self'));
+
+const currentPage = ref(Math.max(1, Number(route.query.page) || 1));
+const totalPages = computed(() => Math.max(1, Math.ceil(skillPosts.value.length / PAGE_SIZE)));
+const safePage = computed(() => Math.min(currentPage.value, totalPages.value));
+const pagedSkills = computed(() => {
+  const start = (safePage.value - 1) * PAGE_SIZE;
+  return skillPosts.value.slice(start, start + PAGE_SIZE);
+});
+const pageSelfSkills = computed(() => pagedSkills.value.filter((post) => post.skillType === 'self'));
+const pageCommonSkills = computed(() => pagedSkills.value.filter((post) => post.skillType !== 'self'));
 
 const heroMeta = computed(() => [
   { label: 'SELF-MADE', value: String(selfSkills.value.length).padStart(2, '0') },
   { label: 'COMMON', value: String(commonSkills.value.length).padStart(2, '0') },
   { label: 'TOTAL', value: String(skillPosts.value.length).padStart(2, '0') },
 ]);
+
+watch(
+  () => route.query.page,
+  (value) => {
+    currentPage.value = Math.max(1, Number(value) || 1);
+  },
+);
+
+watch(
+  totalPages,
+  (total) => {
+    if (currentPage.value <= total) return;
+    currentPage.value = total;
+    const query = { ...route.query };
+    if (total > 1) query.page = String(total);
+    else delete query.page;
+    router.replace({ path: route.path, query });
+  },
+  { immediate: true },
+);
+
+function goToPage(page) {
+  const next = Math.max(1, Math.min(totalPages.value, page));
+  if (next === safePage.value) return;
+
+  currentPage.value = next;
+  const query = { ...route.query };
+  if (next > 1) query.page = String(next);
+  else delete query.page;
+  router.replace({ path: route.path, query });
+
+  nextTick(() => {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    sectionRef.value?.scrollIntoView({
+      behavior: reduce ? 'auto' : 'smooth',
+      block: 'start',
+    });
+  });
+}
 </script>
 
 <template>
@@ -35,9 +90,9 @@ const heroMeta = computed(() => [
       :meta="heroMeta"
     />
 
-    <section class="section skill-section">
+    <section ref="sectionRef" class="section skill-section">
       <div class="container">
-        <div class="skill-group">
+        <div v-if="pageSelfSkills.length" class="skill-group">
           <SectionHeading index="01" title="SELF-MADE SKILL" zh="自制 Skill">
             <template #action>
               <a
@@ -57,24 +112,29 @@ const heroMeta = computed(() => [
             下。文章正文展示 SKILL.md 主体。
           </p>
 
-          <div v-if="selfSkills.length" class="archive-list">
-            <ArchiveRow v-for="post in selfSkills" :key="post.slug" :post="post" />
+          <div class="skill-grid">
+            <ArchiveCard v-for="post in pageSelfSkills" :key="post.slug" :post="post" />
           </div>
-          <EmptyState v-else code="SKILL / SELF-EMPTY" title="还没有自制 Skill 记录" description="本地 Skill 还在整理中。" />
         </div>
 
-        <div class="skill-group">
+        <div v-if="pageCommonSkills.length" class="skill-group">
           <SectionHeading index="02" title="COMMON SKILL" zh="常用 Skill（非自制）" />
 
           <p class="skill-group__note">
             平时在用的非自制 Skill，按用途整理。
           </p>
 
-          <div v-if="commonSkills.length" class="archive-list">
-            <ArchiveRow v-for="post in commonSkills" :key="post.slug" :post="post" />
+          <div class="skill-grid">
+            <ArchiveCard v-for="post in pageCommonSkills" :key="post.slug" :post="post" />
           </div>
-          <EmptyState v-else code="SKILL / COMMON-EMPTY" title="还没有常用 Skill 记录" description="常用 Skill 还在整理中。" />
         </div>
+
+        <ArchivePagination
+          :page="safePage"
+          :total-pages="totalPages"
+          :total="skillPosts.length"
+          @update:page="goToPage"
+        />
       </div>
     </section>
   </div>
@@ -83,6 +143,7 @@ const heroMeta = computed(() => [
 <style scoped>
 .skill-section {
   padding-top: clamp(32px, 5vw, 52px);
+  scroll-margin-top: calc(var(--header-height) + 24px);
 }
 
 .skill-group + .skill-group {
@@ -120,7 +181,22 @@ const heroMeta = computed(() => [
   color: var(--accent-ink);
 }
 
-.archive-list {
-  border-top: 1px solid var(--border-subtle);
+.skill-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 26px 22px;
+}
+
+@media (max-width: 1100px) {
+  .skill-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  .skill-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 22px;
+  }
 }
 </style>

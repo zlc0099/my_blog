@@ -2,7 +2,64 @@
   "demo": false,
   "source": "claude-code-logs",
   "updated": "2026-10-26",
-  "note": "由本地 Claude Code 会话日志聚合，不包含对话原文。tokensIn 为未缓存输入，tokensOut 为输出，cacheRead / cacheWrite 单列；总量包含缓存读写。Qoder / Trae 暂无自动导入，需要手动记录。",
+  "note": "由本地 Claude Code 会话日志聚合，不包含对话原文。tokensIn 为未缓存输入，tokensOut 为输出，cacheRead / cacheWrite 单列；总量包含缓存读写。模型维度按每条 assistant 消息的 model 聚合，同一会话可能包含多个模型。Qoder / Trae 的本地应用未保存 Token 明细，AI LAB 仅展示其模型与会话统计。",
+  "models": [
+    {
+      "model": "deepseek-flash",
+      "agent": "claude-code",
+      "sessions": 18,
+      "messages": 9329,
+      "tokensIn": 10525895,
+      "tokensOut": 4781472,
+      "cacheRead": 951752960,
+      "cacheWrite": 0,
+      "total": 967060327
+    },
+    {
+      "model": "claude-opus-5-5",
+      "agent": "claude-code",
+      "sessions": 2,
+      "messages": 78,
+      "tokensIn": 275283,
+      "tokensOut": 0,
+      "cacheRead": 8683392,
+      "cacheWrite": 0,
+      "total": 8958675
+    },
+    {
+      "model": "claude-sonnet-5-5",
+      "agent": "claude-code",
+      "sessions": 2,
+      "messages": 107,
+      "tokensIn": 234361,
+      "tokensOut": 440,
+      "cacheRead": 4075136,
+      "cacheWrite": 0,
+      "total": 4309937
+    },
+    {
+      "model": "claude-haiku-5-5",
+      "agent": "claude-code",
+      "sessions": 1,
+      "messages": 38,
+      "tokensIn": 50614,
+      "tokensOut": 0,
+      "cacheRead": 1080448,
+      "cacheWrite": 0,
+      "total": 1131062
+    },
+    {
+      "model": "deepseek-v4.1-flash",
+      "agent": "claude-code",
+      "sessions": 2,
+      "messages": 7,
+      "tokensIn": 66019,
+      "tokensOut": 2578,
+      "cacheRead": 90240,
+      "cacheWrite": 0,
+      "total": 158837
+    }
+  ],
   "records": [
     {
       "date": "2026-10-26",
@@ -11,6 +68,9 @@
       "task": "Claude Code 会话 · home",
       "type": "session",
       "model": "deepseek-flash",
+      "models": [
+        "deepseek-flash"
+      ],
       "project": "home",
       "session": "3e844ca0",
       "messages": 1,
@@ -30,6 +90,9 @@
       "task": "Claude Code 会话 · home",
       "type": "session",
       "model": "deepseek-flash",
+      "models": [
+        "deepseek-flash"
+      ],
       "project": "home",
       "session": "bb329a2c",
       "messages": 2,
@@ -49,6 +112,9 @@
       "task": "Claude Code 会话 · home",
       "type": "session",
       "model": "deepseek-flash",
+      "models": [
+        "deepseek-flash"
+      ],
       "project": "home",
       "session": "2e719b4a",
       "messages": 1528,
@@ -68,6 +134,9 @@
       "task": "Claude Code 会话 · dusk_youxi",
       "type": "session",
       "model": "deepseek-flash",
+      "models": [
+        "deepseek-flash"
+      ],
       "project": "dusk_youxi",
       "session": "094e33cf",
       "messages": 1,
@@ -87,6 +156,9 @@
       "task": "Claude Code 会话 · home",
       "type": "session",
       "model": "deepseek-flash",
+      "models": [
+        "deepseek-flash"
+      ],
       "project": "home",
       "session": "80928c8e",
       "messages": 262,
@@ -106,6 +178,9 @@
       "task": "Claude Code 会话 · home",
       "type": "session",
       "model": "deepseek-flash",
+      "models": [
+        "deepseek-flash"
+      ],
       "project": "home",
       "session": "160965d0",
       "messages": 1207,
@@ -125,6 +200,9 @@
       "task": "Claude Code 会话 · home",
       "type": "session",
       "model": "deepseek-flash",
+      "models": [
+        "deepseek-flash"
+      ],
       "project": "home",
       "session": "36b71e3b",
       "messages": 229,
@@ -144,6 +222,9 @@
       "task": "Claude Code 会话 · home",
       "type": "session",
       "model": "deepseek-flash",
+      "models": [
+        "deepseek-flash"
+      ],
       "project": "home",
       "session": "f65398e1",
       "messages": 1,
@@ -163,6 +244,9 @@
       "task": "Claude Code 会话 · home",
       "type": "session",
       "model": "deepseek-flash",
+      "models": [
+        "deepseek-flash"
+      ],
       "project": "home",
       "session": "05241c9f",
       "messages": 1844,
@@ -182,6 +266,9 @@
       "task": "Claude Code 会话 · home",
       "type": "session",
       "model": "deepseek-flash",
+      "models": [
+        "deepseek-flash"
+      ],
       "project": "home",
       "session": "afd186ea",
       "messages": 73,
@@ -201,6 +288,10 @@
       "task": "Claude Code 会话 · home",
       "type": "session",
       "model": "deepseek-flash",
+      "models": [
+        "deepseek-flash",
+        "claude-sonnet-5-5"
+      ],
       "project": "home",
       "session": "7ff9d289",
       "messages": 2227,
@@ -220,6 +311,9 @@
       "task": "Claude Code 会话 · home",
       "type": "session",
       "model": "deepseek-flash",
+      "models": [
+        "deepseek-flash"
+      ],
       "project": "home",
       "session": "91c82cef",
       "messages": 532,
@@ -239,6 +333,10 @@
       "task": "Claude Code 会话 · home",
       "type": "session",
       "model": "deepseek-flash",
+      "models": [
+        "deepseek-flash",
+        "claude-opus-5-5"
+      ],
       "project": "home",
       "session": "dee3e014",
       "messages": 417,
@@ -258,6 +356,12 @@
       "task": "Claude Code 会话 · home",
       "type": "session",
       "model": "deepseek-flash",
+      "models": [
+        "deepseek-flash",
+        "claude-opus-5-5",
+        "claude-sonnet-5-5",
+        "claude-haiku-5-5"
+      ],
       "project": "home",
       "session": "f80a5c92",
       "messages": 390,
@@ -277,6 +381,9 @@
       "task": "Claude Code 会话 · home",
       "type": "session",
       "model": "deepseek-flash",
+      "models": [
+        "deepseek-flash"
+      ],
       "project": "home",
       "session": "31e5992e",
       "messages": 282,
@@ -296,6 +403,9 @@
       "task": "Claude Code 会话 · home",
       "type": "session",
       "model": "deepseek-flash",
+      "models": [
+        "deepseek-flash"
+      ],
       "project": "home",
       "session": "442774d9",
       "messages": 108,
@@ -315,6 +425,9 @@
       "task": "Claude Code 会话 · home",
       "type": "session",
       "model": "deepseek-flash",
+      "models": [
+        "deepseek-flash"
+      ],
       "project": "home",
       "session": "3f0f5592",
       "messages": 18,
@@ -334,6 +447,9 @@
       "task": "Claude Code 会话 · home",
       "type": "session",
       "model": "deepseek-v4.1-flash",
+      "models": [
+        "deepseek-v4.1-flash"
+      ],
       "project": "home",
       "session": "ca4ae734",
       "messages": 1,
@@ -353,6 +469,9 @@
       "task": "Claude Code 会话 · home",
       "type": "session",
       "model": "deepseek-v4.1-flash",
+      "models": [
+        "deepseek-v4.1-flash"
+      ],
       "project": "home",
       "session": "3d62c7df",
       "messages": 6,
@@ -372,6 +491,9 @@
       "task": "Claude Code 会话 · home",
       "type": "session",
       "model": "deepseek-flash",
+      "models": [
+        "deepseek-flash"
+      ],
       "project": "home",
       "session": "8eaceb47",
       "messages": 431,

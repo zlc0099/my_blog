@@ -1,0 +1,92 @@
+{
+  "demo": false,
+  "source": "local-agent-trace",
+  "updated": "2026-10-26",
+  "note": "由本机 Qoder 会话库与 Trae 本地日志 / 完成缓存聚合。仅包含模型名、会话数、活动数与日期范围；不包含对话、标题、路径、会话 ID 或 Token 明细。",
+  "agents": [
+    {
+      "agent": "qoder",
+      "source": "qoder-local-db",
+      "sourceLabel": "LOCAL DB",
+      "tokensAvailable": false,
+      "activityLabel": "REPLIES",
+      "sessions": 9,
+      "activity": 294,
+      "period": {
+        "first": "2026-10-12",
+        "last": "2026-10-26"
+      },
+      "models": [
+        {
+          "model": "dfmodel",
+          "sessions": 7,
+          "activity": 278,
+          "first": "2026-10-15",
+          "last": "2026-10-26"
+        },
+        {
+          "model": "qfmodel",
+          "sessions": 1,
+          "activity": 14,
+          "first": "2026-10-14",
+          "last": "2026-10-20"
+        },
+        {
+          "model": "auto",
+          "sessions": 1,
+          "activity": 2,
+          "first": "2026-10-12",
+          "last": "2026-10-12"
+        }
+      ]
+    },
+    {
+      "agent": "trae",
+      "source": "trae-local-trace",
+      "sourceLabel": "LOCAL TRACE",
+      "tokensAvailable": false,
+      "activityLabel": "CALLS",
+      "sessions": 8,
+      "activity": 15,
+      "period": {
+        "first": "2026-08-19",
+        "last": "2026-10-26"
+      },
+      "models": [
+        {
+          "model": "Doubao-Seed-Code",
+          "sessions": 4,
+          "activity": 4,
+          "first": "2026-08-19",
+          "last": "2026-08-21"
+        },
+        {
+          "model": "glm-5.3-flash",
+          "sessions": 2,
+          "activity": 6,
+          "first": "2026-10-23",
+          "last": "2026-10-26"
+        },
+        {
+          "model": "deepseek-v4.1-flash",
+          "sessions": 2,
+          "activity": 4,
+          "first": "2026-10-25",
+          "last": "2026-10-26"
+        },
+        {
+          "model": "qwen3.8-flash",
+          "sessions": 1,
+          "activity": 1,
+          "first": "2026-10-26",
+          "last": "2026-10-26"
+        }
+      ],
+      "evidence": {
+        "logFiles": 14,
+        "logRequests": 11,
+        "cachedSessions": 4
+      }
+    }
+  ]
+}

@@ -4,6 +4,7 @@ import { useRoute } from 'vue-router';
 import NotFoundView from '@/views/NotFoundView.vue';
 import MarkdownBody from '@/components/post/MarkdownBody.vue';
 import RelatedPrompts from '@/components/post/RelatedPrompts.vue';
+import StyleCover from '@/components/post/StyleCover.vue';
 import TocSidebar from '@/components/post/TocSidebar.vue';
 import ReadingProgress from '@/components/post/ReadingProgress.vue';
 import TagChip from '@/components/ui/TagChip.vue';
@@ -84,6 +85,17 @@ usePageMeta(() =>
             <span class="post-header__side-label mono">FILE / ENTRY</span>
           </div>
         </div>
+
+        <figure v-if="post.coverStyle" class="post-cover">
+          <StyleCover
+            :variant="post.coverStyle"
+            :label="post.coverNote || post.title"
+          />
+          <figcaption class="post-cover__caption">
+            <span class="eyebrow">STYLE SAMPLE / 封面示意</span>
+            <p>{{ post.coverNote }}</p>
+          </figcaption>
+        </figure>
       </div>
     </header>
 
@@ -307,6 +319,40 @@ usePageMeta(() =>
   color: var(--text-muted);
   font-size: 10px;
   letter-spacing: 0.14em;
+}
+
+.post-cover {
+  --cover-ratio: 16 / 6.4;
+  position: relative;
+  margin-top: clamp(26px, 4vw, 44px);
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-deep);
+}
+
+.post-cover__caption {
+  display: flex;
+  align-items: baseline;
+  gap: 18px;
+  padding: 12px 14px;
+  border-top: 1px solid var(--border-subtle);
+  background: var(--bg-secondary);
+}
+
+.post-cover__caption p {
+  color: var(--text-secondary);
+  font-size: 12.5px;
+  line-height: 1.7;
+}
+
+@media (max-width: 720px) {
+  .post-cover {
+    --cover-ratio: 16 / 9;
+  }
+
+  .post-cover__caption {
+    flex-direction: column;
+    gap: 6px;
+  }
 }
 
 .post-layout {

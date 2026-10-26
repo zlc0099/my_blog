@@ -13,7 +13,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "import:claude": "node scripts/import-claude-usage.mjs"
+    "import:claude": "node scripts/import-claude-usage.mjs",
+    "import:agents": "node scripts/import-agent-models.mjs"
   },
   "engines": {
     "node": ">=20"

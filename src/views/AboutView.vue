@@ -1,11 +1,8 @@
 <script setup>
-import { computed } from 'vue';
+import { ref } from 'vue';
 import SectionHeading from '@/components/ui/SectionHeading.vue';
-import FocusList from '@/components/home/FocusList.vue';
 import { site } from '@/data/site';
-import { agents } from '@/data/agents';
-import { focusItems } from '@/data/focus';
-import { archiveStats, projects } from '@/lib/content';
+import { archiveStats } from '@/lib/content';
 import { formatDate } from '@/lib/format';
 import { usePageMeta } from '@/composables/usePageMeta';
 
@@ -14,7 +11,33 @@ usePageMeta({
   description: site.aboutIntro,
 });
 
-const focusLine = computed(() => focusItems.map((item) => item.topic).join(' / '));
+const aboutPanels = [
+  {
+    id: 'interests',
+    index: '01',
+    title: '兴趣爱好',
+    preview: '足球 / NBA · 游戏 · 代码 · 跑步健身',
+  },
+  {
+    id: 'principles',
+    index: '02',
+    title: '学习方式',
+    preview: '项目驱动 · 先跑通再抽象 · 问题留档 · 工具服务判断',
+  },
+  {
+    id: 'contact',
+    index: '03',
+    title: '联系方式',
+    preview: 'GitHub · Bilibili · 抖音',
+  },
+];
+
+const activePanel = ref('interests');
+
+function togglePanel(id) {
+  activePanel.value = activePanel.value === id ? null : id;
+}
+
 const barcode = [2, 5, 3, 8, 2, 6, 4, 9, 3, 5, 2, 7, 4, 6, 3, 8, 2, 5, 7, 3, 6, 2, 8, 4, 5, 3, 7, 2, 6, 4];
 </script>
 
@@ -58,14 +81,6 @@ const barcode = [2, 5, 3, 8, 2, 6, 4, 9, 3, 5, 2, 7, 4, 6, 3, 8, 2, 5, 7, 3, 6, 
               <dd>{{ site.owner.role }}</dd>
             </div>
             <div>
-              <dt>FOCUS</dt>
-              <dd>{{ focusLine }}</dd>
-            </div>
-            <div>
-              <dt>TOOLS</dt>
-              <dd>{{ agents.map((agent) => agent.name).join(' / ') }}</dd>
-            </div>
-            <div>
               <dt>GITHUB</dt>
               <dd>
                 <a :href="site.github" target="_blank" rel="noopener noreferrer">
@@ -84,85 +99,90 @@ const barcode = [2, 5, 3, 8, 2, 6, 4, 9, 3, 5, 2, 7, 4, 6, 3, 8, 2, 5, 7, 3, 6, 
 
     <section class="section section--bordered">
       <div class="container">
-        <SectionHeading index="01" title="CURRENT FOCUS" zh="当前关注" />
-        <FocusList />
-      </div>
-    </section>
+        <SectionHeading index="01" title="PROFILE" zh="关于我" />
 
-    <section class="section section--bordered">
-      <div class="container">
-        <SectionHeading index="02" title="TOOLCHAIN" zh="工具链" />
-        <div class="about-tools">
-          <div v-for="agent in agents" :key="agent.id" class="about-tool">
-            <span class="about-tool__code mono">{{ agent.code }}</span>
-            <div>
-              <strong>{{ agent.name }}</strong>
-              <p>{{ agent.role }}</p>
-            </div>
-            <span class="about-tool__mode mono">{{ agent.mode }}</span>
-          </div>
-        </div>
-        <p class="about-note mono">
-          TOOLS ARE EXECUTION LAYERS / 工具只是执行层，方案判断与最终验收由人负责。
-        </p>
-      </div>
-    </section>
-
-    <section class="section section--bordered">
-      <div class="container">
-        <SectionHeading index="03" title="PRINCIPLES" zh="学习方式" />
-        <div class="principles">
-          <article v-for="(item, index) in site.philosophy" :key="item.title" class="principle">
-            <span class="principle__index mono">0{{ index + 1 }}</span>
-            <h3>{{ item.title }}</h3>
-            <p>{{ item.desc }}</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section section--bordered">
-      <div class="container">
-        <SectionHeading
-          index="04"
-          title="PROJECT EXPERIENCE"
-          zh="项目经历"
-          action-to="/projects"
-          action-label="ALL PROJECTS"
-        />
-        <div class="about-projects">
-          <RouterLink
-            v-for="project in projects"
-            :key="project.slug"
-            :to="`/projects/${project.slug}`"
-            class="about-project"
+        <div class="about-accordion">
+          <article
+            v-for="panel in aboutPanels"
+            :key="panel.id"
+            class="about-accordion__item"
+            :class="{ 'is-active': activePanel === panel.id }"
           >
-            <div class="about-project__main">
-              <span class="mono about-project__meta">{{ project.archiveCode }} / {{ project.period }} / {{ project.status }}</span>
-              <h3>{{ project.title }}</h3>
-              <p>{{ project.summary }}</p>
-            </div>
-            <div class="about-project__side">
-              <span class="about-project__stack mono">{{ project.stack.slice(0, 3).join(' · ') }}</span>
-              <span class="about-project__arrow" aria-hidden="true">→</span>
-            </div>
-          </RouterLink>
-        </div>
-      </div>
-    </section>
+            <h3 class="about-accordion__heading">
+              <button
+                :id="`about-tab-${panel.id}`"
+                type="button"
+                class="about-accordion__trigger"
+                :aria-expanded="activePanel === panel.id"
+                :aria-controls="`about-panel-${panel.id}`"
+                @click="togglePanel(panel.id)"
+              >
+                <span class="about-accordion__index mono">{{ panel.index }}</span>
+                <span class="about-accordion__title">{{ panel.title }}</span>
+                <span class="about-accordion__preview">{{ panel.preview }}</span>
+                <span class="about-accordion__arrow" aria-hidden="true"></span>
+              </button>
+            </h3>
 
-    <section class="section section--bordered">
-      <div class="container">
-        <SectionHeading index="05" title="CONTACT" zh="联系方式" />
-        <div class="about-contact">
-          <div>
-            <span class="eyebrow">OPEN CHANNEL / 公开入口</span>
-            <h2>GitHub 是唯一的公开联系方式。</h2>
-            <p>项目代码、站点更新与后续学习记录会同步到 GitHub。这里不展示未经确认的个人信息。</p>
-          </div>
-          <a :href="site.github" class="btn btn--primary" target="_blank" rel="noopener noreferrer">
-            github.com/zlc0099 ↗
-          </a>
+            <div
+              :id="`about-panel-${panel.id}`"
+              class="about-accordion__collapse"
+              role="region"
+              :aria-labelledby="`about-tab-${panel.id}`"
+              :aria-hidden="activePanel !== panel.id"
+              :inert="activePanel !== panel.id ? true : undefined"
+            >
+              <div class="about-accordion__collapse-inner">
+                <div class="about-accordion__content">
+                  <template v-if="panel.id === 'interests'">
+                    <p class="about-interests__intro">{{ site.interestsIntro }}</p>
+                    <div class="about-interests">
+                      <article v-for="item in site.interests" :key="item.title" class="about-interest">
+                        <span class="about-interest__code mono">{{ item.code }}</span>
+                        <h4>{{ item.title }}</h4>
+                        <p>{{ item.desc }}</p>
+                      </article>
+                    </div>
+                  </template>
+
+                  <template v-else-if="panel.id === 'principles'">
+                    <div class="principles">
+                      <article v-for="(item, index) in site.philosophy" :key="item.title" class="principle">
+                        <span class="principle__index mono">0{{ index + 1 }}</span>
+                        <h4>{{ item.title }}</h4>
+                        <p>{{ item.desc }}</p>
+                      </article>
+                    </div>
+                  </template>
+
+                  <template v-else>
+                    <div class="about-contact">
+                      <div class="about-contact__intro">
+                        <span class="eyebrow">OPEN CHANNEL / 公开入口</span>
+                        <h4>代码、视频和日常，都在这三个地方。</h4>
+                        <p>GitHub 放代码和站点更新，B站和抖音放视频与日常。账号信息以这里为准。</p>
+                      </div>
+                      <div class="about-contact__grid">
+                        <a
+                          v-for="contact in site.contacts"
+                          :key="contact.label"
+                          :href="contact.href"
+                          class="about-contact__item"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <span class="about-contact__label mono">{{ contact.label }}</span>
+                          <strong class="about-contact__value">{{ contact.value }}</strong>
+                          <span class="about-contact__note">{{ contact.note }}</span>
+                          <span class="about-contact__arrow" aria-hidden="true">↗</span>
+                        </a>
+                      </div>
+                    </div>
+                  </template>
+                </div>
+              </div>
+            </div>
+          </article>
         </div>
 
         <div class="about-siteinfo mono">
@@ -340,55 +360,184 @@ const barcode = [2, 5, 3, 8, 2, 6, 4, 9, 3, 5, 2, 7, 4, 6, 3, 8, 2, 5, 7, 3, 6, 
   background: var(--text-secondary);
 }
 
-.about-tools {
+.about-accordion {
+  border: 1px solid var(--border-subtle);
+  border-radius: 2px;
+  background: var(--border-subtle);
+  overflow: hidden;
+}
+
+.about-accordion__item {
+  background: var(--bg-primary);
+}
+
+.about-accordion__item + .about-accordion__item {
   border-top: 1px solid var(--border-subtle);
 }
 
-.about-tool {
-  display: grid;
-  grid-template-columns: 90px minmax(0, 1fr) auto;
-  gap: 20px;
+.about-accordion__heading {
+  margin: 0;
+}
+
+.about-accordion__trigger {
+  display: flex;
   align-items: center;
-  padding: 18px 0;
-  border-bottom: 1px solid var(--border-subtle);
+  gap: 14px;
+  width: 100%;
+  padding: 18px 22px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
   transition: background-color var(--dur-fast) var(--ease-out);
 }
 
-.about-tool:hover {
+.about-accordion__trigger:hover,
+.about-accordion__trigger:focus-visible,
+.about-accordion__item.is-active .about-accordion__trigger {
   background: var(--bg-secondary);
 }
 
-.about-tool__code {
+.about-accordion__index {
+  flex: none;
   color: var(--accent-ink);
   font-size: 10px;
   letter-spacing: 0.08em;
 }
 
-.about-tool strong {
+.about-accordion__title {
+  flex: none;
   color: var(--text-primary);
-  font-size: 16px;
-  font-weight: 500;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.3;
 }
 
-.about-tool p {
-  margin-top: 3px;
+.about-accordion__preview {
+  max-width: 56%;
+  margin-left: auto;
+  overflow: hidden;
   color: var(--text-muted);
   font-size: 11.5px;
+  line-height: 1.65;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateX(4px);
+  transition: opacity var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
 }
 
-.about-tool__mode {
-  padding: 3px 6px;
-  border: 1px solid var(--border-primary);
-  color: var(--text-muted);
+.about-accordion__trigger:hover .about-accordion__preview,
+.about-accordion__trigger:focus-visible .about-accordion__preview,
+.about-accordion__item.is-active .about-accordion__preview {
+  opacity: 1;
+  transform: none;
+}
+
+.about-accordion__arrow {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  margin-right: 3px;
+  border-right: 1px solid var(--text-muted);
+  border-bottom: 1px solid var(--text-muted);
+  transform: rotate(45deg);
+  transition: transform 180ms var(--ease-out);
+}
+
+.about-accordion__item.is-active .about-accordion__arrow {
+  transform: rotate(225deg);
+}
+
+.about-accordion__collapse {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 260ms var(--ease-out);
+}
+
+.about-accordion__item.is-active .about-accordion__collapse {
+  grid-template-rows: 1fr;
+}
+
+.about-accordion__collapse-inner {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.about-accordion__item.is-active .about-accordion__collapse-inner {
+  border-top: 1px solid var(--border-subtle);
+}
+
+.about-accordion__content {
+  padding: 20px 22px 26px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-accordion__collapse,
+  .about-accordion__arrow,
+  .about-accordion__preview {
+    transition: none;
+  }
+}
+
+.about-interests__intro {
+  max-width: 760px;
+  margin-bottom: 24px;
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.95;
+}
+
+.about-interests {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  border: 1px solid var(--border-subtle);
+  background: var(--border-subtle);
+}
+
+.about-interest {
+  position: relative;
+  min-height: 160px;
+  padding: 24px;
+  background: var(--bg-primary);
+}
+
+.about-interest::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--accent);
+  transition: width var(--dur-base) var(--ease-out);
+}
+
+.about-interest:hover::before {
+  width: 42px;
+}
+
+.about-interest__code {
+  color: var(--accent-ink);
   font-size: 10px;
   letter-spacing: 0.08em;
 }
 
-.about-note {
-  margin-top: 16px;
-  color: var(--text-muted);
-  font-size: 10px;
-  letter-spacing: 0.08em;
+.about-interest h4 {
+  margin-top: 24px;
+  color: var(--text-primary);
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.about-interest p {
+  margin-top: 8px;
+  color: var(--text-secondary);
+  font-size: 12.5px;
+  line-height: 1.8;
 }
 
 .principles {
@@ -427,7 +576,7 @@ const barcode = [2, 5, 3, 8, 2, 6, 4, 9, 3, 5, 2, 7, 4, 6, 3, 8, 2, 5, 7, 3, 6, 
   letter-spacing: 0.08em;
 }
 
-.principle h3 {
+.principle h4 {
   margin-top: 24px;
   color: var(--text-primary);
   font-size: 18px;
@@ -441,97 +590,103 @@ const barcode = [2, 5, 3, 8, 2, 6, 4, 9, 3, 5, 2, 7, 4, 6, 3, 8, 2, 5, 7, 3, 6, 
   line-height: 1.8;
 }
 
-.about-projects {
-  border-top: 1px solid var(--border-subtle);
-}
-
-.about-project {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 28px;
-  align-items: center;
-  padding: 22px 0;
-  border-bottom: 1px solid var(--border-subtle);
-  transition: background-color var(--dur-fast) var(--ease-out);
-}
-
-.about-project:hover {
-  background: var(--bg-secondary);
-}
-
-.about-project__meta {
-  color: var(--text-muted);
-  font-size: 10px;
-  letter-spacing: 0.08em;
-}
-
-.about-project h3 {
-  margin-top: 8px;
-  color: var(--text-primary);
-  font-size: 22px;
-  font-weight: 600;
-}
-
-.about-project:hover h3 {
-  color: var(--accent-ink);
-}
-
-.about-project p {
-  max-width: 760px;
-  margin-top: 6px;
-  color: var(--text-secondary);
-  font-size: 12.5px;
-  line-height: 1.75;
-}
-
-.about-project__side {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 12px;
-}
-
-.about-project__stack {
-  color: var(--text-muted);
-  font-size: 10px;
-  letter-spacing: 0.04em;
-  text-align: right;
-}
-
-.about-project__arrow {
-  color: var(--text-muted);
-  font-size: 20px;
-  transition: color var(--dur-fast) var(--ease-out), transform var(--dur-base) var(--ease-out);
-}
-
-.about-project:hover .about-project__arrow {
-  color: var(--accent-ink);
-  transform: translateX(3px);
-}
-
 .about-contact {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 40px;
-  padding: clamp(24px, 4vw, 36px);
-  border: 1px solid var(--border-subtle);
-  border-left: 2px solid var(--accent);
-  background: var(--bg-secondary);
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(24px, 4vw, 48px);
 }
 
-.about-contact h2 {
+.about-accordion__content .about-contact {
+  border: 0;
+  padding: 0;
+  background: transparent;
+}
+
+.about-contact h4 {
   margin-top: 12px;
   font-size: clamp(22px, 2.8vw, 30px);
   font-weight: 600;
 }
 
-.about-contact p {
+.about-contact__intro p {
   max-width: 560px;
   margin-top: 10px;
   color: var(--text-secondary);
   font-size: 13px;
   line-height: 1.85;
+}
+
+.about-contact__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  align-content: start;
+}
+
+.about-contact__item {
+  display: flex;
+  flex-direction: column;
+  min-height: 140px;
+  padding: 16px;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-primary);
+  color: inherit;
+  transition: border-color var(--dur-fast) var(--ease-out),
+    background-color var(--dur-fast) var(--ease-out);
+}
+
+.about-contact__item:hover {
+  border-color: var(--border-strong);
+  background: var(--bg-secondary);
+}
+
+.about-contact__label {
+  color: var(--accent-ink);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+}
+
+.about-contact__value {
+  margin-top: 12px;
+  color: var(--text-primary);
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.about-contact__note {
+  margin-top: 6px;
+  color: var(--text-muted);
+  font-size: 11.5px;
+  line-height: 1.65;
+}
+
+.about-contact__arrow {
+  align-self: flex-end;
+  margin-top: auto;
+  color: var(--text-muted);
+  font-size: 18px;
+  transition: color var(--dur-fast) var(--ease-out),
+    transform var(--dur-base) var(--ease-out);
+}
+
+.about-contact__item:hover .about-contact__arrow {
+  color: var(--accent-ink);
+  transform: translate(2px, -2px);
+}
+
+.about-contact__item.is-pending {
+  border-style: dashed;
+}
+
+.about-contact__item.is-pending .about-contact__label,
+.about-contact__item.is-pending .about-contact__value {
+  color: var(--text-muted);
+}
+
+.about-contact__item.is-pending .about-contact__value {
+  font-weight: 500;
 }
 
 .about-siteinfo {
@@ -553,6 +708,10 @@ const barcode = [2, 5, 3, 8, 2, 6, 4, 9, 3, 5, 2, 7, 4, 6, 3, 8, 2, 5, 7, 3, 6, 
   .profile-card {
     max-width: 520px;
   }
+
+  .about-contact {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 720px) {
@@ -564,33 +723,37 @@ const barcode = [2, 5, 3, 8, 2, 6, 4, 9, 3, 5, 2, 7, 4, 6, 3, 8, 2, 5, 7, 3, 6, 
     grid-template-columns: 1fr;
   }
 
-  .about-tool {
-    grid-template-columns: 64px minmax(0, 1fr);
+  .about-accordion__trigger {
+    gap: 10px;
+    padding: 16px 14px;
   }
 
-  .about-tool__mode {
+  .about-accordion__title {
+    font-size: 17px;
+  }
+
+  .about-accordion__index {
+    font-size: 9px;
+  }
+
+  .about-accordion__preview {
     display: none;
   }
 
-  .about-project {
+  .about-accordion__content {
+    padding: 18px 14px 20px;
+  }
+
+  .about-interests {
     grid-template-columns: 1fr;
-    gap: 12px;
-  }
-
-  .about-project__side {
-    align-items: flex-start;
-    flex-direction: row;
-    justify-content: space-between;
-  }
-
-  .about-project__stack {
-    text-align: left;
   }
 
   .about-contact {
-    align-items: flex-start;
-    flex-direction: column;
     gap: 22px;
+  }
+
+  .about-contact__grid {
+    grid-template-columns: 1fr;
   }
 }
 </style>

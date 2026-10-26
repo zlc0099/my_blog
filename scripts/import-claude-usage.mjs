@@ -119,6 +119,17 @@ function normalizeSession(session) {
     [...session.models.entries()].filter(([model]) => model !== '<synthetic>'),
   );
   const model = topKey(models) || topKey(session.models) || 'unknown';
+  const modelUsage = [...session.modelUsage.entries()]
+    .map(([name, stat]) => ({
+      model: name,
+      messages: stat.messages,
+      tokensIn: stat.tokensIn,
+      tokensOut: stat.tokensOut,
+      cacheRead: stat.cacheRead,
+      cacheWrite: stat.cacheWrite,
+      total: stat.tokensIn + stat.tokensOut + stat.cacheRead + stat.cacheWrite,
+    }))
+    .sort((a, b) => b.total - a.total);
   return {
     sessionId: session.id,
     shortId: session.shortId,
@@ -126,6 +137,7 @@ function normalizeSession(session) {
     updated: end,
     project,
     model,
+    modelUsage,
     messages: session.messages,
     sideMessages: session.sideMessages,
     tokensIn: session.input,
@@ -224,6 +236,7 @@ async function parseSessionFile(file, seenMessageIds, sessions) {
         fileDate,
         cwds: new Map(),
         models: new Map(),
+        modelUsage: new Map(),
         messages: 0,
         sideMessages: 0,
         input: 0,
@@ -242,10 +255,29 @@ async function parseSessionFile(file, seenMessageIds, sessions) {
     session.models.set(model, (session.models.get(model) || 0) + 1);
     session.messages += 1;
     if (entry.isSidechain) session.sideMessages += 1;
-    session.input += Number(usage.input_tokens) || 0;
-    session.output += Number(usage.output_tokens) || 0;
-    session.cacheRead += Number(usage.cache_read_input_tokens) || 0;
-    session.cacheWrite += Number(usage.cache_creation_input_tokens) || 0;
+    const tokensIn = Number(usage.input_tokens) || 0;
+    const tokensOut = Number(usage.output_tokens) || 0;
+    const cacheRead = Number(usage.cache_read_input_tokens) || 0;
+    const cacheWrite = Number(usage.cache_creation_input_tokens) || 0;
+    session.input += tokensIn;
+    session.output += tokensOut;
+    session.cacheRead += cacheRead;
+    session.cacheWrite += cacheWrite;
+    if (model !== '<synthetic>') {
+      const modelStat = session.modelUsage.get(model) || {
+        messages: 0,
+        tokensIn: 0,
+        tokensOut: 0,
+        cacheRead: 0,
+        cacheWrite: 0,
+      };
+      modelStat.messages += 1;
+      modelStat.tokensIn += tokensIn;
+      modelStat.tokensOut += tokensOut;
+      modelStat.cacheRead += cacheRead;
+      modelStat.cacheWrite += cacheWrite;
+      session.modelUsage.set(model, modelStat);
+    }
   }
 }
 
@@ -269,6 +301,32 @@ async function main() {
   }
 
   normalized.sort((a, b) => b.date.localeCompare(a.date) || b.updated.localeCompare(a.updated));
+
+  const modelMap = new Map();
+  for (const session of normalized) {
+    for (const usage of session.modelUsage) {
+      const entry = modelMap.get(usage.model) || {
+        model: usage.model,
+        agent: 'claude-code',
+        sessions: 0,
+        messages: 0,
+        tokensIn: 0,
+        tokensOut: 0,
+        cacheRead: 0,
+        cacheWrite: 0,
+        total: 0,
+      };
+      entry.sessions += 1;
+      entry.messages += usage.messages;
+      entry.tokensIn += usage.tokensIn;
+      entry.tokensOut += usage.tokensOut;
+      entry.cacheRead += usage.cacheRead;
+      entry.cacheWrite += usage.cacheWrite;
+      entry.total += usage.total;
+      modelMap.set(usage.model, entry);
+    }
+  }
+  const models = [...modelMap.values()].sort((a, b) => b.total - a.total);
 
   const usedShortIds = new Map();
   for (const session of normalized) {
@@ -309,6 +367,7 @@ async function main() {
     task: `Claude Code 会话${session.project !== 'unknown' ? ` · ${session.project}` : ''}`,
     type: 'session',
     model: session.model,
+    models: session.modelUsage.map((usage) => usage.model),
     project: session.project,
     session: session.shortId,
     messages: session.messages,
@@ -359,7 +418,8 @@ async function main() {
     demo: false,
     source: 'claude-code-logs',
     updated: localDate(new Date().toISOString()),
-    note: '由本地 Claude Code 会话日志聚合，不包含对话原文。tokensIn 为未缓存输入，tokensOut 为输出，cacheRead / cacheWrite 单列；总量包含缓存读写。Qoder / Trae 暂无自动导入，需要手动记录。',
+    note: '由本地 Claude Code 会话日志聚合，不包含对话原文。tokensIn 为未缓存输入，tokensOut 为输出，cacheRead / cacheWrite 单列；总量包含缓存读写。模型维度按每条 assistant 消息的 model 聚合，同一会话可能包含多个模型。Qoder / Trae 的本地应用未保存 Token 明细，AI LAB 仅展示其模型与会话统计。',
+    models,
     records,
   };
 
@@ -373,6 +433,9 @@ async function main() {
   console.log(`total tokens:        ${totals.total} (${(totals.total / 1_000_000).toFixed(2)}M)`);
   console.log(`date range:          ${normalized.at(-1)?.date || '-'} -> ${normalized[0]?.date || '-'}`);
   console.log(`projects:            ${activeProjectLabels.join(', ') || '-'}`);
+  console.log(
+    `models:              ${models.map((model) => `${model.model} ${(model.total / 1_000_000).toFixed(2)}M`).join(', ') || '-'}`,
+  );
   console.log(`new note stubs:      ${createdNotes}`);
   console.log(`existing notes kept: ${existingNotes}`);
 

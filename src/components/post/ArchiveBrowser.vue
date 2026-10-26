@@ -1,10 +1,11 @@
 <script setup>
-import { computed, onBeforeUnmount, ref, watch } from 'vue';
+import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import PageHero from '@/components/ui/PageHero.vue';
-import ArchiveRow from '@/components/post/ArchiveRow.vue';
+import ArchiveCard from '@/components/post/ArchiveCard.vue';
+import ArchivePagination from '@/components/post/ArchivePagination.vue';
 import EmptyState from '@/components/ui/EmptyState.vue';
-import { archiveStats, categoriesWithCount, posts, tags } from '@/lib/content';
+import { archiveStats, categoriesWithCount, posts } from '@/lib/content';
 import { formatDate, toTagSlug } from '@/lib/format';
 import { stripMarkdown } from '@/lib/text';
 import { usePageMeta } from '@/composables/usePageMeta';
@@ -24,7 +25,7 @@ const props = defineProps({
   },
   description: {
     type: String,
-    default: '学习记录、Skill、前端/后端提示词和 AI 分工。按模块、标签或关键词检索。',
+    default: '学习记录、Skill、前端/后端提示词和 AI 分工。按分类或关键词检索。',
   },
   serial: {
     type: String,
@@ -40,12 +41,13 @@ const props = defineProps({
   },
 });
 
-const PAGE_SIZE = 6;
+const PAGE_SIZE = 9;
 const route = useRoute();
 const router = useRouter();
 
 const searchInput = ref(String(route.query.q || ''));
-const limit = ref(PAGE_SIZE);
+const currentPage = ref(Math.max(1, Number(route.query.page) || 1));
+const gridRef = ref(null);
 let searchTimer = null;
 
 const searchTerm = computed(() => String(route.query.q || '').trim());
@@ -78,8 +80,16 @@ const filteredPosts = computed(() => {
   });
 });
 
-const visiblePosts = computed(() => filteredPosts.value.slice(0, limit.value));
-const remaining = computed(() => Math.max(0, filteredPosts.value.length - visiblePosts.value.length));
+const totalPages = computed(() => Math.max(1, Math.ceil(filteredPosts.value.length / PAGE_SIZE)));
+const safePage = computed(() => Math.min(currentPage.value, totalPages.value));
+const pagedPosts = computed(() => {
+  const start = (safePage.value - 1) * PAGE_SIZE;
+  return filteredPosts.value.slice(start, start + PAGE_SIZE);
+});
+const pageStart = computed(() =>
+  filteredPosts.value.length ? (safePage.value - 1) * PAGE_SIZE + 1 : 0,
+);
+const pageEnd = computed(() => Math.min(safePage.value * PAGE_SIZE, filteredPosts.value.length));
 const hasFilters = computed(() =>
   Boolean(
     searchTerm.value ||
@@ -113,24 +123,39 @@ watch(searchInput, (value) => {
   searchTimer = window.setTimeout(() => {
     const next = value.trim();
     if (next === searchTerm.value) return;
-    updateQuery({ q: next || undefined });
+    currentPage.value = 1;
+    updateQuery({ q: next || undefined, page: undefined });
   }, 220);
 });
 
-watch([activeCategory, activeTag], () => {
-  limit.value = PAGE_SIZE;
-});
-
 watch([() => props.lockedCategory, () => props.lockedTag], () => {
-  limit.value = PAGE_SIZE;
+  currentPage.value = 1;
   searchInput.value = '';
   const nextQuery = { ...route.query };
   delete nextQuery.q;
   delete nextQuery.tag;
+  delete nextQuery.page;
   if (Object.keys(nextQuery).length !== Object.keys(route.query).length) {
     router.replace({ path: route.path, query: nextQuery });
   }
 });
+
+watch(
+  () => route.query.page,
+  (value) => {
+    currentPage.value = Math.max(1, Number(value) || 1);
+  },
+);
+
+watch(
+  totalPages,
+  (total) => {
+    if (currentPage.value <= total) return;
+    currentPage.value = total;
+    updateQuery({ page: total > 1 ? total : undefined });
+  },
+  { immediate: true },
+);
 
 function updateQuery(patch) {
   const next = { ...route.query };
@@ -146,31 +171,43 @@ function setCategory(slug) {
     router.push('/categories/skill');
     return;
   }
-  updateQuery({ category: slug || undefined });
-}
-
-function toggleTag(slug) {
-  updateQuery({ tag: activeTag.value === slug ? undefined : slug });
+  currentPage.value = 1;
+  updateQuery({ category: slug || undefined, page: undefined });
 }
 
 function clearSearch() {
   window.clearTimeout(searchTimer);
   searchInput.value = '';
-  updateQuery({ q: undefined });
+  currentPage.value = 1;
+  updateQuery({ q: undefined, page: undefined });
 }
 
 function clearFilters() {
   window.clearTimeout(searchTimer);
   searchInput.value = '';
+  currentPage.value = 1;
   const next = { ...route.query };
   delete next.q;
   delete next.tag;
+  delete next.page;
   if (!props.lockedCategory) delete next.category;
   router.replace({ path: route.path, query: next });
 }
 
-function loadMore() {
-  limit.value += PAGE_SIZE;
+function goToPage(page) {
+  const next = Math.max(1, Math.min(totalPages.value, page));
+  if (next === safePage.value) return;
+
+  currentPage.value = next;
+  updateQuery({ page: next > 1 ? next : undefined });
+
+  nextTick(() => {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    gridRef.value?.scrollIntoView({
+      behavior: reduce ? 'auto' : 'smooth',
+      block: 'start',
+    });
+  });
 }
 
 onBeforeUnmount(() => {
@@ -218,7 +255,7 @@ onBeforeUnmount(() => {
             </div>
 
             <div class="archive-summary mono">
-              <span>SHOWING {{ String(visiblePosts.length).padStart(2, '0') }} / {{ String(filteredPosts.length).padStart(2, '0') }}</span>
+              <span>SHOWING {{ String(pageStart).padStart(2, '0') }}–{{ String(pageEnd).padStart(2, '0') }} / {{ String(filteredPosts.length).padStart(2, '0') }}</span>
               <button v-if="hasFilters" type="button" class="archive-clear" @click="clearFilters">
                 CLEAR FILTERS ×
               </button>
@@ -248,26 +285,10 @@ onBeforeUnmount(() => {
               </button>
             </div>
           </div>
-
-          <div v-if="!lockedTag && tags.length" class="filter-group">
-            <span class="eyebrow filter-group__label">TAGS</span>
-            <div class="filter-options">
-              <button
-                v-for="tag in tags"
-                :key="tag.slug"
-                type="button"
-                class="filter-chip filter-chip--tag"
-                :class="{ 'is-active': activeTag === tag.slug }"
-                @click="toggleTag(tag.slug)"
-              >
-                #{{ tag.name }} <span>{{ tag.count }}</span>
-              </button>
-            </div>
-          </div>
         </div>
 
-        <div v-if="visiblePosts.length" class="archive-list">
-          <ArchiveRow v-for="post in visiblePosts" :key="post.slug" :post="post" />
+        <div v-if="pagedPosts.length" ref="gridRef" class="archive-grid">
+          <ArchiveCard v-for="post in pagedPosts" :key="post.slug" :post="post" />
         </div>
 
         <EmptyState
@@ -288,15 +309,12 @@ onBeforeUnmount(() => {
           description="内容整理中，稍后再来看看。"
         />
 
-        <div v-if="remaining > 0" class="archive-load">
-          <button type="button" class="btn" @click="loadMore">
-            LOAD MORE <span class="mono archive-load__count">+{{ remaining }}</span>
-          </button>
-        </div>
-
-        <p v-else-if="filteredPosts.length > PAGE_SIZE" class="archive-end mono">
-          END OF INDEX / 已显示全部 {{ filteredPosts.length }} 条记录
-        </p>
+        <ArchivePagination
+          :page="safePage"
+          :total-pages="totalPages"
+          :total="filteredPosts.length"
+          @update:page="goToPage"
+        />
       </div>
     </section>
   </div>
@@ -447,43 +465,22 @@ onBeforeUnmount(() => {
   color: var(--accent-ink);
 }
 
-.filter-chip--tag {
-  height: 26px;
-  padding: 0 8px;
-  font-size: 10px;
-  border-color: transparent;
-}
-
-.filter-chip--tag:hover,
-.filter-chip--tag.is-active {
-  border-color: var(--accent-line);
-}
-
-.archive-list {
-  border-bottom: 0;
+.archive-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 26px 22px;
+  margin-top: 28px;
+  scroll-margin-top: calc(var(--header-height) + 24px);
 }
 
 .archive-section :deep(.empty-state) {
   margin-top: 28px;
 }
 
-.archive-load {
-  display: flex;
-  justify-content: center;
-  margin-top: 34px;
-}
-
-.archive-load__count {
-  color: var(--text-muted);
-  font-size: 10px;
-}
-
-.archive-end {
-  margin-top: 28px;
-  color: var(--text-muted);
-  font-size: 10px;
-  letter-spacing: 0.1em;
-  text-align: center;
+@media (max-width: 1100px) {
+  .archive-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 900px) {
@@ -508,6 +505,13 @@ onBeforeUnmount(() => {
 
   .filter-group__label {
     padding-top: 0;
+  }
+}
+
+@media (max-width: 700px) {
+  .archive-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 22px;
   }
 }
 

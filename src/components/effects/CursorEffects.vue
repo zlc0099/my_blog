@@ -83,7 +83,7 @@ function draw(time, delta) {
   });
 
   ripples.forEach((ripple) => {
-    const progress = Math.min(1, ripple.age);
+    const progress = Math.max(0, Math.min(1, ripple.age));
     const eased = 1 - (1 - progress) * (1 - progress);
     const radius = 3 + eased * 26;
     context.beginPath();

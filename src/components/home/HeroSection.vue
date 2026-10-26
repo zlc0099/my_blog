@@ -1,9 +1,46 @@
 <script setup>
+import { ref } from 'vue';
 import { site } from '@/data/site';
 
 const year = new Date().getFullYear();
 const projectIndex = String(year).slice(-2);
 const tickMarks = Array.from({ length: 36 }, (_, index) => index + 1);
+const avatarSrc = `${import.meta.env.BASE_URL}${site.avatarHd || site.avatar}`;
+const avatarInitial = site.owner.callsign.slice(0, 1).toUpperCase();
+const avatarFailed = ref(false);
+const plateRef = ref(null);
+
+function canHover() {
+  return window.matchMedia('(hover: hover) and (prefers-reduced-motion: no-preference)').matches;
+}
+
+function onPlateEnter() {
+  if (!canHover() || !plateRef.value) return;
+  plateRef.value.classList.add('is-hovered');
+}
+
+function onPlateMove(event) {
+  if (!canHover() || !plateRef.value) return;
+
+  const rect = plateRef.value.getBoundingClientRect();
+  const x = (event.clientX - rect.left) / rect.width - 0.5;
+  const y = (event.clientY - rect.top) / rect.height - 0.5;
+
+  plateRef.value.style.setProperty('--tilt-x', `${(-y * 5).toFixed(2)}deg`);
+  plateRef.value.style.setProperty('--tilt-y', `${(x * 7).toFixed(2)}deg`);
+  plateRef.value.style.setProperty('--shift-x', `${(x * 12).toFixed(1)}px`);
+  plateRef.value.style.setProperty('--shift-y', `${(y * 12).toFixed(1)}px`);
+  plateRef.value.classList.add('is-hovered');
+}
+
+function resetPlate() {
+  if (!plateRef.value) return;
+  plateRef.value.classList.remove('is-hovered');
+  plateRef.value.style.setProperty('--tilt-x', '0deg');
+  plateRef.value.style.setProperty('--tilt-y', '0deg');
+  plateRef.value.style.setProperty('--shift-x', '0px');
+  plateRef.value.style.setProperty('--shift-y', '0px');
+}
 </script>
 
 <template>
@@ -32,8 +69,8 @@ const tickMarks = Array.from({ length: 36 }, (_, index) => index + 1);
           <RouterLink to="/posts" class="btn btn--primary">
             浏览学习档案 <span class="btn__arrow">→</span>
           </RouterLink>
-          <RouterLink to="/lab" class="btn">
-            打开 AI LAB <span class="btn__arrow">→</span>
+          <RouterLink to="/about" class="btn">
+            关于我 <span class="btn__arrow">→</span>
           </RouterLink>
         </div>
 
@@ -54,7 +91,13 @@ const tickMarks = Array.from({ length: 36 }, (_, index) => index + 1);
       </div>
 
       <div class="hero__plate">
-        <div class="archive-plate">
+        <div
+          ref="plateRef"
+          class="archive-plate"
+          @mouseenter="onPlateEnter"
+          @mousemove="onPlateMove"
+          @mouseleave="resetPlate"
+        >
           <svg
             class="archive-plate__frame"
             viewBox="0 0 100 100"
@@ -128,6 +171,33 @@ const tickMarks = Array.from({ length: 36 }, (_, index) => index + 1);
               <text x="180" y="352" text-anchor="middle" class="archive-plate__axis">S</text>
               <text x="16" y="183" text-anchor="middle" class="archive-plate__axis">W</text>
             </svg>
+
+            <figure class="archive-photo">
+              <div class="archive-photo__head mono">
+                <span>GITHUB / AVATAR</span>
+                <span>001</span>
+              </div>
+              <div class="archive-photo__frame">
+                <img
+                  v-if="!avatarFailed"
+                  :src="avatarSrc"
+                  :alt="`${site.owner.callsign} 的 GitHub 头像`"
+                  decoding="async"
+                  @error="avatarFailed = true"
+                />
+                <span v-else class="archive-photo__fallback" aria-hidden="true">{{ avatarInitial }}</span>
+                <span class="archive-photo__scan" aria-hidden="true"></span>
+                <i class="archive-photo__corner tl"></i>
+                <i class="archive-photo__corner tr"></i>
+                <i class="archive-photo__corner bl"></i>
+                <i class="archive-photo__corner br"></i>
+              </div>
+              <figcaption class="archive-photo__id">
+                <span class="mono">ID / CALLSIGN</span>
+                <strong>{{ site.owner.callsign }}</strong>
+              </figcaption>
+            </figure>
+
             <span class="archive-plate__tag archive-plate__tag--left mono">A—01</span>
             <span class="archive-plate__tag archive-plate__tag--right mono">GRID / 07</span>
           </div>
@@ -138,7 +208,7 @@ const tickMarks = Array.from({ length: 36 }, (_, index) => index + 1);
           <div class="archive-plate__info">
             <div class="archive-plate__info-row">
               <span class="mono">CALLSIGN</span>
-              <strong>zlc0099</strong>
+              <strong>{{ site.owner.callsign }}</strong>
             </div>
             <div class="archive-plate__info-row">
               <span class="mono">STACK</span>
@@ -307,6 +377,7 @@ const tickMarks = Array.from({ length: 36 }, (_, index) => index + 1);
 .hero__plate {
   width: min(100%, 470px);
   justify-self: end;
+  animation: plate-in 0.7s var(--ease-out) both;
 }
 
 .archive-plate {
@@ -329,7 +400,20 @@ const tickMarks = Array.from({ length: 36 }, (_, index) => index + 1);
     0 calc(100% - 28px)
   );
   overflow: hidden;
-  animation: plate-in 0.7s var(--ease-out) both;
+  transform:
+    perspective(1000px)
+    rotateX(var(--tilt-x, 0deg))
+    rotateY(var(--tilt-y, 0deg))
+    translate3d(var(--shift-x, 0px), calc(var(--shift-y, 0px) - var(--lift, 0px)), 0);
+  transform-style: preserve-3d;
+  transition: transform 520ms var(--ease-out), filter 320ms var(--ease-out);
+  will-change: transform;
+}
+
+.archive-plate.is-hovered {
+  --lift: 6px;
+  filter: drop-shadow(0 26px 50px rgba(0, 0, 0, 0.38));
+  transition-duration: 120ms, 320ms;
 }
 
 @keyframes plate-in {
@@ -385,9 +469,15 @@ const tickMarks = Array.from({ length: 36 }, (_, index) => index + 1);
 }
 
 .archive-plate__emblem {
+  position: absolute;
+  top: 50%;
+  left: 50%;
   width: min(88%, 330px);
   height: auto;
   color: var(--text-primary);
+  opacity: 0.26;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
 }
 
 .archive-plate__axis {
@@ -424,6 +514,182 @@ const tickMarks = Array.from({ length: 36 }, (_, index) => index + 1);
   right: 4%;
   bottom: 18%;
   writing-mode: vertical-rl;
+}
+
+.archive-photo {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  width: min(52%, 210px);
+  margin: 0;
+  transform: translate3d(
+    calc(var(--shift-x, 0px) * 0.45),
+    calc(var(--shift-y, 0px) * 0.45),
+    0
+  );
+  transition: transform 520ms var(--ease-out);
+}
+
+.archive-plate.is-hovered .archive-photo {
+  transition-duration: 120ms;
+}
+
+.archive-photo__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-muted);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+}
+
+.archive-photo__frame {
+  position: relative;
+  margin-top: 7px;
+  aspect-ratio: 1;
+  border: 1px solid var(--border-strong);
+  background: var(--bg-deep);
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% calc(100% - 14px),
+    calc(100% - 14px) 100%,
+    0 100%
+  );
+  overflow: hidden;
+  transition: border-color var(--dur-fast) var(--ease-out);
+}
+
+.archive-plate.is-hovered .archive-photo__frame {
+  border-color: var(--accent-line);
+}
+
+.archive-photo__frame img,
+.archive-photo__fallback {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.archive-photo__frame img {
+  object-fit: cover;
+  filter: grayscale(0.2) contrast(1.05) saturate(0.9);
+  transform: scale(1.01);
+  transition: transform 600ms var(--ease-out), filter var(--dur-base) var(--ease-out);
+}
+
+.archive-plate.is-hovered .archive-photo__frame img {
+  filter: grayscale(0.05) contrast(1.08) saturate(1);
+  transform: scale(1.045);
+}
+
+.archive-photo__fallback {
+  display: grid;
+  place-items: center;
+  background: var(--bg-secondary);
+  color: var(--accent);
+  font-family: var(--font-display);
+  font-size: 64px;
+  font-weight: 600;
+}
+
+.archive-photo__frame::after {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: linear-gradient(180deg, rgba(245, 166, 35, 0.06), transparent 38%, rgba(11, 13, 15, 0.42));
+  content: '';
+  pointer-events: none;
+}
+
+.archive-photo__scan {
+  position: absolute;
+  top: -45%;
+  right: 0;
+  left: 0;
+  z-index: 3;
+  height: 36%;
+  background: linear-gradient(180deg, transparent, rgba(245, 166, 35, 0.22), transparent);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.archive-plate.is-hovered .archive-photo__scan {
+  opacity: 1;
+  animation: photo-scan 3.2s linear infinite;
+}
+
+@keyframes photo-scan {
+  to {
+    transform: translateY(420%);
+  }
+}
+
+.archive-photo__corner {
+  position: absolute;
+  z-index: 4;
+  width: 14px;
+  height: 14px;
+  border-color: var(--accent);
+  border-style: solid;
+  pointer-events: none;
+}
+
+.archive-photo__corner.tl {
+  top: 7px;
+  left: 7px;
+  border-width: 1px 0 0 1px;
+}
+
+.archive-photo__corner.tr {
+  top: 7px;
+  right: 7px;
+  border-width: 1px 1px 0 0;
+}
+
+.archive-photo__corner.bl {
+  bottom: 7px;
+  left: 7px;
+  border-width: 0 0 1px 1px;
+}
+
+.archive-photo__corner.br {
+  right: 7px;
+  bottom: 7px;
+  border-width: 0 1px 1px 0;
+}
+
+.archive-photo__id {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 7px;
+  padding-top: 6px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.archive-photo__id span {
+  color: var(--text-muted);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+}
+
+.archive-photo__id strong {
+  overflow: hidden;
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .archive-plate__orange {
@@ -560,12 +826,31 @@ const tickMarks = Array.from({ length: 36 }, (_, index) => index + 1);
     padding: 20px;
   }
 
+  .archive-photo {
+    width: min(52%, 180px);
+  }
+
   .archive-plate__emblem {
     width: min(84%, 280px);
   }
 
   .archive-plate__vertical {
     display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .archive-plate,
+  .archive-photo,
+  .archive-photo__frame img {
+    transform: none;
+    transition: none;
+  }
+
+  .archive-plate__rotate,
+  .archive-photo__scan,
+  .hero__scroll-line span {
+    animation: none;
   }
 }
 </style>

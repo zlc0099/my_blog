@@ -10,8 +10,15 @@ import EmptyState from '@/components/ui/EmptyState.vue';
 
 const chartTypes = computed(() => usageSummary.tokenTypes);
 
-const inactiveNames = computed(() =>
-  usageSummary.inactiveAgents.map((agent) => agent.name).join(' · '),
+const traceNames = computed(() =>
+  usageSummary.traceAgents.map((agent) => agent.name).join(' · '),
+);
+
+const noLogNames = computed(() =>
+  usageSummary.agentCoverage
+    .filter((agent) => agent.sessions === 0)
+    .map((agent) => agent.name)
+    .join(' · '),
 );
 
 const stats = computed(() => [
@@ -41,7 +48,7 @@ const stats = computed(() => [
     sub: 'cache creation',
   },
   {
-    label: 'SESSIONS',
+    label: 'TOKEN SESSIONS',
     value: String(usageSummary.sessions).padStart(2, '0'),
     sub: `${formatTokens(usageSummary.average)} avg / session`,
   },
@@ -150,8 +157,11 @@ function barHeight(month) {
       <p v-if="usageSummary.note" class="ledger__note mono">
         {{ usageSummary.sourceLabel }} / {{ usageSummary.note }}
       </p>
-      <p v-if="inactiveNames" class="ledger__hint mono">
-        NO LOGS YET / {{ inactiveNames }} · 手动记录后显示
+      <p v-if="traceNames" class="ledger__hint mono">
+        TOKEN N/A / {{ traceNames }} · 已接入本机模型与会话统计，但本地应用未保存 Token 明细
+      </p>
+      <p v-if="noLogNames" class="ledger__hint mono">
+        NO LOGS YET / {{ noLogNames }} · 手动记录后显示
       </p>
     </div>
   </div>

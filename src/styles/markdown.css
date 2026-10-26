@@ -196,6 +196,12 @@
   overscroll-behavior-x: contain;
 }
 
+.md .code-block[data-lang="PROMPT"] pre {
+  max-height: 520px;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
 .md .code-block code {
   display: block;
   width: max-content;
