@@ -8,6 +8,11 @@ import VisualNovelCover from './covers/VisualNovelCover.vue';
 import DossierCover from './covers/DossierCover.vue';
 import SonataCover from './covers/SonataCover.vue';
 import PetWidgetCover from './covers/PetWidgetCover.vue';
+import Y2kCover from './covers/Y2kCover.vue';
+import MovieCover from './covers/MovieCover.vue';
+import AnimeGameCover from './covers/AnimeGameCover.vue';
+import AdminLayoutCover from './covers/AdminLayoutCover.vue';
+import IndustrialPlatformCover from './covers/IndustrialPlatformCover.vue';
 
 const props = defineProps({
   variant: {
@@ -29,6 +34,11 @@ const covers = {
   dossier: DossierCover,
   sonata: SonataCover,
   'pet-widget': PetWidgetCover,
+  y2k: Y2kCover,
+  movie: MovieCover,
+  'anime-game': AnimeGameCover,
+  'admin-layout': AdminLayoutCover,
+  'industrial-platform': IndustrialPlatformCover,
 };
 
 const cover = computed(() => covers[props.variant] || null);

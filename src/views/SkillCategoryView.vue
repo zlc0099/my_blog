@@ -107,7 +107,7 @@ function goToPage(page) {
           </SectionHeading>
 
           <p class="skill-group__note">
-            这三份技能是我自己维护的，完整目录（SKILL.md、references、脚本）在 GitHub 的
+            这些技能是我自己维护的，完整目录（SKILL.md、references、模板）在 GitHub 的
             <a :href="`${site.repo}/tree/main/myskill`" target="_blank" rel="noopener noreferrer">myskill</a>
             下。文章正文展示 SKILL.md 主体。
           </p>

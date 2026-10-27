@@ -269,7 +269,8 @@ onBeforeUnmount(() => {
   height: var(--header-height);
   border-bottom: 1px solid transparent;
   background: var(--header-bg);
-  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: var(--glass-filter);
+  backdrop-filter: var(--glass-filter);
   transition: border-color var(--dur-base) var(--ease-out),
     background-color var(--dur-base) var(--ease-out),
     opacity 0.55s var(--ease-out);

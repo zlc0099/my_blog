@@ -34,7 +34,24 @@ const router = createRouter({
       } catch (error) {
         // Keep the original hash when decoding fails.
       }
-      return { el: hash, top: 96, behavior: 'smooth' };
+      const targetId = hash.replace(/^#/, '');
+      return new Promise((resolve) => {
+        const started = Date.now();
+        const locate = () => {
+          const element = document.getElementById(targetId);
+          if (element) {
+            resolve({ el: element, top: 96, behavior: 'smooth' });
+            return;
+          }
+          // The route transition mounts the next view after its leave phase.
+          if (Date.now() - started > 1200) {
+            resolve({ top: 0 });
+            return;
+          }
+          window.requestAnimationFrame(locate);
+        };
+        locate();
+      });
     }
     if (to.path === from.path) return false;
     return { top: 0 };

@@ -29,6 +29,17 @@ body {
   transition: background-color var(--dur-base) var(--ease-out), color var(--dur-base) var(--ease-out);
 }
 
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -3;
+  background:
+    radial-gradient(ellipse 1100px 750px at 10% -10%, var(--ambient-warm), transparent 62%),
+    radial-gradient(ellipse 900px 850px at 100% 105%, var(--ambient-cool), transparent 64%);
+  pointer-events: none;
+}
+
 ::selection {
   background: var(--selection);
   color: var(--text-primary);

@@ -1,4 +1,6 @@
 <script setup>
+import AnimeCarousel from '@/components/effects/AnimeCarousel.vue';
+
 defineProps({
   eyebrow: {
     type: String,
@@ -24,12 +26,19 @@ defineProps({
     type: Array,
     default: () => [],
   },
+  anime: {
+    type: Boolean,
+    default: true,
+  },
 });
 </script>
 
 <template>
   <header class="page-hero">
     <div class="page-hero__field" aria-hidden="true"></div>
+    <div v-if="anime" class="page-hero__anime-band" aria-hidden="true">
+      <AnimeCarousel />
+    </div>
     <div class="container page-hero__inner">
       <div class="page-hero__main">
         <div class="eyebrow eyebrow--accent">
@@ -42,10 +51,12 @@ defineProps({
         <p v-if="description" class="page-hero__desc">{{ description }}</p>
       </div>
 
-      <div v-if="meta.length" class="page-hero__meta">
-        <div v-for="item in meta" :key="item.label" class="page-hero__meta-item">
-          <span class="page-hero__meta-label">{{ item.label }}</span>
-          <span class="page-hero__meta-value">{{ item.value }}</span>
+      <div class="page-hero__aside">
+        <div v-if="meta.length" class="page-hero__meta">
+          <div v-for="item in meta" :key="item.label" class="page-hero__meta-item">
+            <span class="page-hero__meta-label">{{ item.label }}</span>
+            <span class="page-hero__meta-value">{{ item.value }}</span>
+          </div>
         </div>
       </div>
 
@@ -74,10 +85,47 @@ defineProps({
 
 .page-hero__inner {
   position: relative;
+  isolation: isolate;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: end;
   gap: 40px;
+}
+
+.page-hero__anime-band {
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  z-index: 2;
+  width: min(calc(100% - var(--gutter) * 2 - 32px), var(--content-width));
+  height: clamp(58px, 5.5vw, 74px);
+  transform: translateX(-50%);
+}
+
+.page-hero__inner::before {
+  content: '';
+  position: absolute;
+  inset: -18px -20px;
+  z-index: -1;
+  border: 1px solid var(--hero-glass-border);
+  background: var(--hero-glass);
+  -webkit-backdrop-filter: var(--glass-filter);
+  backdrop-filter: var(--glass-filter);
+  pointer-events: none;
+}
+
+.page-hero__main,
+.page-hero__meta {
+  position: relative;
+  z-index: 1;
+}
+
+.page-hero__aside {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 }
 
 .page-hero__title {
@@ -143,6 +191,7 @@ defineProps({
   position: absolute;
   top: 4px;
   right: var(--gutter);
+  z-index: 3;
   color: var(--text-muted);
   font-family: var(--font-mono);
   font-size: 10px;
@@ -150,10 +199,20 @@ defineProps({
   writing-mode: vertical-rl;
 }
 
+@media (max-width: 1100px) {
+  .page-hero__anime-band {
+    display: none;
+  }
+}
+
 @media (max-width: 900px) {
   .page-hero__inner {
     grid-template-columns: 1fr;
     gap: 28px;
+  }
+
+  .page-hero__inner::before {
+    inset: -14px -16px;
   }
 
   .page-hero__meta {

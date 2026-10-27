@@ -1,0 +1,59 @@
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .site-header,
+  .search-panel,
+  .mobile-menu,
+  .archive-search,
+  .archive-card,
+  .project-card,
+  .post-cover__caption,
+  .toc-mobile,
+  .post-repo,
+  .post-project,
+  .related-prompt,
+  .archive-plate,
+  .lab-intro,
+  .agent-card,
+  .ledger,
+  .model-usage,
+  .agent-trace,
+  .session-log,
+  .profile-card,
+  .about-accordion__item,
+  .about-interest,
+  .principle,
+  .about-contact__item,
+  .project-facts,
+  .empty-state,
+  .back-to-top {
+    -webkit-backdrop-filter: var(--glass-filter);
+    backdrop-filter: var(--glass-filter);
+  }
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  :root {
+    --bg-primary: rgba(24, 28, 32, 0.92);
+    --bg-secondary: rgba(32, 37, 42, 0.88);
+    --bg-elevated: rgba(42, 48, 54, 0.92);
+    --bg-hover: rgba(48, 54, 60, 0.94);
+    --header-bg: rgba(18, 22, 26, 0.92);
+  }
+
+  [data-theme='light'] {
+    --bg-primary: rgba(248, 245, 240, 0.94);
+    --bg-secondary: rgba(240, 236, 228, 0.9);
+    --bg-elevated: rgba(233, 228, 219, 0.94);
+    --bg-hover: rgba(220, 214, 203, 0.94);
+    --header-bg: rgba(242, 239, 233, 0.9);
+  }
+}
+
+@media (max-width: 720px) {
+  :root {
+    --glass-filter: blur(12px) saturate(120%);
+  }
+
+  [data-theme='light'] {
+    --glass-filter: blur(12px) saturate(112%);
+  }
+}

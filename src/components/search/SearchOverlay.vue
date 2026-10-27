@@ -205,7 +205,8 @@ onBeforeUnmount(() => {
 
 .search-dialog::backdrop {
   background: var(--overlay);
-  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
 }
 
 .search-dialog[open] {
@@ -222,7 +223,7 @@ onBeforeUnmount(() => {
   max-height: min(740px, calc(100vh - 140px));
   flex-direction: column;
   border: 1px solid var(--border-strong);
-  background: var(--bg-primary);
+  background: var(--bg-elevated);
   box-shadow: var(--shadow-panel);
   animation: search-in var(--dur-base) var(--ease-out);
 }

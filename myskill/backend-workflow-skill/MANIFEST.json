@@ -1,0 +1,14 @@
+{
+  "skill_name": "backend-workflow",
+  "file_count": 7,
+  "files": [
+    "README.md",
+    "SKILL.md",
+    "references/testing-and-quality.md",
+    "references/workflow-gates.md",
+    "templates/development-task.md",
+    "templates/final-delivery.md",
+    "templates/phase-report.md"
+  ],
+  "validation": "passed: frontmatter/name/description/referenced files"
+}

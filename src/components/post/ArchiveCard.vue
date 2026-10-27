@@ -58,18 +58,46 @@ defineProps({
 
 <style scoped>
 .archive-card {
+  position: relative;
+  z-index: 0;
   display: flex;
   flex-direction: column;
   min-width: 0;
   border: 1px solid var(--border-subtle);
   background: var(--bg-primary);
-  transition: border-color var(--dur-base) var(--ease-out),
-    background-color var(--dur-base) var(--ease-out);
+  transition: transform 0.34s var(--ease-out),
+    border-color var(--dur-base) var(--ease-out),
+    background-color var(--dur-base) var(--ease-out),
+    box-shadow 0.34s var(--ease-out);
 }
 
-.archive-card:hover {
-  border-color: var(--border-strong);
+.archive-card::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  right: -1px;
+  z-index: 3;
+  height: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.42s var(--ease-out);
+  pointer-events: none;
+}
+
+.archive-card:hover,
+.archive-card:focus-within {
+  z-index: 2;
+  border-color: var(--accent-line);
   background: var(--bg-secondary);
+  box-shadow: var(--card-hover-shadow);
+  transform: translateY(-6px);
+}
+
+.archive-card:hover::before,
+.archive-card:focus-within::before {
+  transform: scaleX(1);
 }
 
 .archive-card__cover {
@@ -80,6 +108,38 @@ defineProps({
   overflow: hidden;
   background: var(--bg-deep);
   border-bottom: 1px solid var(--border-subtle);
+}
+
+.archive-card__cover::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    180deg,
+    transparent 42%,
+    rgba(5, 7, 9, 0.34) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.34s var(--ease-out);
+  pointer-events: none;
+}
+
+.archive-card:hover .archive-card__cover::after,
+.archive-card:focus-within .archive-card__cover::after {
+  opacity: 1;
+}
+
+.archive-card__cover :deep(.style-cover),
+.archive-card__cover :deep(.default-cover) {
+  transition: transform 0.65s var(--ease-out);
+}
+
+.archive-card:hover .archive-card__cover :deep(.style-cover),
+.archive-card:hover .archive-card__cover :deep(.default-cover),
+.archive-card:focus-within .archive-card__cover :deep(.style-cover),
+.archive-card:focus-within .archive-card__cover :deep(.default-cover) {
+  transform: scale(1.035);
 }
 
 .archive-card__body {
@@ -138,6 +198,11 @@ defineProps({
   color: var(--accent-ink);
 }
 
+.archive-card:hover .archive-card__title a,
+.archive-card:focus-within .archive-card__title a {
+  color: var(--accent-ink);
+}
+
 .archive-card__summary {
   display: -webkit-box;
   -webkit-box-orient: vertical;
@@ -175,6 +240,34 @@ defineProps({
   font-size: 9.5px;
   letter-spacing: 0.08em;
   white-space: nowrap;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.archive-card:hover .archive-card__read,
+.archive-card:focus-within .archive-card__read {
+  color: var(--accent-ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .archive-card,
+  .archive-card__cover :deep(.style-cover),
+  .archive-card__cover :deep(.default-cover),
+  .archive-card::before,
+  .archive-card__cover::after {
+    transition: none;
+  }
+
+  .archive-card:hover,
+  .archive-card:focus-within {
+    transform: none;
+  }
+
+  .archive-card:hover .archive-card__cover :deep(.style-cover),
+  .archive-card:hover .archive-card__cover :deep(.default-cover),
+  .archive-card:focus-within .archive-card__cover :deep(.style-cover),
+  .archive-card:focus-within .archive-card__cover :deep(.default-cover) {
+    transform: none;
+  }
 }
 
 @media (max-width: 720px) {

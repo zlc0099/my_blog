@@ -10,6 +10,7 @@ import '@fontsource/jetbrains-mono/latin-500.css';
 import './styles/tokens.css';
 import './styles/base.css';
 import './styles/markdown.css';
+import './styles/glass.css';
 
 import { createApp } from 'vue';
 import App from './App.vue';
