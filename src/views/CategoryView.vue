@@ -7,6 +7,14 @@ import { categoryMap } from '@/data/taxonomy';
 
 const route = useRoute();
 const category = computed(() => categoryMap[String(route.params.slug)]);
+
+const description = computed(() => {
+  if (!category.value) return '';
+  const base = `${category.value.desc}。浏览该分类下的全部记录。`;
+  return category.value.slug === 'musings'
+    ? `${base} 以下内容仅代表个人观点，不代表大众立场。`
+    : base;
+});
 </script>
 
 <template>
@@ -15,7 +23,7 @@ const category = computed(() => categoryMap[String(route.params.slug)]);
     eyebrow="ARCHIVE / CATEGORY"
     :title="category.en"
     :zh="category.zh.toLowerCase() === category.en.toLowerCase() ? '' : category.zh"
-    :description="`${category.desc}。浏览该分类下的全部记录。`"
+    :description="description"
     :serial="`CATEGORY / ${category.slug.toUpperCase()}`"
     :locked-category="category.slug"
   />

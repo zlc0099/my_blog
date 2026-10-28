@@ -14,8 +14,8 @@
     </div>
 
     <div class="default-cover__bottom">
-      <span>{{ post.date }}</span>
-      <span>{{ post.readingTime }} MIN READ</span>
+      <span>PERSONAL ARCHIVE</span>
+      <span>FILE / ENTRY</span>
     </div>
   </div>
 </template>

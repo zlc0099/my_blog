@@ -1,8 +1,8 @@
 <script setup>
 import StyleCover from '@/components/post/StyleCover.vue';
 import DefaultCover from '@/components/post/covers/DefaultCover.vue';
+import ImageCover from '@/components/post/covers/ImageCover.vue';
 import TagChip from '@/components/ui/TagChip.vue';
-import { formatDate } from '@/lib/format';
 
 defineProps({
   post: {
@@ -19,8 +19,13 @@ defineProps({
       class="archive-card__cover"
       :aria-label="`阅读：${post.title}`"
     >
+      <ImageCover
+        v-if="post.coverImage"
+        :src="post.coverImage"
+        :alt="post.title"
+      />
       <StyleCover
-        v-if="post.coverStyle"
+        v-else-if="post.coverStyle"
         :variant="post.coverStyle"
         :label="post.coverNote || post.title"
       />
@@ -33,8 +38,6 @@ defineProps({
         <RouterLink :to="`/categories/${post.category}`" class="archive-card__category">
           {{ post.categoryInfo.en }}
         </RouterLink>
-        <span class="archive-card__sep">/</span>
-        <time :datetime="post.date">{{ formatDate(post.date) }}</time>
         <span v-if="post.sample" class="badge">SAMPLE</span>
       </div>
 
@@ -50,7 +53,6 @@ defineProps({
             <TagChip :tag="tag" />
           </li>
         </ul>
-        <span class="archive-card__read mono">{{ post.readingTime }} MIN</span>
       </div>
     </div>
   </article>
@@ -131,14 +133,17 @@ defineProps({
 }
 
 .archive-card__cover :deep(.style-cover),
-.archive-card__cover :deep(.default-cover) {
+.archive-card__cover :deep(.default-cover),
+.archive-card__cover :deep(.image-cover) {
   transition: transform 0.65s var(--ease-out);
 }
 
 .archive-card:hover .archive-card__cover :deep(.style-cover),
 .archive-card:hover .archive-card__cover :deep(.default-cover),
+.archive-card:hover .archive-card__cover :deep(.image-cover),
 .archive-card:focus-within .archive-card__cover :deep(.style-cover),
-.archive-card:focus-within .archive-card__cover :deep(.default-cover) {
+.archive-card:focus-within .archive-card__cover :deep(.default-cover),
+.archive-card:focus-within .archive-card__cover :deep(.image-cover) {
   transform: scale(1.035);
 }
 
@@ -172,10 +177,6 @@ defineProps({
 
 .archive-card__category:hover {
   color: var(--accent-ink);
-}
-
-.archive-card__sep {
-  color: var(--border-strong);
 }
 
 .archive-card__title {
@@ -232,20 +233,6 @@ defineProps({
   height: 21px;
   padding: 0 6px;
   font-size: 9.5px;
-}
-
-.archive-card__read {
-  flex: none;
-  color: var(--text-muted);
-  font-size: 9.5px;
-  letter-spacing: 0.08em;
-  white-space: nowrap;
-  transition: color var(--dur-fast) var(--ease-out);
-}
-
-.archive-card:hover .archive-card__read,
-.archive-card:focus-within .archive-card__read {
-  color: var(--accent-ink);
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -29,6 +29,12 @@ export const categories = [
     zh: 'AI 分工',
     desc: 'Claude Code / Qoder / Trae 的使用分工。',
   },
+  {
+    slug: 'musings',
+    en: 'MUSINGS',
+    zh: '碎碎念',
+    desc: '零散的想法、生活片段和随手记录。',
+  },
 ];
 
 export const categoryMap = Object.fromEntries(categories.map((item) => [item.slug, item]));

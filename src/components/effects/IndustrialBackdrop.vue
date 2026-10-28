@@ -66,91 +66,80 @@
 
 .ind-aurora {
   position: absolute;
-  top: -18%;
+  top: -16%;
   right: -12%;
   left: -12%;
-  height: 78%;
-  filter: blur(30px);
-  opacity: var(--aurora-opacity, 0.85);
-  animation: ind-aurora-breathe 34s ease-in-out infinite alternate;
-  will-change: opacity, transform;
-  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 56%, transparent 100%);
-  mask-image: linear-gradient(180deg, #000 0%, #000 56%, transparent 100%);
+  height: 76%;
+  opacity: var(--aurora-opacity, 0.78);
+  animation: ind-aurora-breathe 26s ease-in-out infinite alternate;
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 60%, transparent 100%);
+  mask-image: linear-gradient(180deg, #000 0%, #000 60%, transparent 100%);
 }
 
 .aurora {
   position: absolute;
   display: block;
-  border-radius: 50%;
+  will-change: transform;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 18%, #000 58%, transparent 96%);
+  mask-image: linear-gradient(180deg, transparent 0%, #000 18%, #000 58%, transparent 96%);
 }
 
 .aurora--a {
-  top: -8%;
+  top: -6%;
   left: -12%;
-  width: 78%;
-  height: 58%;
-  background: linear-gradient(
-    102deg,
-    transparent 4%,
-    var(--aurora-1) 30%,
-    var(--aurora-2) 55%,
-    transparent 90%
-  );
-  transform: rotate(-9deg) skewX(-24deg);
-  animation: ind-aurora-a 58s ease-in-out infinite alternate;
-  will-change: transform;
+  width: 80%;
+  height: 62%;
+  background:
+    radial-gradient(ellipse 62% 82% at 36% 52%, var(--aurora-1) 0%, transparent 68%),
+    radial-gradient(ellipse 48% 70% at 70% 48%, var(--aurora-2) 0%, transparent 72%),
+    linear-gradient(100deg, transparent 0%, var(--aurora-1) 30%, var(--aurora-2) 60%, transparent 94%);
+  transform: rotate(-8deg);
+  animation: aurora-drift-a 32s ease-in-out infinite alternate;
 }
 
 .aurora--b {
   top: 8%;
   right: -14%;
-  width: 70%;
-  height: 46%;
-  background: linear-gradient(
-    96deg,
-    transparent,
-    var(--aurora-3) 30%,
-    var(--aurora-1) 62%,
-    transparent
-  );
-  transform: rotate(8deg) skewX(18deg);
-  animation: ind-aurora-b 72s ease-in-out infinite alternate;
-  will-change: transform;
+  width: 72%;
+  height: 52%;
+  background:
+    radial-gradient(ellipse 56% 80% at 42% 48%, var(--aurora-3) 0%, transparent 70%),
+    radial-gradient(ellipse 44% 64% at 72% 46%, var(--aurora-2) 0%, transparent 72%),
+    linear-gradient(98deg, transparent 0%, var(--aurora-3) 28%, var(--aurora-1) 64%, transparent 94%);
+  opacity: 0.85;
+  transform: rotate(7deg);
+  animation: aurora-drift-b 46s ease-in-out infinite alternate;
 }
 
 .aurora--c {
-  top: 32%;
+  top: 30%;
   left: 18%;
-  width: 65%;
+  width: 62%;
   height: 32%;
-  background: linear-gradient(
-    100deg,
-    transparent,
-    var(--aurora-2),
-    var(--aurora-3),
-    transparent
-  );
-  opacity: 0.55;
-  transform: rotate(-4deg) skewX(-10deg);
-  animation: ind-aurora-c 46s ease-in-out infinite alternate;
-  will-change: transform;
+  background:
+    radial-gradient(ellipse 60% 84% at 44% 52%, var(--aurora-mint) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 60% at 74% 48%, var(--aurora-3) 0%, transparent 72%),
+    linear-gradient(100deg, transparent 0%, var(--aurora-2) 32%, var(--aurora-mint) 64%, transparent 94%);
+  opacity: 0.5;
+  transform: rotate(-4deg);
+  animation: aurora-drift-c 40s ease-in-out infinite alternate;
 }
 
 .aurora-rays {
   position: absolute;
   inset: 0;
   background: repeating-linear-gradient(
-    99deg,
-    transparent 0 3.2em,
-    var(--aurora-ray) 3.2em 3.35em,
-    transparent 3.35em 7.8em
+    96deg,
+    transparent 0 2.8em,
+    var(--aurora-ray) 2.8em 3.1em,
+    transparent 3.1em 7.6em
   );
-  opacity: 0.55;
-  transform: skewX(-16deg);
-  animation: ind-aurora-rays 90s linear infinite;
+  opacity: 0.36;
+  transform: skewX(-12deg);
+  animation: aurora-rays-flow 70s linear infinite alternate;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 18%, #000 82%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0%, #000 18%, #000 82%, transparent 100%);
   will-change: transform;
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 22%, #000 78%, transparent);
-  mask-image: linear-gradient(90deg, transparent, #000 22%, #000 78%, transparent);
 }
 
 .ind-grid {
@@ -406,48 +395,48 @@
 
 @keyframes ind-aurora-breathe {
   from {
-    transform: translate3d(-1.4%, 0, 0);
-    opacity: calc(var(--aurora-opacity, 0.85) * 0.82);
+    transform: translate3d(-1%, 0, 0);
+    opacity: calc(var(--aurora-opacity, 0.78) * 0.88);
   }
   to {
-    transform: translate3d(1.4%, 0.8%, 0);
-    opacity: var(--aurora-opacity, 0.85);
+    transform: translate3d(1%, 0.6%, 0);
+    opacity: var(--aurora-opacity, 0.78);
   }
 }
 
-@keyframes ind-aurora-a {
+@keyframes aurora-drift-a {
   from {
-    transform: translate3d(-2.5%, 0, 0) rotate(-9deg) skewX(-24deg);
+    transform: translate3d(-2.5%, 0, 0) rotate(-8deg);
   }
   to {
-    transform: translate3d(3.5%, 2%, 0) rotate(-6deg) skewX(-20deg);
+    transform: translate3d(3.5%, 1.5%, 0) rotate(-5deg);
   }
 }
 
-@keyframes ind-aurora-b {
+@keyframes aurora-drift-b {
   from {
-    transform: translate3d(2.5%, -1%, 0) rotate(8deg) skewX(18deg);
+    transform: translate3d(2.5%, -1%, 0) rotate(7deg);
   }
   to {
-    transform: translate3d(-3%, 1.5%, 0) rotate(5deg) skewX(22deg);
+    transform: translate3d(-3%, 1%, 0) rotate(4deg);
   }
 }
 
-@keyframes ind-aurora-c {
+@keyframes aurora-drift-c {
   from {
-    transform: translate3d(-1.5%, 0, 0) rotate(-4deg) skewX(-10deg);
+    transform: translate3d(-1.5%, 1%, 0) rotate(-4deg);
   }
   to {
-    transform: translate3d(2%, -2%, 0) rotate(-2deg) skewX(-16deg);
+    transform: translate3d(2.5%, -1.5%, 0) rotate(-1deg);
   }
 }
 
-@keyframes ind-aurora-rays {
+@keyframes aurora-rays-flow {
   from {
-    transform: translate3d(-4%, 0, 0) skewX(-16deg);
+    transform: translate3d(-2%, 0, 0) skewX(-12deg);
   }
   to {
-    transform: translate3d(4%, 0, 0) skewX(-16deg);
+    transform: translate3d(2%, 0, 0) skewX(-12deg);
   }
 }
 
@@ -502,12 +491,24 @@
   }
 
   .ind-aurora {
-    filter: blur(20px);
-    opacity: 0.8;
+    top: -14%;
+    height: 64%;
+    opacity: calc(var(--aurora-opacity, 0.8) * 0.82);
   }
 
+  .aurora--c,
   .aurora-rays {
     display: none;
+  }
+
+  .aurora--a {
+    left: -22%;
+    width: 96%;
+  }
+
+  .aurora--b {
+    right: -26%;
+    width: 84%;
   }
 
   .ind-beam {

@@ -47,6 +47,7 @@ const postList = Object.entries(postFiles).map(([path, raw]) => {
     skillType: asString(data.skillType),
     repoPath: asString(data.repoPath),
     coverStyle: asString(data.coverStyle),
+    coverImage: asString(data.coverImage),
     coverNote: asString(data.coverNote),
     body,
     readingTime: readingTime(body),

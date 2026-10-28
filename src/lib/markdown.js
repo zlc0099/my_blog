@@ -23,6 +23,9 @@ hljs.registerLanguage('json', json);
 hljs.registerLanguage('yaml', yamlLanguage);
 
 const slugger = new GithubSlugger();
+const baseUrl = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
 
 const languageAliases = {
   js: 'javascript',
@@ -114,6 +117,10 @@ md.renderer.rules.table_close = () => '</table></div>\n';
 
 md.renderer.rules.image = (tokens, index, options, env, self) => {
   const token = tokens[index];
+  const src = token.attrGet('src');
+  if (src && src.startsWith('/') && !src.startsWith('//')) {
+    token.attrSet('src', `${baseUrl}${src.slice(1)}`);
+  }
   token.attrSet('loading', 'lazy');
   token.attrSet('decoding', 'async');
   return self.renderToken(tokens, index, options);

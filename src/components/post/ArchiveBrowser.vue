@@ -6,7 +6,7 @@ import ArchiveCard from '@/components/post/ArchiveCard.vue';
 import ArchivePagination from '@/components/post/ArchivePagination.vue';
 import EmptyState from '@/components/ui/EmptyState.vue';
 import { archiveStats, categoriesWithCount, posts } from '@/lib/content';
-import { formatDate, toTagSlug } from '@/lib/format';
+import { toTagSlug } from '@/lib/format';
 import { stripMarkdown } from '@/lib/text';
 import { usePageMeta } from '@/composables/usePageMeta';
 
@@ -102,7 +102,7 @@ const hasFilters = computed(() =>
 const heroMeta = computed(() => [
   { label: 'FILES', value: String(archiveStats.postCount).padStart(2, '0') },
   { label: 'MATCHED', value: String(filteredPosts.value.length).padStart(2, '0') },
-  { label: 'UPDATED', value: formatDate(archiveStats.latestUpdate) },
+  { label: 'TAGS', value: String(archiveStats.tagCount).padStart(2, '0') },
 ]);
 
 usePageMeta(() => ({

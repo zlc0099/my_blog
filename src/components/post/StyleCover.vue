@@ -13,6 +13,8 @@ import MovieCover from './covers/MovieCover.vue';
 import AnimeGameCover from './covers/AnimeGameCover.vue';
 import AdminLayoutCover from './covers/AdminLayoutCover.vue';
 import IndustrialPlatformCover from './covers/IndustrialPlatformCover.vue';
+import MobileH5Cover from './covers/MobileH5Cover.vue';
+import WikiCover from './covers/WikiCover.vue';
 
 const props = defineProps({
   variant: {
@@ -39,6 +41,8 @@ const covers = {
   'anime-game': AnimeGameCover,
   'admin-layout': AdminLayoutCover,
   'industrial-platform': IndustrialPlatformCover,
+  'mobile-h5': MobileH5Cover,
+  wiki: WikiCover,
 };
 
 const cover = computed(() => covers[props.variant] || null);

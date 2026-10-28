@@ -5,6 +5,7 @@ import NotFoundView from '@/views/NotFoundView.vue';
 import MarkdownBody from '@/components/post/MarkdownBody.vue';
 import RelatedPrompts from '@/components/post/RelatedPrompts.vue';
 import StyleCover from '@/components/post/StyleCover.vue';
+import ImageCover from '@/components/post/covers/ImageCover.vue';
 import TocSidebar from '@/components/post/TocSidebar.vue';
 import ReadingProgress from '@/components/post/ReadingProgress.vue';
 import TagChip from '@/components/ui/TagChip.vue';
@@ -15,7 +16,6 @@ import {
   getProjectBySlug,
   getRelatedPosts,
 } from '@/lib/content';
-import { formatDate } from '@/lib/format';
 import { renderMarkdown } from '@/lib/markdown';
 import { usePageMeta } from '@/composables/usePageMeta';
 
@@ -59,16 +59,13 @@ usePageMeta(() =>
                   / {{ post.categoryInfo.zh }}
                 </template>
               </RouterLink>
-              <span class="post-meta__sep">/</span>
-              <time :datetime="post.date">{{ formatDate(post.date) }}</time>
-              <template v-if="post.updated !== post.date">
-                <span class="post-meta__sep">/</span>
-                <span>UPDATED {{ formatDate(post.updated) }}</span>
-              </template>
-              <span class="post-meta__sep">/</span>
-              <span>{{ post.readingTime }} MIN READ</span>
               <span v-if="post.sample" class="badge" title="示例内容，可替换为真实记录">SAMPLE</span>
             </div>
+
+            <p v-if="post.category === 'musings'" class="post-disclaimer mono">
+              <span class="post-disclaimer__label">DISCLAIMER</span>
+              仅代表个人观点，不代表大众立场。
+            </p>
 
             <h1 class="post-title">{{ post.title }}</h1>
             <p class="post-summary">{{ post.summary }}</p>
@@ -86,14 +83,21 @@ usePageMeta(() =>
           </div>
         </div>
 
-        <figure v-if="post.coverStyle" class="post-cover">
+        <figure v-if="post.coverImage || post.coverStyle" class="post-cover">
+          <ImageCover
+            v-if="post.coverImage"
+            :src="post.coverImage"
+            :alt="post.title"
+            loading="eager"
+          />
           <StyleCover
+            v-else
             :variant="post.coverStyle"
             :label="post.coverNote || post.title"
           />
           <figcaption class="post-cover__caption">
-            <span class="eyebrow">STYLE SAMPLE / 封面示意</span>
-            <p>{{ post.coverNote }}</p>
+            <span class="eyebrow">{{ post.coverImage ? 'STILL / 封面' : 'STYLE SAMPLE / 封面示意' }}</span>
+            <p>{{ post.coverNote || post.title }}</p>
           </figcaption>
         </figure>
       </div>
@@ -166,7 +170,6 @@ usePageMeta(() =>
           >
             <span class="post-pagination__label mono">PREVIOUS / 上一篇</span>
             <strong>{{ adjacent.older.title }}</strong>
-            <span class="post-pagination__date mono">{{ formatDate(adjacent.older.date) }}</span>
           </RouterLink>
           <span v-else class="post-pagination__placeholder mono">ARCHIVE / START</span>
 
@@ -177,7 +180,6 @@ usePageMeta(() =>
           >
             <span class="post-pagination__label mono">NEXT / 下一篇</span>
             <strong>{{ adjacent.newer.title }}</strong>
-            <span class="post-pagination__date mono">{{ formatDate(adjacent.newer.date) }}</span>
           </RouterLink>
           <span v-else class="post-pagination__placeholder mono">END OF ARCHIVE</span>
         </nav>
@@ -295,6 +297,24 @@ usePageMeta(() =>
 
 .post-tags {
   margin-top: 20px;
+}
+
+.post-disclaimer {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-top: 10px;
+  padding-left: 10px;
+  border-left: 2px solid var(--accent);
+  color: var(--text-muted);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  line-height: 1.7;
+}
+
+.post-disclaimer__label {
+  color: var(--accent-ink);
+  letter-spacing: 0.12em;
 }
 
 .post-header__side {
@@ -551,12 +571,6 @@ usePageMeta(() =>
 
 .post-pagination__item:hover strong {
   color: var(--accent-ink);
-}
-
-.post-pagination__date {
-  margin-top: auto;
-  color: var(--text-muted);
-  font-size: 10px;
 }
 
 .post-pagination__placeholder {
