@@ -26,6 +26,10 @@ defineProps({
     type: Array,
     default: () => [],
   },
+  notice: {
+    type: String,
+    default: '',
+  },
   anime: {
     type: Boolean,
     default: true,
@@ -45,9 +49,15 @@ defineProps({
           <span class="eyebrow__tick"></span>
           {{ eyebrow }}
         </div>
-        <h1 class="page-hero__title">
-          {{ title }}<span v-if="zh" class="page-hero__zh">/ {{ zh }}</span>
-        </h1>
+        <div class="page-hero__heading">
+          <h1 class="page-hero__title">
+            {{ title }}<span v-if="zh" class="page-hero__zh">/ {{ zh }}</span>
+          </h1>
+          <p v-if="notice" class="page-hero__notice">
+            <span class="page-hero__notice-label">PERSONAL NOTE</span>
+            {{ notice }}
+          </p>
+        </div>
         <p v-if="description" class="page-hero__desc">{{ description }}</p>
       </div>
 
@@ -128,8 +138,38 @@ defineProps({
   align-items: flex-end;
 }
 
-.page-hero__title {
+.page-hero__heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 8px 20px;
   margin-top: 18px;
+}
+
+.page-hero__notice {
+  max-width: 340px;
+  margin: 0 0 8px;
+  padding-left: 12px;
+  border-left: 2px solid var(--accent-line);
+  color: var(--text-muted);
+  font-size: 11.5px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  line-height: 1.75;
+}
+
+.page-hero__notice-label {
+  display: inline-block;
+  margin-right: 6px;
+  color: var(--accent-ink);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  vertical-align: 1px;
+}
+
+.page-hero__title {
+  margin-top: 0;
   font-family: var(--font-display);
   font-size: clamp(44px, 6vw, 76px);
   font-weight: 600;
@@ -227,6 +267,15 @@ defineProps({
 }
 
 @media (max-width: 560px) {
+  .page-hero__heading {
+    gap: 8px 12px;
+  }
+
+  .page-hero__notice {
+    max-width: 100%;
+    margin-bottom: 0;
+  }
+
   .page-hero__title {
     font-size: 38px;
   }

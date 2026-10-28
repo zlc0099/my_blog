@@ -10,10 +10,7 @@ const category = computed(() => categoryMap[String(route.params.slug)]);
 
 const description = computed(() => {
   if (!category.value) return '';
-  const base = `${category.value.desc}。浏览该分类下的全部记录。`;
-  return category.value.slug === 'musings'
-    ? `${base} 以下内容仅代表个人观点，不代表大众立场。`
-    : base;
+  return `${category.value.desc.replace(/[。.!！?？]$/, '')}。浏览该分类下的全部记录。`;
 });
 </script>
 

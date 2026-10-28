@@ -54,6 +54,18 @@ const searchTerm = computed(() => String(route.query.q || '').trim());
 const activeCategory = computed(() => props.lockedCategory || String(route.query.category || ''));
 const activeTag = computed(() => props.lockedTag || String(route.query.tag || ''));
 
+const MUSINGS_NOTICE = '个人主观观点，不代表任何人，只是平日一些稀奇古怪想法的记录。';
+
+const musingsNotice = computed(() => {
+  const isLocked =
+    props.lockedCategory === 'musings' || props.lockedTag === 'musings';
+  return isLocked ? MUSINGS_NOTICE : '';
+});
+
+const showMusingsFilterNote = computed(
+  () => !props.lockedCategory && activeCategory.value === 'musings',
+);
+
 const filteredPosts = computed(() => {
   const keyword = searchTerm.value.toLowerCase();
   return posts.filter((post) => {
@@ -224,6 +236,7 @@ onBeforeUnmount(() => {
       :description="description"
       :serial="serial"
       :meta="heroMeta"
+      :notice="musingsNotice"
     />
 
     <section class="archive-section">
@@ -283,6 +296,10 @@ onBeforeUnmount(() => {
               >
                 {{ category.zh }} <span>{{ String(category.count).padStart(2, '0') }}</span>
               </button>
+              <span v-if="showMusingsFilterNote" class="filter-note">
+                <span class="filter-note__label">PERSONAL NOTE</span>
+                {{ MUSINGS_NOTICE }}
+              </span>
             </div>
           </div>
         </div>
@@ -463,6 +480,27 @@ onBeforeUnmount(() => {
 
 .filter-chip.is-active span {
   color: var(--accent-ink);
+}
+
+.filter-note {
+  display: inline-flex;
+  min-height: 30px;
+  flex: 1 1 300px;
+  align-items: center;
+  gap: 8px;
+  padding-left: 10px;
+  border-left: 2px solid var(--accent-line);
+  color: var(--text-muted);
+  font-size: 10.5px;
+  line-height: 1.6;
+}
+
+.filter-note__label {
+  flex: none;
+  color: var(--accent-ink);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
 }
 
 .archive-grid {

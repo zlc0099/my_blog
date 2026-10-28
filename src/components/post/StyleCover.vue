@@ -15,6 +15,7 @@ import AdminLayoutCover from './covers/AdminLayoutCover.vue';
 import IndustrialPlatformCover from './covers/IndustrialPlatformCover.vue';
 import MobileH5Cover from './covers/MobileH5Cover.vue';
 import WikiCover from './covers/WikiCover.vue';
+import SaasCover from './covers/SaasCover.vue';
 
 const props = defineProps({
   variant: {
@@ -43,6 +44,7 @@ const covers = {
   'industrial-platform': IndustrialPlatformCover,
   'mobile-h5': MobileH5Cover,
   wiki: WikiCover,
+  saas: SaasCover,
 };
 
 const cover = computed(() => covers[props.variant] || null);
