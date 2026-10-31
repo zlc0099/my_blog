@@ -275,8 +275,8 @@ node scripts/import-agent-models.mjs \
 
 ### 技能与提示词
 
-- Skill：`src/content/posts/skill-*.md` 现有 16 条，`/categories/skill` 分成两组：
-  - **自制 Skill（5 条）**：`frontend-ui-design`、`fullstack-dev-workflow`、`web-test-pro`、`backend-workflow`、`business-story-simulator`，文章正文整理自真实 SKILL.md 与参考文档；文章顶部有 GitHub 源码入口，完整目录在仓库的 `myskill/<name>/` 下。`business-story-simulator` 是开发前业务梳理与项目规划 Skill，区分小白/开发者两种用户模式，开发者模式再按轻量/标准/深度分析，输出需求基线、业务故事、规则追溯和开发工单。
+- Skill：`src/content/posts/skill-*.md` 现有 17 条，`/categories/skill` 分成两组：
+  - **自制 Skill（6 条）**：`frontend-ui-design`、`fullstack-dev-workflow`、`web-test-pro`、`backend-workflow`、`business-story-simulator`、`frontend-design-simplifier`，文章正文整理自真实 SKILL.md 与参考文档；文章顶部有 GitHub 源码入口，完整目录在仓库的 `myskill/<name>/` 下。`business-story-simulator` 是开发前业务梳理与项目规划 Skill，区分小白/开发者两种用户模式，开发者模式再按轻量/标准/深度分析，输出需求基线、业务故事、规则追溯和开发工单；`frontend-design-simplifier` 是前端页面简化与去 AI 味审查 Skill，按 P0–P3 诊断模板化、结构臃肿和视觉失衡，强调删除无价值设计但不擅自删业务功能。
   - **常用 Skill（非自制，11 条）**：`superpowers`（一条总览，整理 7 个常用子技能）、`frontend-design`、`ui-ux-pro-max`（ui-max）、`ui-styling`、`design-system`、`banner-design`、`brand`、`design`、`slides`、`webapp-testing`、常用 Skills 合集。
   - Skill 文章只说明能做什么、怎么用，不展示来源、安装位置或调用日志。
 - `myskill/` 存放本地技能源码；站点构建不会打包它，GitHub 目录链接指向仓库里的原始文件。`src/content/sessions/` 是个人的本地会话笔记目录，默认不提交。
@@ -334,7 +334,7 @@ node scripts/import-agent-models.mjs \
 - PageHero 检查：中央毛玻璃面板不影响左右留白；轮播使用本地图片，60 秒淡入淡出并随机排序，不叠加文字；鼠标移动只产生倾斜/位移/放大，不触发悬浮抬升；1100px 以下隐藏轮播，reduced-motion 停止轮播与视差。
 - 工业背景检查：网格、斜线、雷达刻度、光束和扫描线持续缓慢运动；极光采用轻量渐变光带（不使用大面积 blur / clip-path 动画），深色模式呈绿/青/紫，浅色模式呈柔和薄荷/蓝紫；主题切换后颜色变量更新，`prefers-reduced-motion` 下所有背景动画停止，移动端隐藏第三层极光与射线。
 - 真实数据页面检查：20 条 Claude Code 会话记录、按 token 类型的 2 个月图表、6 项 Token 统计、5 个模型的拆分面板（合计 981.62M）、Qoder / Trae 的 17 个会话与 7 条模型记录、37 个 Agent 会话 / 12 条模型记录的汇总、Agent / 项目 / 模型筛选（模型筛选覆盖会话内多模型）、会话时长、移动端布局；首页不渲染其他模块数据，也不显示 note。
-- 优化项检查：提示词搜索跳转锚点、真实 SKILL.md 主体、16 条 Skill 档案与搜索、自制/常用分组、自制技能 GitHub 目录链接、辅助文字最小 10px。
+- 优化项检查：提示词搜索跳转锚点、真实 SKILL.md 主体、17 条 Skill 档案与搜索、自制/常用分组、自制技能 GitHub 目录链接、辅助文字最小 10px。
 - 0 控制台错误、0 失败请求。
 
 ## 已知边界
