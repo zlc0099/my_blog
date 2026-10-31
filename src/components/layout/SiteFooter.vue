@@ -13,47 +13,23 @@ const year = new Date().getFullYear();
           <div class="site-footer__mark" aria-hidden="true">
             <span></span><span></span><span></span>
           </div>
-          <div class="eyebrow eyebrow--accent">
-            <span class="eyebrow__tick"></span>
-            {{ site.brand }} / {{ site.tagline }}
-          </div>
+          <span class="site-footer__name">{{ site.brand }}</span>
           <p>{{ site.intro }}</p>
-          <a :href="site.github" class="site-footer__github" target="_blank" rel="noopener noreferrer">
-            GITHUB / @{{ site.owner.callsign }} ↗
-          </a>
         </div>
 
-        <nav class="site-footer__col" aria-label="站点导航">
-          <div class="eyebrow">INDEX</div>
+        <nav class="site-footer__nav" aria-label="页脚导航">
           <RouterLink to="/">首页</RouterLink>
-          <RouterLink to="/posts">内容档案</RouterLink>
-          <RouterLink to="/projects">项目记录</RouterLink>
-          <RouterLink to="/about">关于我</RouterLink>
-        </nav>
-
-        <nav class="site-footer__col" aria-label="档案分类导航">
-          <div class="eyebrow">ARCHIVE</div>
-          <RouterLink to="/categories/notes">学习记录</RouterLink>
-          <RouterLink to="/categories/skill">Skill</RouterLink>
-          <RouterLink to="/categories/frontend-prompts">前端提示词</RouterLink>
-          <RouterLink to="/categories/backend-prompts">后端提示词</RouterLink>
-          <RouterLink to="/categories/ai-division">AI 分工</RouterLink>
-        </nav>
-
-        <div class="site-footer__col">
-          <div class="eyebrow">SYSTEM</div>
+          <RouterLink to="/posts">档案</RouterLink>
+          <RouterLink to="/projects">项目</RouterLink>
           <RouterLink to="/lab">AI LAB</RouterLink>
-          <span>Vue 3 / Vite</span>
-          <span>GitHub Pages</span>
-          <span>无后端 · 本地数据</span>
-          <RouterLink to="/about">关于本站</RouterLink>
-        </div>
+          <RouterLink to="/about">关于</RouterLink>
+          <a :href="site.github" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+        </nav>
       </div>
 
       <div class="site-footer__bottom">
         <span>© {{ year }} {{ site.brand }}</span>
-        <span class="site-footer__build">LEARN. BUILD. DOCUMENT.</span>
-        <button type="button" @click="scrollToTop">BACK TO TOP ↑</button>
+        <button type="button" @click="scrollToTop">回到顶部 ↑</button>
       </div>
     </div>
   </footer>
@@ -78,14 +54,15 @@ const year = new Date().getFullYear();
 }
 
 .site-footer__top {
-  display: grid;
-  grid-template-columns: minmax(260px, 2fr) repeat(3, minmax(120px, 1fr));
-  gap: clamp(28px, 4vw, 56px);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: clamp(28px, 6vw, 80px);
 }
 
 .site-footer__brand p {
   max-width: 320px;
-  margin: 16px 0 18px;
+  margin: 16px 0 0;
   color: var(--text-secondary);
   font-size: 14px;
   line-height: 1.8;
@@ -109,36 +86,29 @@ const year = new Date().getFullYear();
   background: var(--accent);
 }
 
-.site-footer__github {
-  color: var(--text-secondary);
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.08em;
-  transition: color var(--dur-fast) var(--ease-out);
+.site-footer__name {
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
 }
 
-.site-footer__github:hover {
-  color: var(--accent-ink);
-}
-
-.site-footer__col {
+.site-footer__nav {
   display: flex;
-  flex-direction: column;
-  gap: 9px;
+  flex-wrap: wrap;
+  gap: 12px 22px;
+  padding-top: 4px;
 }
 
-.site-footer__col .eyebrow {
-  margin-bottom: 4px;
-}
-
-.site-footer__col a,
-.site-footer__col span {
+.site-footer__nav a {
   color: var(--text-secondary);
   font-size: 13px;
   line-height: 1.5;
+  transition: color var(--dur-fast) var(--ease-out);
 }
 
-.site-footer__col a:hover {
+.site-footer__nav a:hover {
   color: var(--accent-ink);
 }
 
@@ -170,30 +140,15 @@ const year = new Date().getFullYear();
 
 @media (max-width: 900px) {
   .site-footer__top {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .site-footer__brand {
-    grid-column: 1 / -1;
+    flex-direction: column;
+    gap: 28px;
   }
 }
 
 @media (max-width: 560px) {
-  .site-footer__top {
-    grid-template-columns: 1fr;
-  }
-
-  .site-footer__brand {
-    grid-column: auto;
-  }
-
   .site-footer__bottom {
     flex-wrap: wrap;
     justify-content: flex-start;
-  }
-
-  .site-footer__build {
-    display: none;
   }
 }
 </style>

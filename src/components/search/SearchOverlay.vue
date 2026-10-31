@@ -100,9 +100,9 @@ onBeforeUnmount(() => {
       <div class="search-panel__bar">
         <span id="search-title" class="eyebrow eyebrow--accent">
           <span class="eyebrow__tick"></span>
-          ARCHIVE SEARCH / 检索
+          搜索
         </span>
-        <button class="search-panel__close" type="button" @click="requestClose">ESC ×</button>
+        <button class="search-panel__close" type="button" @click="requestClose">关闭 ×</button>
       </div>
 
       <div class="search-field">
@@ -116,7 +116,7 @@ onBeforeUnmount(() => {
           type="text"
           autocomplete="off"
           spellcheck="false"
-          placeholder="搜索标题、标签、正文…"
+          placeholder="搜索…"
           aria-label="搜索文章和项目"
           @keydown.down.prevent="move(1)"
           @keydown.up.prevent="move(-1)"
@@ -129,10 +129,10 @@ onBeforeUnmount(() => {
 
       <div class="search-results">
         <div v-if="!query.trim()" class="search-placeholder">
-          <div class="search-placeholder__code">QUERY / 000</div>
-          <p>输入关键词开始检索，范围包括文章、项目和提示词。</p>
+          <div class="search-placeholder__code">关键词</div>
+          <p>输入关键词开始搜索。</p>
           <div class="search-placeholder__quick">
-            <span class="eyebrow">TRY / 试试</span>
+            <span class="eyebrow">试试</span>
             <button
               v-for="item in quickQueries"
               :key="item"
@@ -178,10 +178,10 @@ onBeforeUnmount(() => {
       </div>
 
       <div class="search-footer">
-        <span>↑↓ SELECT</span>
-        <span>ENTER OPEN</span>
-        <span>ESC CLOSE</span>
-        <span class="search-footer__brand">PERSONAL ARCHIVE / INDEX</span>
+        <span>↑↓ 选择</span>
+        <span>Enter 打开</span>
+        <span>Esc 关闭</span>
+        <span class="search-footer__brand">PERSONAL ARCHIVE</span>
       </div>
     </div>
   </dialog>

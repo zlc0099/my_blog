@@ -51,8 +51,8 @@ export const site = {
   ],
   owner: {
     callsign: 'zlc0099',
-    role: 'FULL-STACK LEARNER',
-    status: 'CONTINUOUS LEARNING',
+    role: '全栈学习者',
+    status: '持续学习中',
   },
   github: 'https://github.com/zlc0099',
   repo: 'https://github.com/zlc0099/my_blog',

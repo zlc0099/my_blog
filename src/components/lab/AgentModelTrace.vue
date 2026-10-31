@@ -62,7 +62,7 @@ function range(first, last) {
 
     <EmptyState
       v-if="!traceAgents.length"
-      code="TRACE / EMPTY"
+      code="暂无记录"
       title="还没有其他 Agent 模型记录"
       description="运行 Qoder / Trae 本地统计导入器后，这里会显示模型与会话覆盖情况。"
     />

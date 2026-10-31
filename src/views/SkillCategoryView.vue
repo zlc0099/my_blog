@@ -34,9 +34,9 @@ const pageSelfSkills = computed(() => pagedSkills.value.filter((post) => post.sk
 const pageCommonSkills = computed(() => pagedSkills.value.filter((post) => post.skillType !== 'self'));
 
 const heroMeta = computed(() => [
-  { label: 'SELF-MADE', value: String(selfSkills.value.length).padStart(2, '0') },
-  { label: 'COMMON', value: String(commonSkills.value.length).padStart(2, '0') },
-  { label: 'TOTAL', value: String(skillPosts.value.length).padStart(2, '0') },
+  { label: '自制', value: String(selfSkills.value.length).padStart(2, '0') },
+  { label: '常用', value: String(commonSkills.value.length).padStart(2, '0') },
+  { label: '总计', value: String(skillPosts.value.length).padStart(2, '0') },
 ]);
 
 watch(
@@ -82,18 +82,16 @@ function goToPage(page) {
 <template>
   <div>
     <PageHero
-      eyebrow="ARCHIVE / SKILL"
-      title="SKILL ARCHIVE"
+      title="SKILLS"
       zh="技能档案"
-      description="分成两栏：我自己写的 Skill，以及平时在用、但不是自制的 Skill。自制技能的完整源码在 GitHub 的 myskill 目录。"
-      serial="ARCHIVE / SKILL"
+      description="自制 Skill 与常用 Skill。"
       :meta="heroMeta"
     />
 
     <section ref="sectionRef" class="section skill-section">
       <div class="container">
         <div v-if="pageSelfSkills.length" class="skill-group">
-          <SectionHeading index="01" title="SELF-MADE SKILL" zh="自制 Skill">
+          <SectionHeading index="01" title="自制 Skill">
             <template #action>
               <a
                 :href="`${site.repo}/tree/main/myskill`"
@@ -101,15 +99,15 @@ function goToPage(page) {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                GITHUB / myskill ↗
+                GitHub ↗
               </a>
             </template>
           </SectionHeading>
 
           <p class="skill-group__note">
-            这些技能是我自己维护的，完整目录（SKILL.md、references、模板）在 GitHub 的
+            完整目录在 GitHub 的
             <a :href="`${site.repo}/tree/main/myskill`" target="_blank" rel="noopener noreferrer">myskill</a>
-            下。文章正文展示 SKILL.md 主体。
+            下。
           </p>
 
           <div class="skill-grid">
@@ -118,11 +116,7 @@ function goToPage(page) {
         </div>
 
         <div v-if="pageCommonSkills.length" class="skill-group">
-          <SectionHeading index="02" title="COMMON SKILL" zh="常用 Skill（非自制）" />
-
-          <p class="skill-group__note">
-            平时在用的非自制 Skill，按用途整理。
-          </p>
+          <SectionHeading index="02" title="常用 Skill" />
 
           <div class="skill-grid">
             <ArchiveCard v-for="post in pageCommonSkills" :key="post.slug" :post="post" />

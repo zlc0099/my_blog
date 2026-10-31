@@ -45,16 +45,10 @@ function resetPlate() {
 
 <template>
   <section class="hero">
-    <span class="hero__vert" aria-hidden="true">PERSONAL ARCHIVE / LEARNING LOG</span>
     <div class="hero__field" aria-hidden="true"></div>
 
     <div class="container hero__inner">
       <div class="hero__content">
-        <div class="eyebrow hero__eyebrow">
-          <span class="eyebrow__tick"></span>
-          {{ site.brand }} <span class="hero__slash">/</span> {{ site.tagline }}
-        </div>
-
         <h1 class="hero__title">
           <span class="hero__line">LEARN. BUILD.</span>
           <span class="hero__line hero__line--outline">
@@ -63,7 +57,6 @@ function resetPlate() {
         </h1>
 
         <p class="hero__lead">{{ site.selfIntro }}</p>
-        <p class="hero__cn">平时写点东西 / 踩点坑 / 顺手记下来</p>
 
         <div class="hero__actions">
           <RouterLink to="/posts" class="btn btn--primary">
@@ -73,21 +66,6 @@ function resetPlate() {
             关于我 <span class="btn__arrow">→</span>
           </RouterLink>
         </div>
-
-        <dl class="hero__status">
-          <div>
-            <dt>MAINLY</dt>
-            <dd>JAVA · SPRING BOOT · VUE</dd>
-          </div>
-          <div>
-            <dt>TOOLS</dt>
-            <dd>CLAUDE CODE · QODER · TRAE</dd>
-          </div>
-          <div class="hero__scroll">
-            <dt>SCROLL TO READ</dt>
-            <dd class="hero__scroll-line"><span></span></dd>
-          </div>
-        </dl>
       </div>
 
       <div class="hero__plate">
@@ -112,11 +90,6 @@ function resetPlate() {
               vector-effect="non-scaling-stroke"
             />
           </svg>
-
-          <div class="archive-plate__top">
-            <span class="mono">PROFILE / 001</span>
-            <span class="archive-plate__status mono"><i></i> PERSONAL SITE</span>
-          </div>
 
           <div class="archive-plate__visual">
             <svg class="archive-plate__emblem" viewBox="0 0 360 360" aria-hidden="true">
@@ -173,10 +146,6 @@ function resetPlate() {
             </svg>
 
             <figure class="archive-photo">
-              <div class="archive-photo__head mono">
-                <span>GITHUB / AVATAR</span>
-                <span>001</span>
-              </div>
               <div class="archive-photo__frame">
                 <img
                   v-if="!avatarFailed"
@@ -193,34 +162,17 @@ function resetPlate() {
                 <i class="archive-photo__corner br"></i>
               </div>
               <figcaption class="archive-photo__id">
-                <span class="mono">ID / CALLSIGN</span>
                 <strong>{{ site.owner.callsign }}</strong>
               </figcaption>
             </figure>
 
-            <span class="archive-plate__tag archive-plate__tag--left mono">A—01</span>
-            <span class="archive-plate__tag archive-plate__tag--right mono">GRID / 07</span>
-          </div>
+            <span class="archive-plate__orange" aria-hidden="true"></span>
+            <span class="archive-plate__index" aria-hidden="true">{{ projectIndex }}</span>
 
-          <span class="archive-plate__orange" aria-hidden="true"></span>
-          <span class="archive-plate__index" aria-hidden="true">{{ projectIndex }}</span>
-
-          <div class="archive-plate__info">
-            <div class="archive-plate__info-row">
-              <span class="mono">CALLSIGN</span>
-              <strong>{{ site.owner.callsign }}</strong>
-            </div>
-            <div class="archive-plate__info-row">
-              <span class="mono">STACK</span>
-              <strong>JAVA / VUE</strong>
+            <div class="archive-plate__ticks" aria-hidden="true">
+              <span v-for="n in 7" :key="n"></span>
             </div>
           </div>
-
-          <div class="archive-plate__ticks" aria-hidden="true">
-            <span v-for="n in 7" :key="n"></span>
-          </div>
-
-          <span class="archive-plate__vertical mono">PERSONAL ARCHIVE — {{ year }}</span>
         </div>
       </div>
     </div>

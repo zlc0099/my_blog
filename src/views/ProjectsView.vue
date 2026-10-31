@@ -17,28 +17,25 @@ const onlineCount = computed(
 );
 
 const heroMeta = computed(() => [
-  { label: 'OPERATIONS', value: String(projects.length).padStart(2, '0') },
-  { label: 'ONLINE', value: String(onlineCount.value).padStart(2, '0') },
-  { label: 'UPDATED', value: formatDate(latestUpdate) },
+  { label: '项目', value: String(projects.length).padStart(2, '0') },
+  { label: '上线', value: String(onlineCount.value).padStart(2, '0') },
+  { label: '更新', value: formatDate(latestUpdate) },
 ]);
 </script>
 
 <template>
   <div>
     <PageHero
-      eyebrow="OPERATIONS / PROJECTS"
-      title="PROJECT RECORDS"
+      title="PROJECTS"
       zh="项目记录"
-      description="不只是结果截图，而是项目的目标、实现过程、关键问题与复盘。所有外链均为真实地址。"
-      serial="OPERATIONS / INDEX"
+      description="目标、过程、关键问题和复盘。"
       :meta="heroMeta"
     />
 
     <section class="section projects-section">
       <div class="container">
         <div class="projects-summary">
-          <span class="eyebrow">IMPLEMENTATION LOG / 实现记录</span>
-          <p class="mono">ONLINE {{ String(onlineCount).padStart(2, '0') }} / TOTAL {{ String(projects.length).padStart(2, '0') }}</p>
+          <p class="mono">上线 {{ String(onlineCount).padStart(2, '0') }} / 共 {{ String(projects.length).padStart(2, '0') }}</p>
         </div>
 
         <div v-if="projects.length" class="projects-grid">
@@ -57,7 +54,7 @@ const heroMeta = computed(() => [
 
         <EmptyState
           v-else
-          code="OPERATIONS / EMPTY"
+          code="暂无项目"
           title="还没有项目记录"
           description="完成项目后会在这里留下目标、实现过程和复盘。"
         />

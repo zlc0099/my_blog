@@ -14,7 +14,7 @@ posts.forEach((post) => {
 const searchIndex = [
   ...posts.map((post) => ({
     type: 'post',
-    group: 'ARCHIVE / 文章',
+    group: '文章',
     code: post.archiveCode,
     title: post.title,
     summary: post.summary,
@@ -25,7 +25,7 @@ const searchIndex = [
   })),
   ...projects.map((project) => ({
     type: 'project',
-    group: 'OPERATIONS / 项目',
+    group: '项目',
     code: project.archiveCode,
     title: project.title,
     summary: project.summary,
@@ -40,7 +40,7 @@ const searchIndex = [
       const post = promptPostMap.get(prompt.code);
       return {
         type: 'prompt',
-        group: 'PROMPTS / 提示词',
+        group: '提示词',
         code: prompt.code,
         title: prompt.title,
         summary: prompt.goal,

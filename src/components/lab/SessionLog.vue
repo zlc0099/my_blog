@@ -92,7 +92,7 @@ function clearFilters() {
 
     <EmptyState
       v-if="!usageSummary.sessions"
-      code="LOG / EMPTY"
+      code="暂无会话"
       title="还没有作业记录"
       description="运行 Claude Code 导入器后，这里会显示真实会话记录。"
     />

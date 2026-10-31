@@ -26,10 +26,10 @@ const timers = [];
 const ticks = Array.from({ length: 24 }, (_, index) => index + 1);
 
 const status = computed(() => {
-  if (progress.value < 35) return 'MOUNTING ARCHIVE';
-  if (progress.value < 74) return 'LOADING CONTENT';
-  if (progress.value < 99) return 'FINALISING';
-  return 'READY';
+  if (progress.value < 35) return '载入档案';
+  if (progress.value < 74) return '读取内容';
+  if (progress.value < 99) return '整理中';
+  return '完成';
 });
 
 const displayProgress = computed(() =>
@@ -156,7 +156,6 @@ onBeforeUnmount(() => {
         </span>
         <span class="boot__brand-text">
           <span class="boot__name">PERSONAL ARCHIVE</span>
-          <span class="boot__sub mono">LEARNING DOSSIER / INITIALISING</span>
         </span>
       </div>
 

@@ -40,11 +40,11 @@
   }
 
   [data-theme='light'] {
-    --bg-primary: rgba(248, 245, 240, 0.94);
-    --bg-secondary: rgba(240, 236, 228, 0.9);
-    --bg-elevated: rgba(233, 228, 219, 0.94);
-    --bg-hover: rgba(220, 214, 203, 0.94);
-    --header-bg: rgba(242, 239, 233, 0.9);
+    --bg-primary: rgba(249, 250, 248, 0.94);
+    --bg-secondary: rgba(240, 243, 238, 0.9);
+    --bg-elevated: rgba(231, 235, 229, 0.94);
+    --bg-hover: rgba(221, 226, 219, 0.94);
+    --header-bg: rgba(238, 240, 236, 0.9);
   }
 }
 

@@ -36,16 +36,14 @@ defineProps({
       <div class="archive-card__meta mono">
         <span class="archive-card__code">{{ post.archiveCode }}</span>
         <RouterLink :to="`/categories/${post.category}`" class="archive-card__category">
-          {{ post.categoryInfo.en }}
+          {{ post.categoryInfo.zh }}
         </RouterLink>
-        <span v-if="post.sample" class="badge">SAMPLE</span>
+        <span v-if="post.sample" class="badge">示例</span>
       </div>
 
       <h3 class="archive-card__title">
         <RouterLink :to="`/posts/${post.slug}`">{{ post.title }}</RouterLink>
       </h3>
-
-      <p class="archive-card__summary">{{ post.summary }}</p>
 
       <div class="archive-card__foot">
         <ul v-if="post.tags.length" class="tag-list archive-card__tags">
@@ -202,17 +200,6 @@ defineProps({
 .archive-card:hover .archive-card__title a,
 .archive-card:focus-within .archive-card__title a {
   color: var(--accent-ink);
-}
-
-.archive-card__summary {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  overflow: hidden;
-  margin-top: 8px;
-  color: var(--text-secondary);
-  font-size: 13px;
-  line-height: 1.75;
 }
 
 .archive-card__foot {

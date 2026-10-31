@@ -5,31 +5,23 @@ import PageHero from '@/components/ui/PageHero.vue';
 import ArchiveCard from '@/components/post/ArchiveCard.vue';
 import ArchivePagination from '@/components/post/ArchivePagination.vue';
 import EmptyState from '@/components/ui/EmptyState.vue';
-import { archiveStats, categoriesWithCount, posts } from '@/lib/content';
+import { categoriesWithCount, posts } from '@/lib/content';
 import { toTagSlug } from '@/lib/format';
 import { stripMarkdown } from '@/lib/text';
 import { usePageMeta } from '@/composables/usePageMeta';
 
 const props = defineProps({
-  eyebrow: {
-    type: String,
-    default: 'ARCHIVE / CONTENT',
-  },
   title: {
     type: String,
-    default: 'CONTENT ARCHIVE',
+    default: 'ARCHIVE',
   },
   zh: {
     type: String,
-    default: '内容档案',
+    default: '档案',
   },
   description: {
     type: String,
-    default: '学习记录、Skill、前端/后端提示词和 AI 分工。按分类或关键词检索。',
-  },
-  serial: {
-    type: String,
-    default: 'ARCHIVE / CONTENT',
+    default: '学习记录、Skill、提示词与碎碎念。',
   },
   lockedCategory: {
     type: String,
@@ -110,12 +102,6 @@ const hasFilters = computed(() =>
       (!props.lockedTag && activeTag.value),
   ),
 );
-
-const heroMeta = computed(() => [
-  { label: 'FILES', value: String(archiveStats.postCount).padStart(2, '0') },
-  { label: 'MATCHED', value: String(filteredPosts.value.length).padStart(2, '0') },
-  { label: 'TAGS', value: String(archiveStats.tagCount).padStart(2, '0') },
-]);
 
 usePageMeta(() => ({
   title: props.zh ? `${props.title} / ${props.zh}` : props.title,
@@ -230,12 +216,9 @@ onBeforeUnmount(() => {
 <template>
   <div>
     <PageHero
-      :eyebrow="eyebrow"
       :title="title"
       :zh="zh"
       :description="description"
-      :serial="serial"
-      :meta="heroMeta"
       :notice="musingsNotice"
     />
 
@@ -251,7 +234,7 @@ onBeforeUnmount(() => {
               <input
                 v-model="searchInput"
                 type="search"
-                placeholder="搜索标题、摘要、标签或正文…"
+                placeholder="搜索档案…"
                 aria-label="搜索学习档案"
                 autocomplete="off"
                 spellcheck="false"
@@ -268,15 +251,15 @@ onBeforeUnmount(() => {
             </div>
 
             <div class="archive-summary mono">
-              <span>SHOWING {{ String(pageStart).padStart(2, '0') }}–{{ String(pageEnd).padStart(2, '0') }} / {{ String(filteredPosts.length).padStart(2, '0') }}</span>
+              <span>{{ String(pageStart).padStart(2, '0') }}–{{ String(pageEnd).padStart(2, '0') }} / {{ String(filteredPosts.length).padStart(2, '0') }}</span>
               <button v-if="hasFilters" type="button" class="archive-clear" @click="clearFilters">
-                CLEAR FILTERS ×
+                清除筛选
               </button>
             </div>
           </div>
 
           <div v-if="!lockedCategory" class="filter-group">
-            <span class="eyebrow filter-group__label">CATEGORY</span>
+            <span class="eyebrow filter-group__label">分类</span>
             <div class="filter-options">
               <button
                 type="button"
@@ -297,7 +280,7 @@ onBeforeUnmount(() => {
                 {{ category.zh }} <span>{{ String(category.count).padStart(2, '0') }}</span>
               </button>
               <span v-if="showMusingsFilterNote" class="filter-note">
-                <span class="filter-note__label">PERSONAL NOTE</span>
+                <span class="filter-note__label">提示</span>
                 {{ MUSINGS_NOTICE }}
               </span>
             </div>
@@ -310,20 +293,18 @@ onBeforeUnmount(() => {
 
         <EmptyState
           v-else-if="posts.length"
-          code="ARCHIVE / NO MATCH"
           title="没有匹配的档案"
-          description="试着缩短关键词，或者清除当前筛选条件。"
+          description="换个关键词，或清除筛选。"
         >
           <button type="button" class="btn btn--compact" @click="clearFilters">
-            CLEAR FILTERS
+            清除筛选
           </button>
         </EmptyState>
 
         <EmptyState
           v-else
-          code="ARCHIVE / EMPTY"
           title="档案还没有内容"
-          description="内容整理中，稍后再来看看。"
+          description="稍后再来看看。"
         />
 
         <ArchivePagination

@@ -2,10 +2,6 @@
 import AnimeCarousel from '@/components/effects/AnimeCarousel.vue';
 
 defineProps({
-  eyebrow: {
-    type: String,
-    required: true,
-  },
   title: {
     type: String,
     required: true,
@@ -15,10 +11,6 @@ defineProps({
     default: '',
   },
   description: {
-    type: String,
-    default: '',
-  },
-  serial: {
     type: String,
     default: '',
   },
@@ -45,16 +37,12 @@ defineProps({
     </div>
     <div class="container page-hero__inner">
       <div class="page-hero__main">
-        <div class="eyebrow eyebrow--accent">
-          <span class="eyebrow__tick"></span>
-          {{ eyebrow }}
-        </div>
         <div class="page-hero__heading">
           <h1 class="page-hero__title">
             {{ title }}<span v-if="zh" class="page-hero__zh">/ {{ zh }}</span>
           </h1>
           <p v-if="notice" class="page-hero__notice">
-            <span class="page-hero__notice-label">PERSONAL NOTE</span>
+            <span class="page-hero__notice-label">提示</span>
             {{ notice }}
           </p>
         </div>
@@ -69,8 +57,6 @@ defineProps({
           </div>
         </div>
       </div>
-
-      <span v-if="serial" class="page-hero__serial">{{ serial }}</span>
     </div>
   </header>
 </template>
@@ -227,18 +213,6 @@ defineProps({
   letter-spacing: 0.04em;
 }
 
-.page-hero__serial {
-  position: absolute;
-  top: 4px;
-  right: var(--gutter);
-  z-index: 3;
-  color: var(--text-muted);
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.16em;
-  writing-mode: vertical-rl;
-}
-
 @media (max-width: 1100px) {
   .page-hero__anime-band {
     display: none;
@@ -259,10 +233,6 @@ defineProps({
     padding-left: 0;
     border-left: 0;
     gap: 22px;
-  }
-
-  .page-hero__serial {
-    display: none;
   }
 }
 

@@ -73,7 +73,7 @@ function barHeight(month) {
 
     <EmptyState
       v-if="!usageSummary.sessions"
-      code="LEDGER / EMPTY"
+      code="暂无账本"
       title="还没有 Token 记录"
       description="在 usage.json 中添加作业记录后，这里会自动生成月度账本。"
     />

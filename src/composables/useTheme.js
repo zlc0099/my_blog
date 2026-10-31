@@ -7,7 +7,7 @@ function applyTheme(value) {
   theme.value = value;
   document.documentElement.dataset.theme = value;
   const meta = document.querySelector('meta[name="theme-color"]');
-  if (meta) meta.setAttribute('content', value === 'light' ? '#F2EFE9' : '#111315');
+  if (meta) meta.setAttribute('content', value === 'light' ? '#EEF0EC' : '#111315');
   try {
     localStorage.setItem('pa-theme', value);
   } catch (error) {
@@ -26,7 +26,7 @@ export function useTheme() {
     }
     document.documentElement.dataset.theme = theme.value;
     const meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.setAttribute('content', theme.value === 'light' ? '#F2EFE9' : '#111315');
+    if (meta) meta.setAttribute('content', theme.value === 'light' ? '#EEF0EC' : '#111315');
   }
 
   function toggleTheme() {

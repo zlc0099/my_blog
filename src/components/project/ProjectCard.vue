@@ -31,7 +31,7 @@ defineProps({
     <div class="project-card__body">
       <div class="project-card__meta">
         <span class="eyebrow">{{ project.period }} / {{ project.status }}</span>
-        <span v-if="project.featured" class="badge">FEATURED</span>
+        <span v-if="project.featured" class="badge">精选</span>
       </div>
 
       <h3 class="project-card__title">

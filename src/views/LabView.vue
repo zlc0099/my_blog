@@ -16,21 +16,19 @@ usePageMeta({
 });
 
 const heroMeta = [
-  { label: 'SESSIONS', value: String(usageSummary.agentSessions).padStart(2, '0') },
-  { label: 'MODEL ROWS', value: String(usageSummary.agentModelCount).padStart(2, '0') },
-  { label: 'CC TOKENS', value: formatTokens(usageSummary.total) },
-  { label: 'UPDATED', value: formatDate(usageSummary.updated) },
+  { label: '会话', value: String(usageSummary.agentSessions).padStart(2, '0') },
+  { label: '模型', value: String(usageSummary.agentModelCount).padStart(2, '0') },
+  { label: 'Token', value: formatTokens(usageSummary.total) },
+  { label: '更新', value: formatDate(usageSummary.updated) },
 ];
 </script>
 
 <template>
   <div>
     <PageHero
-      eyebrow="AI LAB / AGENT OPERATIONS"
-      title="AGENT OPERATIONS"
-      zh="智能体作业记录"
-      description="记录 Claude Code、Qoder、Trae 在真实开发流程中的分工、模型使用与资源消耗。Claude Code 从本机会话日志聚合 Token；Qoder 读取本地会话库，Trae 读取本地日志与完成缓存，二者仅统计模型与会话，应用未保存 Token 明细。原始对话不在站点发布。"
-      serial="LAB / OPS"
+      title="AI LAB"
+      zh="智能体记录"
+      description="Claude Code、Qoder、Trae 的分工、模型与 Token 记录。原始对话不发布。"
       :meta="heroMeta"
     />
 
@@ -38,47 +36,35 @@ const heroMeta = [
       <div class="container">
         <div class="lab-intro">
           <div class="lab-intro__text">
-            <span class="eyebrow eyebrow--accent">
-              <span class="eyebrow__tick"></span>
-              LOCAL LEDGER / 本地账本
-            </span>
             <p>
-              Claude Code Token 由本机 JSONL 会话日志聚合：未缓存输入、输出与缓存读写分别统计，总量包含缓存，并按每条消息的模型拆分。Qoder 与 Trae 的本机数据没有 Token 明细，只同步模型、会话和活动次数；原始对话、标题与路径都不会进入仓库或页面。
+              Token 来自本地会话日志；Qoder 与 Trae 只统计模型和会话，原始对话不进入仓库。
             </p>
           </div>
           <div class="lab-intro__status">
-            <span class="badge">LOCAL TRACE</span>
-            <span class="mono">{{ usageSummary.agentSessions }} SESSIONS / {{ usageSummary.agentCoverage.length }} AGENTS / {{ usageSummary.agentModelCount }} MODEL ROWS</span>
+            <span class="badge">本地数据</span>
+            <span class="mono">{{ usageSummary.agentSessions }} 会话 / {{ usageSummary.agentCoverage.length }} 个 Agent / {{ usageSummary.agentModelCount }} 条模型记录</span>
           </div>
         </div>
 
-        <SectionHeading index="01" title="AGENT ROSTER" zh="智能体档案" />
+        <SectionHeading index="01" title="智能体档案" />
 
         <AgentRoster />
-        <p class="lab-roster-note mono">
-          AUTO IMPORT / Claude Code 与 Qoder 读取本地数据，Trae 读取本地日志；Token 明细仅 Claude Code 可用。
-        </p>
 
         <div class="lab-block">
-          <SectionHeading index="02" title="TOKEN LEDGER" zh="资源账本" />
+          <SectionHeading index="02" title="资源账本" />
           <TokenLedger />
         </div>
 
         <div class="lab-block">
-          <SectionHeading index="03" title="MODEL USAGE" zh="模型使用" />
+          <SectionHeading index="03" title="模型使用" />
           <ModelUsage />
           <AgentModelTrace />
         </div>
 
         <div class="lab-block">
-          <SectionHeading index="04" title="SESSION LOG" zh="作业明细" />
+          <SectionHeading index="04" title="作业明细" />
           <SessionLog />
         </div>
-
-        <p class="lab-maintenance mono">
-          DATA SOURCE / scripts/import-claude-usage.mjs · scripts/import-agent-models.mjs ·
-          src/data/usage.json · src/data/agent-models.json · 本机会话与模型统计 · 原始对话不进入仓库
-        </p>
       </div>
     </section>
   </div>

@@ -63,7 +63,7 @@ const coverageText = computed(() =>
 
     <EmptyState
       v-if="!models.length"
-      code="MODEL / EMPTY"
+      code="暂无模型"
       title="还没有模型记录"
       description="运行 Claude Code 导入器后，这里会按模型拆分 Token 使用情况。"
     />

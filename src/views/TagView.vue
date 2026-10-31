@@ -10,12 +10,6 @@ const tag = computed(
   () => tags.find((item) => item.slug === slug.value) || { name: slug.value, slug: slug.value, count: 0 },
 );
 
-const description = computed(() =>
-  slug.value === 'musings'
-    ? '所有标记为 #musings 的碎碎念与零散记录。'
-    : `所有标记为 #${tag.value.name} 的学习记录与项目笔记。`,
-);
-
 const displayZh = computed(() =>
   slug.value === 'musings' ? '碎碎念' : `#${tag.value.name}`,
 );
@@ -23,11 +17,9 @@ const displayZh = computed(() =>
 
 <template>
   <ArchiveBrowser
-    eyebrow="ARCHIVE / TAG"
-    title="TAG ARCHIVE"
+    title="TAG"
     :zh="displayZh"
-    :description="description"
-    :serial="`TAG / ${tag.slug.toUpperCase()}`"
+    description=""
     :locked-tag="tag.slug"
   />
 </template>

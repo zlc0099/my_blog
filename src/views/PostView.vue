@@ -48,22 +48,18 @@ usePageMeta(() =>
     <header class="post-header">
       <div class="post-header__field" aria-hidden="true"></div>
       <div class="container">
-        <RouterLink to="/posts" class="post-back mono">← BACK TO ARCHIVE</RouterLink>
+        <RouterLink to="/posts" class="post-back mono">← 返回档案</RouterLink>
 
         <div class="post-header__grid">
           <div class="post-header__main">
             <div class="post-meta mono">
               <RouterLink :to="`/categories/${post.category}`" class="post-meta__category">
-                {{ post.categoryInfo.en }}
-                <template v-if="post.categoryInfo.zh.toLowerCase() !== post.categoryInfo.en.toLowerCase()">
-                  / {{ post.categoryInfo.zh }}
-                </template>
+                {{ post.categoryInfo.zh }}
               </RouterLink>
               <span v-if="post.sample" class="badge" title="示例内容，可替换为真实记录">SAMPLE</span>
             </div>
 
             <p v-if="post.category === 'musings'" class="post-disclaimer mono">
-              <span class="post-disclaimer__label">DISCLAIMER</span>
               仅代表个人观点，不代表大众立场。
             </p>
 
@@ -79,7 +75,6 @@ usePageMeta(() =>
 
           <div class="post-header__side" aria-hidden="true">
             <span class="post-header__code">{{ post.archiveCode }}</span>
-            <span class="post-header__side-label mono">FILE / ENTRY</span>
           </div>
         </div>
 
@@ -95,10 +90,6 @@ usePageMeta(() =>
             :variant="post.coverStyle"
             :label="post.coverNote || post.title"
           />
-          <figcaption class="post-cover__caption">
-            <span class="eyebrow">{{ post.coverImage ? 'STILL / 封面' : 'STYLE SAMPLE / 封面示意' }}</span>
-            <p>{{ post.coverNote || post.title }}</p>
-          </figcaption>
         </figure>
       </div>
     </header>
@@ -107,9 +98,9 @@ usePageMeta(() =>
       <div class="post-content">
         <details v-if="rendered.headings.length" class="toc-mobile">
           <summary>
-            <span class="eyebrow">TABLE OF CONTENTS / 目录</span>
+            <span class="eyebrow">目录</span>
             <span class="mono toc-mobile__count">
-              {{ String(rendered.headings.length).padStart(2, '0') }} SECTIONS +
+              {{ String(rendered.headings.length).padStart(2, '0') }} 节
             </span>
           </summary>
           <nav aria-label="移动端文章目录">
@@ -132,7 +123,7 @@ usePageMeta(() =>
           target="_blank"
           rel="noopener noreferrer"
         >
-          <span class="eyebrow">GITHUB / 源码</span>
+          <span class="eyebrow">源码</span>
           <strong>完整源码在 GitHub：{{ post.repoPath }} ↗</strong>
         </a>
 
@@ -145,21 +136,21 @@ usePageMeta(() =>
           :to="`/projects/${relatedProject.slug}`"
           class="post-project"
         >
-          <span class="eyebrow">RELATED OPERATION</span>
+          <span class="eyebrow">相关项目</span>
           <strong>{{ relatedProject.title }}</strong>
           <span class="mono">{{ relatedProject.archiveCode }} →</span>
         </RouterLink>
 
         <footer class="post-footer">
           <div>
-            <span class="eyebrow">TAGGED AS / 标签</span>
+            <span class="eyebrow">标签</span>
             <ul v-if="post.tags.length" class="tag-list post-footer__tags">
               <li v-for="tag in post.tags" :key="tag">
                 <TagChip :tag="tag" />
               </li>
             </ul>
           </div>
-          <span class="post-footer__end mono">END OF FILE / {{ post.archiveCode }}</span>
+          <span class="post-footer__end mono">{{ post.archiveCode }}</span>
         </footer>
 
         <nav class="post-pagination" aria-label="文章导航">
@@ -168,26 +159,26 @@ usePageMeta(() =>
             :to="`/posts/${adjacent.older.slug}`"
             class="post-pagination__item"
           >
-            <span class="post-pagination__label mono">PREVIOUS / 上一篇</span>
+            <span class="post-pagination__label mono">上一篇</span>
             <strong>{{ adjacent.older.title }}</strong>
           </RouterLink>
-          <span v-else class="post-pagination__placeholder mono">ARCHIVE / START</span>
+          <span v-else class="post-pagination__placeholder mono">已经是第一篇</span>
 
           <RouterLink
             v-if="adjacent.newer"
             :to="`/posts/${adjacent.newer.slug}`"
             class="post-pagination__item post-pagination__item--next"
           >
-            <span class="post-pagination__label mono">NEXT / 下一篇</span>
+            <span class="post-pagination__label mono">下一篇</span>
             <strong>{{ adjacent.newer.title }}</strong>
           </RouterLink>
-          <span v-else class="post-pagination__placeholder mono">END OF ARCHIVE</span>
+          <span v-else class="post-pagination__placeholder mono">已经是最后一篇</span>
         </nav>
 
         <section v-if="related.length" class="post-related">
           <div class="post-related__head">
-            <span class="eyebrow">RELATED NOTES / 相关笔记</span>
-            <RouterLink to="/posts" class="mono post-related__all">ALL NOTES →</RouterLink>
+            <span class="eyebrow">相关笔记</span>
+            <RouterLink to="/posts" class="mono post-related__all">全部档案 →</RouterLink>
           </div>
           <div class="post-related__list">
             <RouterLink
@@ -312,11 +303,6 @@ usePageMeta(() =>
   line-height: 1.7;
 }
 
-.post-disclaimer__label {
-  color: var(--accent-ink);
-  letter-spacing: 0.12em;
-}
-
 .post-header__side {
   display: flex;
   flex-direction: column;
@@ -335,12 +321,6 @@ usePageMeta(() =>
   -webkit-text-stroke: 1px var(--border-strong);
 }
 
-.post-header__side-label {
-  color: var(--text-muted);
-  font-size: 10px;
-  letter-spacing: 0.14em;
-}
-
 .post-cover {
   --cover-ratio: 16 / 6.4;
   position: relative;
@@ -349,29 +329,9 @@ usePageMeta(() =>
   background: var(--bg-deep);
 }
 
-.post-cover__caption {
-  display: flex;
-  align-items: baseline;
-  gap: 18px;
-  padding: 12px 14px;
-  border-top: 1px solid var(--border-subtle);
-  background: var(--bg-secondary);
-}
-
-.post-cover__caption p {
-  color: var(--text-secondary);
-  font-size: 12.5px;
-  line-height: 1.7;
-}
-
 @media (max-width: 720px) {
   .post-cover {
     --cover-ratio: 16 / 9;
-  }
-
-  .post-cover__caption {
-    flex-direction: column;
-    gap: 6px;
   }
 }
 

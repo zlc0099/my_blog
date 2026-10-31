@@ -57,7 +57,7 @@ watch(
 <template>
   <aside v-if="headings.length" class="toc-sidebar">
     <div class="toc-sidebar__head">
-      <span class="eyebrow">CONTENTS</span>
+      <span class="eyebrow">目录</span>
       <span class="toc-sidebar__count mono">{{ String(headings.length).padStart(2, '0') }}</span>
     </div>
 
@@ -75,8 +75,6 @@ watch(
         </li>
       </ol>
     </nav>
-
-    <div class="toc-sidebar__foot mono">SCROLL TO TRACK</div>
   </aside>
 </template>
 
@@ -167,13 +165,5 @@ watch(
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-}
-
-.toc-sidebar__foot {
-  padding-top: 10px;
-  border-top: 1px solid var(--border-subtle);
-  color: var(--text-muted);
-  font-size: 10px;
-  letter-spacing: 0.12em;
 }
 </style>

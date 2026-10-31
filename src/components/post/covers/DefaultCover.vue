@@ -4,18 +4,13 @@
     <div class="default-cover__beam" aria-hidden="true"></div>
 
     <div class="default-cover__top">
-      <span>{{ post.categoryInfo.en }}</span>
+      <span>{{ post.categoryInfo.zh }}</span>
       <span>{{ post.archiveCode }}</span>
     </div>
 
     <div class="default-cover__center">
       <span class="default-cover__code">{{ post.archiveCode }}</span>
       <span class="default-cover__zh">{{ post.categoryInfo.zh }}</span>
-    </div>
-
-    <div class="default-cover__bottom">
-      <span>PERSONAL ARCHIVE</span>
-      <span>FILE / ENTRY</span>
     </div>
   </div>
 </template>

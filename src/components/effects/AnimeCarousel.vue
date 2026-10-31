@@ -29,11 +29,6 @@
         </div>
       </div>
       <span class="anime-carousel__shade"></span>
-      <span class="anime-carousel__label mono">ANIME STILLS / ARCHIVE</span>
-      <span class="anime-carousel__count mono">
-        {{ String(offset + 1).padStart(2, '0') }} /
-        {{ String(images.length).padStart(2, '0') }} · 60S LOOP
-      </span>
     </div>
   </div>
 </template>
@@ -208,26 +203,6 @@ onBeforeUnmount(() => {
   height: 34px;
   background: linear-gradient(180deg, transparent, rgba(6, 8, 10, 0.68));
   pointer-events: none;
-}
-
-.anime-carousel__label {
-  position: absolute;
-  bottom: 9px;
-  left: 12px;
-  z-index: 4;
-  color: #f1f3f5;
-  font-size: 9px;
-  letter-spacing: 0.1em;
-}
-
-.anime-carousel__count {
-  position: absolute;
-  right: 12px;
-  bottom: 9px;
-  z-index: 4;
-  color: rgba(255, 255, 255, 0.78);
-  font-size: 8.5px;
-  letter-spacing: 0.08em;
 }
 
 @media (prefers-reduced-motion: reduce) {

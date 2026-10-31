@@ -2,12 +2,10 @@
 import { ref } from 'vue';
 import SectionHeading from '@/components/ui/SectionHeading.vue';
 import { site } from '@/data/site';
-import { archiveStats } from '@/lib/content';
-import { formatDate } from '@/lib/format';
 import { usePageMeta } from '@/composables/usePageMeta';
 
 usePageMeta({
-  title: 'ABOUT / DOSSIER',
+  title: '关于我',
   description: site.aboutIntro,
 });
 
@@ -47,10 +45,6 @@ const barcode = [2, 5, 3, 8, 2, 6, 4, 9, 3, 5, 2, 7, 4, 6, 3, 8, 2, 5, 7, 3, 6, 
       <div class="about-hero__field" aria-hidden="true"></div>
       <div class="container about-hero__inner">
         <div class="about-hero__main">
-          <div class="eyebrow eyebrow--accent">
-            <span class="eyebrow__tick"></span>
-            ABOUT / DOSSIER
-          </div>
           <h1 class="about-hero__title">
             A RECORD OF<br />
             <span class="about-hero__outline">WHAT I LEARN</span><br />
@@ -67,21 +61,20 @@ const barcode = [2, 5, 3, 8, 2, 6, 4, 9, 3, 5, 2, 7, 4, 6, 3, 8, 2, 5, 7, 3, 6, 
 
         <aside class="profile-card">
           <div class="profile-card__head">
-            <span class="mono">PROFILE / 001</span>
             <span class="mono profile-card__status"><i></i>{{ site.owner.status }}</span>
           </div>
 
           <dl class="profile-card__data">
             <div>
-              <dt>CALLSIGN</dt>
+              <dt>称呼</dt>
               <dd>{{ site.owner.callsign }}</dd>
             </div>
             <div>
-              <dt>ROLE</dt>
+              <dt>方向</dt>
               <dd>{{ site.owner.role }}</dd>
             </div>
             <div>
-              <dt>GITHUB</dt>
+              <dt>GitHub</dt>
               <dd>
                 <a :href="site.github" target="_blank" rel="noopener noreferrer">
                   @{{ site.owner.callsign }} ↗
@@ -99,7 +92,7 @@ const barcode = [2, 5, 3, 8, 2, 6, 4, 9, 3, 5, 2, 7, 4, 6, 3, 8, 2, 5, 7, 3, 6, 
 
     <section class="section section--bordered">
       <div class="container">
-        <SectionHeading index="01" title="PROFILE" zh="关于我" />
+        <SectionHeading index="01" title="关于我" />
 
         <div class="about-accordion">
           <article
@@ -158,9 +151,9 @@ const barcode = [2, 5, 3, 8, 2, 6, 4, 9, 3, 5, 2, 7, 4, 6, 3, 8, 2, 5, 7, 3, 6, 
                   <template v-else>
                     <div class="about-contact">
                       <div class="about-contact__intro">
-                        <span class="eyebrow">OPEN CHANNEL / 公开入口</span>
+                        <span class="eyebrow">公开入口</span>
                         <h4>代码、视频和日常，都在这三个地方。</h4>
-                        <p>GitHub 放代码和站点更新，B站和抖音放视频与日常。账号信息以这里为准。</p>
+                        <p>GitHub 放代码，B站和抖音放视频与日常。</p>
                       </div>
                       <div class="about-contact__grid">
                         <a
@@ -183,12 +176,6 @@ const barcode = [2, 5, 3, 8, 2, 6, 4, 9, 3, 5, 2, 7, 4, 6, 3, 8, 2, 5, 7, 3, 6, 
               </div>
             </div>
           </article>
-        </div>
-
-        <div class="about-siteinfo mono">
-          <span>SITE / Vue 3 + Vite · GitHub Pages · 无后端</span>
-          <span>SOURCE / Markdown + JSON</span>
-          <span>UPDATED / {{ formatDate(archiveStats.latestUpdate) }}</span>
         </div>
       </div>
     </section>
@@ -281,7 +268,7 @@ const barcode = [2, 5, 3, 8, 2, 6, 4, 9, 3, 5, 2, 7, 4, 6, 3, 8, 2, 5, 7, 3, 6, 
 .profile-card__head {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: 12px;
   padding-bottom: 14px;
   border-bottom: 1px solid var(--border-subtle);
@@ -687,16 +674,6 @@ const barcode = [2, 5, 3, 8, 2, 6, 4, 9, 3, 5, 2, 7, 4, 6, 3, 8, 2, 5, 7, 3, 6, 
 
 .about-contact__item.is-pending .about-contact__value {
   font-weight: 500;
-}
-
-.about-siteinfo {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px 28px;
-  margin-top: 20px;
-  color: var(--text-muted);
-  font-size: 10px;
-  letter-spacing: 0.06em;
 }
 
 @media (max-width: 980px) {

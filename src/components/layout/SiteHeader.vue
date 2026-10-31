@@ -100,7 +100,6 @@ onBeforeUnmount(() => {
         </span>
         <span class="brand__text">
           <span class="brand__name">{{ site.brand }}</span>
-          <span class="brand__sub">{{ site.tagline }} / 001</span>
         </span>
       </RouterLink>
 
@@ -129,7 +128,6 @@ onBeforeUnmount(() => {
             <circle cx="8.5" cy="8.5" r="5.5" stroke="currentColor" stroke-width="1.4" />
             <path d="m13 13 4 4" stroke="currentColor" stroke-width="1.4" />
           </svg>
-          <span class="header-action__label">SEARCH</span>
           <kbd>Ctrl K</kbd>
         </button>
 
@@ -322,15 +320,6 @@ onBeforeUnmount(() => {
   letter-spacing: 0.06em;
   line-height: 1;
   text-transform: uppercase;
-  white-space: nowrap;
-}
-
-.brand__sub {
-  color: var(--text-muted);
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.16em;
-  line-height: 1;
   white-space: nowrap;
 }
 
@@ -656,10 +645,6 @@ onBeforeUnmount(() => {
 }
 
 @media (max-width: 560px) {
-  .brand__sub {
-    display: none;
-  }
-
   .brand__name {
     font-size: 18px;
   }
