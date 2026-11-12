@@ -6,6 +6,8 @@ import TokenLedger from '@/components/lab/TokenLedger.vue';
 import ModelUsage from '@/components/lab/ModelUsage.vue';
 import AgentModelTrace from '@/components/lab/AgentModelTrace.vue';
 import SessionLog from '@/components/lab/SessionLog.vue';
+import UsageHeatmap from '@/components/lab/UsageHeatmap.vue';
+import MyUsage from '@/components/lab/MyUsage.vue';
 import { usageSummary } from '@/lib/usage';
 import { formatDate, formatTokens } from '@/lib/format';
 import { usePageMeta } from '@/composables/usePageMeta';
@@ -56,14 +58,24 @@ const heroMeta = [
         </div>
 
         <div class="lab-block">
-          <SectionHeading index="03" title="模型使用" />
+          <SectionHeading index="03" title="日历热力图" />
+          <UsageHeatmap :records="usageSummary.records" title="站点 Token 热力图" export-name="site-token-heatmap" />
+        </div>
+
+        <div class="lab-block">
+          <SectionHeading index="04" title="模型使用" />
           <ModelUsage />
           <AgentModelTrace />
         </div>
 
         <div class="lab-block">
-          <SectionHeading index="04" title="作业明细" />
+          <SectionHeading index="05" title="作业明细" />
           <SessionLog />
+        </div>
+
+        <div class="lab-block">
+          <SectionHeading index="06" title="我的用量" />
+          <MyUsage />
         </div>
       </div>
     </section>

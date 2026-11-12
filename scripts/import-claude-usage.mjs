@@ -5,6 +5,16 @@ import path from 'node:path';
 import os from 'node:os';
 import readline from 'node:readline';
 import { fileURLToPath } from 'node:url';
+import {
+  aggregateModels,
+  buildUsageSummary,
+  createUsageState,
+  dedupeShortIds,
+  ingestEntry,
+  localDate,
+  sumTokens,
+  toUsageRecords,
+} from '../src/lib/claude-usage.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const args = process.argv.slice(2);
@@ -67,15 +77,6 @@ const dryRun = hasFlag('--dry-run');
 const notesLimit = Math.max(0, Number(argValue('--notes-limit', '0')) || 0);
 const projectFilter = argValue('--project', '');
 
-function localDate(value) {
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return String(value || '').slice(0, 10);
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
-}
-
 function formatDate(value) {
   return String(value || '').replaceAll('-', '.');
 }
@@ -95,60 +96,6 @@ function collectJsonlFiles(directory) {
   };
   visit(directory);
   return files;
-}
-
-function projectLabel(cwd) {
-  if (!cwd) return 'unknown';
-  const normalized = String(cwd).replaceAll('\\', '/').replace(/\/+$/, '');
-  if (/^[A-Za-z]:\/Users\/[^/]+$/.test(normalized)) return 'home';
-  if (/^\/home\/[^/]+$/.test(normalized) || /^\/Users\/[^/]+$/.test(normalized)) return 'home';
-  const parts = normalized.split('/').filter(Boolean);
-  const last = parts.at(-1) || 'unknown';
-  return last.replace(/[^\w.-]+/g, '-').slice(0, 40) || 'unknown';
-}
-
-function topKey(counter) {
-  return [...counter.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] || '';
-}
-
-function normalizeSession(session) {
-  const start = session.firstTs ? localDate(session.firstTs) : session.fileDate;
-  const end = session.lastTs ? localDate(session.lastTs) : start;
-  const project = projectLabel(topKey(session.cwds));
-  const models = new Map(
-    [...session.models.entries()].filter(([model]) => model !== '<synthetic>'),
-  );
-  const model = topKey(models) || topKey(session.models) || 'unknown';
-  const modelUsage = [...session.modelUsage.entries()]
-    .map(([name, stat]) => ({
-      model: name,
-      messages: stat.messages,
-      tokensIn: stat.tokensIn,
-      tokensOut: stat.tokensOut,
-      cacheRead: stat.cacheRead,
-      cacheWrite: stat.cacheWrite,
-      total: stat.tokensIn + stat.tokensOut + stat.cacheRead + stat.cacheWrite,
-    }))
-    .sort((a, b) => b.total - a.total);
-  return {
-    sessionId: session.id,
-    shortId: session.shortId,
-    date: start,
-    updated: end,
-    project,
-    model,
-    modelUsage,
-    messages: session.messages,
-    sideMessages: session.sideMessages,
-    tokensIn: session.input,
-    tokensOut: session.output,
-    cacheRead: session.cacheRead,
-    cacheWrite: session.cacheWrite,
-    total:
-      session.input + session.output + session.cacheRead + session.cacheWrite,
-    firstTs: session.firstTs,
-    lastTs: session.lastTs,
-  };
 }
 
 function noteSlugFor(session, usedSlugs) {
@@ -200,10 +147,11 @@ auto: true
 `;
 }
 
-async function parseSessionFile(file, seenMessageIds, sessions) {
+async function parseSessionFile(file, state) {
   const stream = fs.createReadStream(file, { encoding: 'utf8' });
   const lines = readline.createInterface({ input: stream, crlfDelay: Infinity });
-  let fileDate = localDate(fs.statSync(file).mtime.toISOString());
+  const fileDate = localDate(fs.statSync(file).mtime.toISOString());
+  const fallbackSessionId = path.basename(file, '.jsonl');
 
   for await (const line of lines) {
     if (!line.includes('"usage"')) continue;
@@ -213,71 +161,7 @@ async function parseSessionFile(file, seenMessageIds, sessions) {
     } catch (error) {
       continue;
     }
-    if (entry.type !== 'assistant') continue;
-    const message = entry.message;
-    const usage = message?.usage;
-    if (!message || !usage || typeof usage !== 'object') continue;
-
-    const messageKey = message.id || entry.uuid;
-    if (messageKey) {
-      if (seenMessageIds.has(messageKey)) continue;
-      seenMessageIds.add(messageKey);
-    }
-
-    const sid = entry.sessionId || entry.session_id || path.basename(file, '.jsonl');
-    let session = sessions.get(sid);
-    if (!session) {
-      const baseShort = sid.replace(/[^a-zA-Z0-9]/g, '').slice(0, 8) || 'session';
-      session = {
-        id: sid,
-        shortId: baseShort,
-        firstTs: '',
-        lastTs: '',
-        fileDate,
-        cwds: new Map(),
-        models: new Map(),
-        modelUsage: new Map(),
-        messages: 0,
-        sideMessages: 0,
-        input: 0,
-        output: 0,
-        cacheRead: 0,
-        cacheWrite: 0,
-      };
-      sessions.set(sid, session);
-    }
-
-    const timestamp = entry.timestamp || '';
-    if (timestamp && (!session.firstTs || timestamp < session.firstTs)) session.firstTs = timestamp;
-    if (timestamp && (!session.lastTs || timestamp > session.lastTs)) session.lastTs = timestamp;
-    if (entry.cwd) session.cwds.set(entry.cwd, (session.cwds.get(entry.cwd) || 0) + 1);
-    const model = message.model || 'unknown';
-    session.models.set(model, (session.models.get(model) || 0) + 1);
-    session.messages += 1;
-    if (entry.isSidechain) session.sideMessages += 1;
-    const tokensIn = Number(usage.input_tokens) || 0;
-    const tokensOut = Number(usage.output_tokens) || 0;
-    const cacheRead = Number(usage.cache_read_input_tokens) || 0;
-    const cacheWrite = Number(usage.cache_creation_input_tokens) || 0;
-    session.input += tokensIn;
-    session.output += tokensOut;
-    session.cacheRead += cacheRead;
-    session.cacheWrite += cacheWrite;
-    if (model !== '<synthetic>') {
-      const modelStat = session.modelUsage.get(model) || {
-        messages: 0,
-        tokensIn: 0,
-        tokensOut: 0,
-        cacheRead: 0,
-        cacheWrite: 0,
-      };
-      modelStat.messages += 1;
-      modelStat.tokensIn += tokensIn;
-      modelStat.tokensOut += tokensOut;
-      modelStat.cacheRead += cacheRead;
-      modelStat.cacheWrite += cacheWrite;
-      session.modelUsage.set(model, modelStat);
-    }
+    ingestEntry(state, entry, fallbackSessionId, fileDate);
   }
 }
 
@@ -285,16 +169,13 @@ async function main() {
   const files = collectJsonlFiles(sourceDir);
   if (!files.length) throw new Error(`No .jsonl logs found under: ${sourceDir}`);
 
-  const sessions = new Map();
-  const seenMessageIds = new Set();
-
+  const state = createUsageState();
   for (const file of files) {
-    await parseSessionFile(file, seenMessageIds, sessions);
+    await parseSessionFile(file, state);
   }
 
-  let normalized = [...sessions.values()]
-    .map(normalizeSession)
-    .filter((session) => session.total > 0);
+  const summary = buildUsageSummary(state);
+  let normalized = summary.sessions;
 
   if (projectFilter) {
     normalized = normalized.filter((session) => session.project === projectFilter);
@@ -302,43 +183,8 @@ async function main() {
 
   normalized.sort((a, b) => b.date.localeCompare(a.date) || b.updated.localeCompare(a.updated));
 
-  const modelMap = new Map();
-  for (const session of normalized) {
-    for (const usage of session.modelUsage) {
-      const entry = modelMap.get(usage.model) || {
-        model: usage.model,
-        agent: 'claude-code',
-        sessions: 0,
-        messages: 0,
-        tokensIn: 0,
-        tokensOut: 0,
-        cacheRead: 0,
-        cacheWrite: 0,
-        total: 0,
-      };
-      entry.sessions += 1;
-      entry.messages += usage.messages;
-      entry.tokensIn += usage.tokensIn;
-      entry.tokensOut += usage.tokensOut;
-      entry.cacheRead += usage.cacheRead;
-      entry.cacheWrite += usage.cacheWrite;
-      entry.total += usage.total;
-      modelMap.set(usage.model, entry);
-    }
-  }
-  const models = [...modelMap.values()].sort((a, b) => b.total - a.total);
-
-  const usedShortIds = new Map();
-  for (const session of normalized) {
-    let shortId = session.shortId;
-    let attempt = 2;
-    while (usedShortIds.has(shortId)) {
-      shortId = `${session.shortId}${attempt}`;
-      attempt += 1;
-    }
-    usedShortIds.set(shortId, true);
-    session.shortId = shortId;
-  }
+  const models = aggregateModels(normalized);
+  dedupeShortIds(normalized);
 
   const usedSlugs = new Set();
   const noteResults = [];
@@ -360,26 +206,7 @@ async function main() {
     }
   });
 
-  const importedRecords = normalized.map((session) => ({
-    date: session.date,
-    updated: session.updated,
-    agent: 'claude-code',
-    task: `Claude Code 会话${session.project !== 'unknown' ? ` · ${session.project}` : ''}`,
-    type: 'session',
-    model: session.model,
-    models: session.modelUsage.map((usage) => usage.model),
-    project: session.project,
-    session: session.shortId,
-    messages: session.messages,
-    startedAt: session.firstTs,
-    endedAt: session.lastTs,
-    tokensIn: session.tokensIn,
-    tokensOut: session.tokensOut,
-    cacheRead: session.cacheRead,
-    cacheWrite: session.cacheWrite,
-    note: session.note,
-    source: 'claude-code-import',
-  }));
+  const importedRecords = toUsageRecords(normalized);
 
   let existing = null;
   try {
@@ -402,17 +229,7 @@ async function main() {
     (a, b) => String(b.date || '').localeCompare(String(a.date || '')),
   );
 
-  const totals = records.reduce(
-    (summary, record) => {
-      summary.total +=
-        (Number(record.tokensIn) || 0) +
-        (Number(record.tokensOut) || 0) +
-        (Number(record.cacheRead) || 0) +
-        (Number(record.cacheWrite) || 0);
-      return summary;
-    },
-    { total: 0 },
-  );
+  const totals = { total: sumTokens(records) };
 
   const payload = {
     demo: false,

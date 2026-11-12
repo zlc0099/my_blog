@@ -1,19 +1,19 @@
 {
   "demo": false,
   "source": "claude-code-logs",
-  "updated": "2026-10-26",
+  "updated": "2026-11-11",
   "note": "由本地 Claude Code 会话日志聚合，不包含对话原文。tokensIn 为未缓存输入，tokensOut 为输出，cacheRead / cacheWrite 单列；总量包含缓存读写。模型维度按每条 assistant 消息的 model 聚合，同一会话可能包含多个模型。Qoder / Trae 的本地应用未保存 Token 明细，AI LAB 仅展示其模型与会话统计。",
   "models": [
     {
       "model": "deepseek-flash",
       "agent": "claude-code",
-      "sessions": 18,
-      "messages": 9329,
-      "tokensIn": 10525895,
-      "tokensOut": 4781472,
-      "cacheRead": 951752960,
+      "sessions": 19,
+      "messages": 9347,
+      "tokensIn": 10558320,
+      "tokensOut": 4793359,
+      "cacheRead": 952180224,
       "cacheWrite": 0,
-      "total": 967060327
+      "total": 967531903
     },
     {
       "model": "claude-opus-5-5",
@@ -61,6 +61,28 @@
     }
   ],
   "records": [
+    {
+      "date": "2026-11-05",
+      "updated": "2026-11-05",
+      "agent": "claude-code",
+      "task": "Claude Code 会话 · home",
+      "type": "session",
+      "model": "deepseek-flash",
+      "models": [
+        "deepseek-flash"
+      ],
+      "project": "home",
+      "session": "29157ff2",
+      "messages": 18,
+      "startedAt": "2026-11-05T03:32:33.635Z",
+      "endedAt": "2026-11-05T03:36:01.429Z",
+      "tokensIn": 32425,
+      "tokensOut": 11887,
+      "cacheRead": 427264,
+      "cacheWrite": 0,
+      "note": "",
+      "source": "claude-code-import"
+    },
     {
       "date": "2026-10-26",
       "updated": "2026-10-26",

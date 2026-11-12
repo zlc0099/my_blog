@@ -1,7 +1,7 @@
 {
   "demo": false,
   "source": "local-agent-trace",
-  "updated": "2026-10-26",
+  "updated": "2026-11-11",
   "note": "由本机 Qoder 会话库与 Trae 本地日志 / 完成缓存聚合。仅包含模型名、会话数、活动数与日期范围；不包含对话、标题、路径、会话 ID 或 Token 明细。",
   "agents": [
     {
@@ -10,33 +10,40 @@
       "sourceLabel": "LOCAL DB",
       "tokensAvailable": false,
       "activityLabel": "REPLIES",
-      "sessions": 9,
-      "activity": 294,
+      "sessions": 13,
+      "activity": 470,
       "period": {
         "first": "2026-10-12",
-        "last": "2026-10-26"
+        "last": "2026-11-11"
       },
       "models": [
         {
           "model": "dfmodel",
-          "sessions": 7,
-          "activity": 278,
+          "sessions": 5,
+          "activity": 145,
           "first": "2026-10-15",
-          "last": "2026-10-26"
+          "last": "2026-11-07"
         },
         {
           "model": "qfmodel",
-          "sessions": 1,
-          "activity": 14,
+          "sessions": 5,
+          "activity": 94,
           "first": "2026-10-14",
-          "last": "2026-10-20"
+          "last": "2026-11-05"
+        },
+        {
+          "model": "qmodel_latest",
+          "sessions": 2,
+          "activity": 229,
+          "first": "2026-10-22",
+          "last": "2026-11-11"
         },
         {
           "model": "auto",
           "sessions": 1,
           "activity": 2,
           "first": "2026-10-12",
-          "last": "2026-10-12"
+          "last": "2026-11-02"
         }
       ]
     },
@@ -46,11 +53,11 @@
       "sourceLabel": "LOCAL TRACE",
       "tokensAvailable": false,
       "activityLabel": "CALLS",
-      "sessions": 8,
-      "activity": 15,
+      "sessions": 6,
+      "activity": 29,
       "period": {
         "first": "2026-08-19",
-        "last": "2026-10-26"
+        "last": "2026-11-06"
       },
       "models": [
         {
@@ -63,28 +70,14 @@
         {
           "model": "glm-5.3-flash",
           "sessions": 2,
-          "activity": 6,
-          "first": "2026-10-23",
-          "last": "2026-10-26"
-        },
-        {
-          "model": "deepseek-v4.1-flash",
-          "sessions": 2,
-          "activity": 4,
-          "first": "2026-10-25",
-          "last": "2026-10-26"
-        },
-        {
-          "model": "qwen3.8-flash",
-          "sessions": 1,
-          "activity": 1,
-          "first": "2026-10-26",
-          "last": "2026-10-26"
+          "activity": 25,
+          "first": "2026-11-04",
+          "last": "2026-11-06"
         }
       ],
       "evidence": {
-        "logFiles": 14,
-        "logRequests": 11,
+        "logFiles": 12,
+        "logRequests": 25,
         "cachedSessions": 4
       }
     }
